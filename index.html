@@ -82,13 +82,13 @@
 <body>
 
 <h1>Tokyo Apartment Finder</h1>
-<p class="subtitle">Criteria: ≤40M yen · ≥30m² · 1LDK+ · Post-1982 · ≤20 min walk · Not ground floor · Freehold land · Condo fees ≤30,000¥/mo · ≤45 min to Tokyo Station<br>
+<p class="subtitle">Criteria: ≤40M yen · ≥30m² · 1LDK+ · Post-1982 · ≤15 min walk · Not ground floor · Freehold land · Condo fees ≤30,000¥/mo · ≤45 min to Tokyo Station<br>
 Fresh search started: 2026-06-23 · Sources: SUUMO, HOME'S, Yahoo不動産, nomu.com, 三井のリハウス, 東急リバブル, 住友不動産販売, Century21, athome</p>
 
 <div class="summary">
   <h2>Market Context (as of June 2026)</h2>
-  <p><span class="red">Chuo-ku is out of budget.</span> Post-1982 1LDK+ condos start at ~6,000万. Same for Chiyoda-ku (7,000万+) and Minato-ku.</p>
-  <p><span class="green">Best hunting grounds: Sumida-ku, Katsushika-ku, Itabashi-ku.</span> Expect 2LDK in 32–65m² for 2,800–4,000万. Itabashi has good Mita Line access to Tokyo ~30min. Katsushika has Sobu Line and Keisei access.</p>
+  <p><span class="red">Inner wards (Chuo, Chiyoda, Minato, Shibuya, Setagaya) are mostly out of budget.</span> Post-1982 1LDK+ condos start at 5,000–8,000万 in those wards. Rare budget listings appear occasionally — flagged immediately when found.</p>
+  <p><span class="green">Best hunting grounds at ≤40M yen: Sumida-ku and Koto-ku</span> — genuinely central, good Skytree-area access, 2LDK/3LDK in 35–65m² for 3,000–4,000万. Katsushika borders Sumida and shares Keisei/Sobu access. <strong>Priority: south/SE-facing, high floor, view.</strong></p>
   <p>Search loop active — new listings added automatically. <strong id="candidate-count">0 viable candidates found so far.</strong></p>
 </div>
 
@@ -104,7 +104,7 @@ Fresh search started: 2026-06-23 · Sources: SUUMO, HOME'S, Yahoo不動産, nomu
   <button class="view-btn active" id="btn-wards" onclick="showView('wards')">⊞ By ward</button>
   <button class="view-btn" id="btn-price" onclick="showView('price')">↑ All · cheapest first</button>
   <button class="view-btn" id="btn-fees" onclick="showView('fees')">↑ All · lowest fees first</button>
-  <button class="view-btn" id="btn-new" onclick="showView('new')">✦ New today</button>
+  <button class="view-btn" id="btn-date" onclick="showView('date')">📅 By date found</button>
 </div>
 
 <div id="global-view">
@@ -112,7 +112,7 @@ Fresh search started: 2026-06-23 · Sources: SUUMO, HOME'S, Yahoo不動産, nomu
   <table id="global-table">
     <tr>
       <th>Ward</th><th>Name</th><th class="sortable" id="gh-price" onclick="showView('price')">Price</th><th>Size</th><th>Floor</th><th>Year</th>
-      <th>Walk</th><th>Station</th><th class="sortable" id="gh-fees" onclick="showView('fees')">Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+      <th>Walk</th><th>Station</th><th class="sortable" id="gh-fees" onclick="showView('fees')">Fees/mo</th><th>Layout</th><th>Direction</th><th>Found</th><th>Flags</th>
     </tr>
   </table>
 </div>
@@ -237,6 +237,48 @@ Fresh search started: 2026-06-23 · Sources: SUUMO, HOME'S, Yahoo不動産, nomu
   <p class="empty-note" id="empty-arakawa">No Arakawa-ku listings yet — search in progress.</p>
 </div>
 
+<!-- ==================== TAITO-KU ==================== -->
+<div class="ward" id="ward-taito">
+  <div class="ward-title">Taito-ku 台東区 <span class="ward-count" id="count-taito">0 viable</span></div>
+  <table id="table-taito">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- TAITO_ROWS_START -->
+    <!-- TAITO_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-taito">No Taito-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== SETAGAYA-KU ==================== -->
+<div class="ward" id="ward-setagaya">
+  <div class="ward-title">Setagaya-ku 世田谷区 <span class="ward-count" id="count-setagaya">0 viable</span></div>
+  <table id="table-setagaya">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- SETAGAYA_ROWS_START -->
+    <!-- SETAGAYA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-setagaya">No Setagaya-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== ADACHI-KU ==================== -->
+<div class="ward" id="ward-adachi">
+  <div class="ward-title">Adachi-ku 足立区 <span class="ward-count" id="count-adachi">0 viable</span> <span style="color:#64748b;font-size:0.75rem;font-weight:400;">— exceptional/well-connected only</span></div>
+  <table id="table-adachi">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- ADACHI_ROWS_START -->
+    <!-- ADACHI_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-adachi">No Adachi-ku listings yet.</p>
+</div>
+
 <script>
 function parsePrice(text) {
   const m = (text || '').replace(/,/g, '').match(/(\d+)万/);
@@ -267,14 +309,16 @@ function buildGlobalTable(key) {
   document.querySelectorAll('.ward').forEach(ward => {
     const titleEl = ward.querySelector('.ward-title');
     const wardName = titleEl ? titleEl.childNodes[0].textContent.trim() : '';
-    const include = key === 'new'
-      ? ward.querySelectorAll('tr.new-listing')
-      : ward.querySelectorAll('tr.pass, tr.warn');
+    const include = ward.querySelectorAll('tr.pass, tr.warn');
     include.forEach(row => {
-      allRows.push({ row, wardName, sortVal: parseFn(row.cells[srcIdx]?.textContent) });
+      allRows.push({ row, wardName, sortVal: parseFn(row.cells[srcIdx]?.textContent), dateAdded: row.dataset.added || '' });
     });
   });
-  if (key !== 'new') allRows.sort((a, b) => a.sortVal - b.sortVal);
+  if (key === 'date') {
+    allRows.sort((a, b) => b.dateAdded.localeCompare(a.dateAdded));
+  } else {
+    allRows.sort((a, b) => a.sortVal - b.sortVal);
+  }
 
   const table = document.getElementById('global-table');
   [...table.querySelectorAll('tr:not(:first-child)')].forEach(r => r.remove());
@@ -292,13 +336,13 @@ function buildGlobalTable(key) {
   });
   if (key === 'price') document.getElementById('gh-price')?.classList.add('sort-asc');
   if (key === 'fees')  document.getElementById('gh-fees')?.classList.add('sort-asc');
-  const labels = { price: 'sorted by price ↑', fees: 'sorted by monthly fees ↑', new: 'added today ✦' };
+  const labels = { price: 'sorted by price ↑', fees: 'sorted by monthly fees ↑', date: 'sorted by date found ↓ (newest first)' };
   document.getElementById('global-sort-label').textContent = labels[key] || '';
 }
 
 function showView(view) {
   document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  const btn = document.getElementById('btn-' + view);
+  const btn = document.getElementById('btn-' + (view === 'new' ? 'date' : view));
   if (btn) btn.classList.add('active');
   const wardSections = document.querySelectorAll('.ward');
   const globalView   = document.getElementById('global-view');
