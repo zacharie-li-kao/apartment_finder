@@ -1,0 +1,6 @@
+# Keep old local files out of the repo
+listings.html
+shortlist.html
+findings.md
+*.jsonl
+*.tmp

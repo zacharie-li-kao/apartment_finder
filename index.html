@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tokyo Apartment Finder — Live</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f1117; color: #e2e8f0; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; color: #f0f4ff; margin-bottom: 4px; }
+  .subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 32px; }
+
+  .summary { background: #1e2130; border-left: 4px solid #f59e0b; padding: 18px 22px; border-radius: 8px; margin-bottom: 36px; }
+  .summary h2 { margin: 0 0 10px; color: #f59e0b; font-size: 1.1rem; }
+  .summary p { margin: 6px 0; font-size: 0.92rem; color: #cbd5e1; }
+  .summary .green { color: #4ade80; font-weight: 600; }
+  .summary .red { color: #f87171; font-weight: 600; }
+
+  .ward { margin-bottom: 48px; }
+  .ward-title { font-size: 1.15rem; font-weight: 700; color: #93c5fd; border-bottom: 1px solid #2d3554; padding-bottom: 8px; margin-bottom: 14px; }
+  .ward-count { font-size: 0.8rem; color: #64748b; font-weight: 400; margin-left: 10px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th { background: #1a1f35; color: #94a3b8; text-align: left; padding: 8px 10px; border-bottom: 2px solid #2d3554; white-space: nowrap; }
+  td { padding: 7px 10px; border-bottom: 1px solid #1e2438; vertical-align: top; }
+  tr:hover td { background: #161b2e; }
+
+  tr.pass td { background: #0d1f17; }
+  tr.pass:hover td { background: #102218; }
+  tr.warn td { background: #1c1a0e; }
+  tr.warn:hover td { background: #201e12; }
+  tr.fail td { background: #1a1015; opacity: 0.7; }
+  tr.fail:hover td { opacity: 1; }
+
+  .flag { display: inline-block; font-size: 0.72rem; padding: 2px 7px; border-radius: 4px; margin: 2px 2px 2px 0; white-space: nowrap; }
+  .flag.red { background: #7f1d1d; color: #fca5a5; }
+  .flag.yellow { background: #78350f; color: #fcd34d; }
+  .flag.green { background: #064e3b; color: #6ee7b7; }
+
+  .price { color: #e2e8f0; font-weight: 600; white-space: nowrap; }
+  .over-budget { color: #f87171; }
+  .good-price { color: #4ade80; }
+  .fees-warn { color: #fcd34d; }
+
+  a { color: #60a5fa; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .legend { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #94a3b8; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+  .dot-pass { background: #166534; }
+  .dot-warn { background: #92400e; }
+  .dot-fail { background: #3b0764; }
+
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: #e2e8f0; background: #242840; }
+  th.sort-asc::after { content: ' ↑'; color: #4ade80; font-size: 0.85em; }
+  th.sort-desc::after { content: ' ↓'; color: #f59e0b; font-size: 0.85em; }
+  .view-controls { display: flex; gap: 8px; margin-bottom: 28px; align-items: center; flex-wrap: wrap; }
+  .view-controls-label { color: #475569; font-size: 0.8rem; margin-right: 4px; }
+  .view-btn { background: #1e2130; border: 1px solid #2d3554; color: #94a3b8; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-family: inherit; transition: background 0.12s, border-color 0.12s, color 0.12s; }
+  .view-btn:hover { background: #242840; border-color: #4b5a80; color: #e2e8f0; }
+  .view-btn.active { background: #1e3050; border-color: #3b82f6; color: #93c5fd; font-weight: 600; }
+  #global-view { display: none; margin-bottom: 48px; }
+  #global-view .ward-title { font-size: 1.15rem; font-weight: 700; color: #93c5fd; border-bottom: 1px solid #2d3554; padding-bottom: 8px; margin-bottom: 14px; }
+
+  tr.new-listing td { border-left: 3px solid #3b82f6; }
+  p.new-scoreboard-entry { border-left: 2px solid #3b82f6; padding-left: 10px; background: rgba(30,58,95,0.25); border-radius: 0 4px 4px 0; }
+  tr.new-listing.pass td { background: #0d1a2e; }
+  tr.new-listing.warn td { background: #141624; }
+  tr.new-listing.pass:hover td { background: #112238; }
+  tr.new-listing.warn:hover td { background: #171c30; }
+  .badge-new { display: inline-block; font-size: 0.68rem; padding: 1px 6px; border-radius: 3px; background: #1e3a5f; color: #60a5fa; border: 1px solid #3b82f6; margin-right: 4px; font-weight: 700; vertical-align: middle; }
+
+  .empty-note { color: #475569; font-style: italic; font-size: 0.85rem; padding: 12px 0; }
+
+  /* Scoreboard */
+  #scoreboard { background: #111827; border: 1px solid #1e2d45; border-radius: 10px; padding: 22px 26px; margin-bottom: 48px; }
+  #scoreboard h2 { color: #93c5fd; font-size: 1.05rem; margin: 0 0 6px; }
+  #scoreboard .score-header { color: #64748b; font-size: 0.82rem; margin-bottom: 18px; }
+</style>
+</head>
+<body>
+
+<h1>Tokyo Apartment Finder</h1>
+<p class="subtitle">Criteria: ≤40M yen · ≥30m² · 1LDK+ · Post-1982 · ≤20 min walk · Not ground floor · Freehold land · Condo fees ≤30,000¥/mo · ≤45 min to Tokyo Station<br>
+Fresh search started: 2026-06-23 · Sources: SUUMO, HOME'S, Yahoo不動産, nomu.com, 三井のリハウス, 東急リバブル, 住友不動産販売, Century21, athome</p>
+
+<div class="summary">
+  <h2>Market Context (as of June 2026)</h2>
+  <p><span class="red">Chuo-ku is out of budget.</span> Post-1982 1LDK+ condos start at ~6,000万. Same for Chiyoda-ku (7,000万+) and Minato-ku.</p>
+  <p><span class="green">Best hunting grounds: Sumida-ku, Katsushika-ku, Itabashi-ku.</span> Expect 2LDK in 32–65m² for 2,800–4,000万. Itabashi has good Mita Line access to Tokyo ~30min. Katsushika has Sobu Line and Keisei access.</p>
+  <p>Search loop active — new listings added automatically. <strong id="candidate-count">0 viable candidates found so far.</strong></p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-pass"></div> Passes all criteria</div>
+  <div class="legend-item"><div class="legend-dot dot-warn"></div> Borderline — investigate</div>
+  <div class="legend-item"><div class="legend-dot dot-fail"></div> Disqualified (shown for reference)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1e3a5f; border: 1px solid #3b82f6;"></div> Added today</div>
+</div>
+
+<div class="view-controls">
+  <span class="view-controls-label">View:</span>
+  <button class="view-btn active" id="btn-wards" onclick="showView('wards')">⊞ By ward</button>
+  <button class="view-btn" id="btn-price" onclick="showView('price')">↑ All · cheapest first</button>
+  <button class="view-btn" id="btn-fees" onclick="showView('fees')">↑ All · lowest fees first</button>
+  <button class="view-btn" id="btn-new" onclick="showView('new')">✦ New today</button>
+</div>
+
+<div id="global-view">
+  <div class="ward-title">All viable listings — <span id="global-sort-label" style="color:#4ade80;">sorted by price ↑</span></div>
+  <table id="global-table">
+    <tr>
+      <th>Ward</th><th>Name</th><th class="sortable" id="gh-price" onclick="showView('price')">Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th class="sortable" id="gh-fees" onclick="showView('fees')">Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+  </table>
+</div>
+
+<!-- ==================== SCOREBOARD ==================== -->
+<div id="scoreboard">
+  <h2>Ranked Shortlist</h2>
+  <p class="score-header" id="score-header">0 viable candidates · search in progress</p>
+  <!-- SCOREBOARD_ENTRIES_START -->
+  <!-- SCOREBOARD_ENTRIES_END -->
+</div>
+
+<!-- ==================== SUMIDA-KU ==================== -->
+<div class="ward" id="ward-sumida">
+  <div class="ward-title">Sumida-ku 墨田区 <span class="ward-count" id="count-sumida">0 viable</span></div>
+  <table id="table-sumida">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- SUMIDA_ROWS_START -->
+    <!-- SUMIDA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-sumida">No Sumida-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== KATSUSHIKA-KU ==================== -->
+<div class="ward" id="ward-katsushika">
+  <div class="ward-title">Katsushika-ku 葛飾区 <span class="ward-count" id="count-katsushika">0 viable</span></div>
+  <table id="table-katsushika">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- KATSUSHIKA_ROWS_START -->
+    <!-- KATSUSHIKA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-katsushika">No Katsushika-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== ITABASHI-KU ==================== -->
+<div class="ward" id="ward-itabashi">
+  <div class="ward-title">Itabashi-ku 板橋区 <span class="ward-count" id="count-itabashi">0 viable</span></div>
+  <table id="table-itabashi">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- ITABASHI_ROWS_START -->
+    <!-- ITABASHI_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-itabashi">No Itabashi-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== KOTO-KU ==================== -->
+<div class="ward" id="ward-koto">
+  <div class="ward-title">Koto-ku 江東区 <span class="ward-count" id="count-koto">0 viable</span></div>
+  <table id="table-koto">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- KOTO_ROWS_START -->
+    <!-- KOTO_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-koto">No Koto-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== EDOGAWA-KU ==================== -->
+<div class="ward" id="ward-edogawa">
+  <div class="ward-title">Edogawa-ku 江戸川区 <span class="ward-count" id="count-edogawa">0 viable</span></div>
+  <table id="table-edogawa">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- EDOGAWA_ROWS_START -->
+    <!-- EDOGAWA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-edogawa">No Edogawa-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== NERIMA-KU ==================== -->
+<div class="ward" id="ward-nerima">
+  <div class="ward-title">Nerima-ku 練馬区 <span class="ward-count" id="count-nerima">0 viable</span></div>
+  <table id="table-nerima">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- NERIMA_ROWS_START -->
+    <!-- NERIMA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-nerima">No Nerima-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== KITA-KU ==================== -->
+<div class="ward" id="ward-kita">
+  <div class="ward-title">Kita-ku 北区 <span class="ward-count" id="count-kita">0 viable</span></div>
+  <table id="table-kita">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- KITA_ROWS_START -->
+    <!-- KITA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-kita">No Kita-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== ARAKAWA-KU ==================== -->
+<div class="ward" id="ward-arakawa">
+  <div class="ward-title">Arakawa-ku 荒川区 <span class="ward-count" id="count-arakawa">0 viable</span></div>
+  <table id="table-arakawa">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- ARAKAWA_ROWS_START -->
+    <!-- ARAKAWA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-arakawa">No Arakawa-ku listings yet — search in progress.</p>
+</div>
+
+<script>
+function parsePrice(text) {
+  const m = (text || '').replace(/,/g, '').match(/(\d+)万/);
+  return m ? parseInt(m[1]) : 999999;
+}
+function parseFees(text) {
+  return parseInt((text || '').replace(/[^\d]/g, '')) || 999999;
+}
+
+function sortTableByCol(th, idx, parseFn) {
+  const table = th.closest('table');
+  const rows = [...table.querySelectorAll('tr')].filter(r => !r.querySelector('th'));
+  const goAsc = !th.classList.contains('sort-asc');
+  rows.sort((a, b) => {
+    const av = parseFn(a.cells[idx]?.textContent);
+    const bv = parseFn(b.cells[idx]?.textContent);
+    return goAsc ? av - bv : bv - av;
+  });
+  rows.forEach(r => table.appendChild(r));
+  table.querySelectorAll('th.sort-asc, th.sort-desc').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+  th.classList.add(goAsc ? 'sort-asc' : 'sort-desc');
+}
+
+function buildGlobalTable(key) {
+  const parseFn = key === 'fees' ? parseFees : parsePrice;
+  const srcIdx  = key === 'fees' ? 7 : 1;
+  const allRows = [];
+  document.querySelectorAll('.ward').forEach(ward => {
+    const titleEl = ward.querySelector('.ward-title');
+    const wardName = titleEl ? titleEl.childNodes[0].textContent.trim() : '';
+    const include = key === 'new'
+      ? ward.querySelectorAll('tr.new-listing')
+      : ward.querySelectorAll('tr.pass, tr.warn');
+    include.forEach(row => {
+      allRows.push({ row, wardName, sortVal: parseFn(row.cells[srcIdx]?.textContent) });
+    });
+  });
+  if (key !== 'new') allRows.sort((a, b) => a.sortVal - b.sortVal);
+
+  const table = document.getElementById('global-table');
+  [...table.querySelectorAll('tr:not(:first-child)')].forEach(r => r.remove());
+  allRows.forEach(({ row, wardName }) => {
+    const clone = row.cloneNode(true);
+    const wardTd = document.createElement('td');
+    wardTd.textContent = wardName;
+    wardTd.style.cssText = 'color:#93c5fd; white-space:nowrap; font-weight:500; font-size:0.78rem;';
+    clone.insertBefore(wardTd, clone.firstChild);
+    table.appendChild(clone);
+  });
+  ['gh-price','gh-fees'].forEach(id => {
+    const h = document.getElementById(id);
+    if (h) h.classList.remove('sort-asc','sort-desc');
+  });
+  if (key === 'price') document.getElementById('gh-price')?.classList.add('sort-asc');
+  if (key === 'fees')  document.getElementById('gh-fees')?.classList.add('sort-asc');
+  const labels = { price: 'sorted by price ↑', fees: 'sorted by monthly fees ↑', new: 'added today ✦' };
+  document.getElementById('global-sort-label').textContent = labels[key] || '';
+}
+
+function showView(view) {
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('btn-' + view);
+  if (btn) btn.classList.add('active');
+  const wardSections = document.querySelectorAll('.ward');
+  const globalView   = document.getElementById('global-view');
+  if (view === 'wards') {
+    wardSections.forEach(w => w.style.display = '');
+    globalView.style.display = 'none';
+  } else {
+    wardSections.forEach(w => w.style.display = 'none');
+    buildGlobalTable(view);
+    globalView.style.display = 'block';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Sortable headers
+  document.querySelectorAll('th').forEach(th => {
+    if (th.id && th.id.startsWith('gh-')) return;
+    const text = th.textContent.trim();
+    if (text === 'Price' || text === 'Fees/mo') {
+      th.classList.add('sortable');
+      th.title = "Click to sort this ward's table";
+      const idx = [...th.parentElement.children].indexOf(th);
+      const parseFn = text === 'Price' ? parsePrice : parseFees;
+      th.addEventListener('click', () => sortTableByCol(th, idx, parseFn));
+    }
+  });
+
+  // Hide empty-note when table has data rows
+  document.querySelectorAll('.ward').forEach(ward => {
+    const rows = ward.querySelectorAll('tr:not(:first-child)');
+    const emptyNote = ward.querySelector('.empty-note');
+    if (emptyNote) emptyNote.style.display = rows.length > 0 ? 'none' : '';
+  });
+
+  // Highlight today's new listings
+  const today = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('tr[data-added]').forEach(row => {
+    if (row.dataset.added !== today) return;
+    row.classList.add('new-listing');
+    const flagsCell = row.querySelector('td:last-child');
+    if (flagsCell) {
+      const badge = document.createElement('span');
+      badge.className = 'badge-new';
+      badge.textContent = 'NEW';
+      flagsCell.insertBefore(badge, flagsCell.firstChild);
+    }
+  });
+
+  // Highlight today's scoreboard entries
+  document.querySelectorAll('p[data-added]').forEach(p => {
+    if (p.dataset.added !== today) return;
+    p.classList.add('new-scoreboard-entry');
+    const badge = document.createElement('span');
+    badge.className = 'badge-new';
+    badge.textContent = 'NEW';
+    p.insertBefore(badge, p.firstChild);
+  });
+});
+</script>
+</body>
+</html>
