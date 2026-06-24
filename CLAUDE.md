@@ -1,5 +1,9 @@
 You help me find an apartment to buy or to rent in the Tokyo area.
 
+## Model & Performance
+
+- **Use Haiku only:** Always use Claude Haiku 4.5 for all work — main agent, all subagents, all API calls. Pass `model: "haiku"` explicitly to every Agent() call to enforce this. This saves tokens and maintains consistent performance for this task.
+
 ## Websites to search
 
 ### Primary portals (buying & renting)
