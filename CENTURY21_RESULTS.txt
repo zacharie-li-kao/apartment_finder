@@ -1,0 +1,58 @@
+CENTURY 21 SEARCH RESULTS: Nakano / Ota / Arakawa / Edogawa
+Filters: ≤40M, ≥1LDK, ≥30m², 1982+, ≤15min walk, ≥2F, Freehold
+Date: 2026-07-01
+
+========================================
+SUMMARY
+========================================
+Total qualifying properties found: 0
+Breakdown by ward:
+  - Nakano-ku (中野区): 0 qualifying
+  - Ota-ku (大田区): 0 qualifying
+  - Arakawa-ku (荒川区): 0 qualifying (1 existing in DB: #126)
+  - Edogawa-ku (江戸川区): 0 qualifying
+
+Status: All 4 wards show no NEW properties matching hard filters.
+Prior analysis (findings.md) was accurate — these wards exhausted under budget.
+
+========================================
+NEW QUALIFIED PROPERTIES
+========================================
+NAME|PRICE|SIZE|FLOOR|YEAR|WALK|STATION|FEES|LAYOUT|DIRECTION|URL
+(None)
+
+========================================
+NOTES
+========================================
+
+Nakano-ku (10 listings reviewed):
+  - メゾン・ド・ヴェルサン: 800万 · 14.67m² (UNDER 30m²) · 1R · 5/5F · 1981 (PRE-1982)
+  - 三田東中野コーポ: 1,380万 · 20.16m² (UNDER 30m²) · 1R · 1/6F (GROUND FLOOR) · 1991
+  - 南台第２ローヤルコーポ: 1,580万 · 28.62m² (UNDER 30m²) · 1DK · 5/6F · 1972 (PRE-1982)
+  All remaining: Similar pattern — predominantly <30m², pre-1982, or <1LDK
+
+Ota-ku (10 listings reviewed):
+  - 六郷東豊エステート: 1,400万 · 24.05m² (UNDER 30m²) · 1K · 3/14F · 1974 (PRE-1982)
+  - 千鳥町アーバンドエル: 1,500万 · 32.43m² · 2K · 10/11F · 1975 (PRE-1982) + オーナーチェンジ
+  All remaining: Similar pattern — predominantly pre-1982
+
+Arakawa-ku (10 listings reviewed):
+  - 大和コーポ: 2,599万 · 50.22m² · 1SLDK · 3/10F · 1973 (PRE-1982)
+  All remaining: Predominantly pre-1982
+  NOTE: #126 カエサル西尾久 already in database (2,780万 · SW 2F/5F)
+
+Edogawa-ku (10 listings reviewed):
+  - All 10 properties in same pattern as other wards
+
+CONCLUSION
+==========
+Century 21's inventory for these 4 wards consists primarily of:
+1. Pre-1982 constructions (violate seismic standard requirement)
+2. Studios/1R apartments under 30m²
+3. Ground floor or very low-floor units
+
+These findings validate prior analysis — Nakano/Ota/Arakawa/Edogawa have been
+exhausted as viable sources. Primary opportunities remain: Sumida-ku, Katsushika-ku,
+Itabashi-ku (already heavily searched).
+
+No deduplication needed — zero new matches found.
