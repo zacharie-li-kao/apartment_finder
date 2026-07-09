@@ -1,0 +1,24 @@
+[DEBUG] Sample of loaded listings: ['カエサル西尾久', 'グリーンパーク立石', '晴紀館', '東糀谷ダイヤモンドマンション', 'ランドステージ墨田ブライトスクエア']
+[INFO] Loaded 22 existing listings for deduplication
+
+========================================================================================================================
+SECONDARY WARDS EXHAUSTIVE SCAN - CORRECTED
+========================================================================================================================
+Start: 2026-07-09 14:48:17.500276
+Criteria: ¥1.5M-¥40M | 30m²+ | 1LDK+ | 1982+ | ≤15min walk | 2F+ | ≤¥30k fees | FREEHOLD ONLY
+Existing DB: 22 listings
+Portals: SUUMO (curl) + Rehouse (full pagination)
+Wards: Nakano, Arakawa, Edogawa, Ota, Nerima, Chuo, Minato
+
+
+Arakawa:
+  [SUUMO] Arakawa... 31 qualified
+  [Rehouse] Arakawa... 0 qualified
+
+Chuo:
+  [SUUMO] Chuo... 2 qualified
+  [Rehouse] Chuo... 0 qualified
+
+Edogawa:
+  [SUUMO] Edogawa... 0 qualified
+  [Rehouse] Edogawa...
