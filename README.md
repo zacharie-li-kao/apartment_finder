@@ -3,6 +3,10 @@
 Automated hourly search for a flat to buy in Tokyo, ranked against the criteria in
 `CLAUDE.md`. Open **`index.html`** — that is the whole product.
 
+If your stars and discards do not survive a reload when you open the file
+directly, run **`open.bat`** instead: it serves the same page at
+`http://127.0.0.1:8777` and browser storage is guaranteed to stick there.
+
 ## Files
 
 | File | What it is |
@@ -15,12 +19,16 @@ Automated hourly search for a flat to buy in Tokyo, ranked against the criteria 
 | `build.py` | Turns `db.json` into `index.html`. |
 | `run.py` | One full cycle: scan → gems → build → append to `watch.log`. |
 | `watch.bat` | What the hourly scheduled task runs. |
+| `open.bat` | Opens the report over `http://127.0.0.1:8777` (guaranteed storage). |
 | `watch.log` | One line per cycle plus any new/changed/delisted listings. |
 | `archive/` | Everything from the previous three search campaigns. |
 
 ## The hourly loop
 
 A Windows scheduled task named `TokyoApartmentWatch` runs `watch.bat` every hour.
+It runs under your interactive session, so it only fires while you are logged in,
+and it is set to `IgnoreNew` — a cycle that overruns will never collide with the
+next one.
 
 ```
 schtasks /Query  /TN "TokyoApartmentWatch"     # check it
@@ -28,9 +36,17 @@ schtasks /Run    /TN "TokyoApartmentWatch"     # run now
 schtasks /Delete /TN "TokyoApartmentWatch" /F  # stop it
 ```
 
-Each cycle re-checks every ward, fetches detail pages only for listings it has
-never seen, marks vanished listings as delisted, records price changes, and
-rewrites `index.html`.
+A cycle takes about **19 minutes**, so it always finishes well before the next
+one starts. It re-checks every ward, fetches detail pages only for listings it
+has never seen, records price changes, and rewrites `index.html`.
+
+Delisting is deliberately cautious. SUUMO throttles and reshuffles its listing
+ids, so a ward whose pages failed to fetch is skipped entirely, and a listing is
+only marked sold after it has been missing from **two consecutive** clean scans.
+A single absence proves nothing.
+
+If a scraper fails outright, the `watch.log` line for that cycle starts with
+`!! FAILED:` — the report is never allowed to shrink silently.
 
 ## Starring and discarding
 
@@ -66,10 +82,23 @@ ignored, which is how SUUMO makes far-out flats look close.
 
 ## Coverage and known gaps
 
-Covered: SUUMO (the bulk of the market), Nomura Real Estate (nomu.com), and
-Mitsui Rehouse — the last two often list a unit before it syndicates to portals.
+**Covered:** SUUMO (the bulk of the market), Nomura Real Estate (nomu.com) and
+Mitsui Rehouse. The last two are agency-direct and often list a unit before it
+syndicates to the portals — the "hidden gem" layer. Each card shows its source,
+and the source dropdown filters by it.
 
-Not covered yet: at-home and Yahoo! Real Estate render their result lists in
-JavaScript and block plain HTTP scraping, so they need browser automation.
-LIFULL HOME'S sits behind AWS WAF. Adding these means driving a real browser on
-a slower schedule — worth doing if the current sources go quiet.
+**Probed and not usable over plain HTTP** (all would need a scripted browser):
+
+| Site | What happens |
+|---|---|
+| at-home | Result list rendered client-side by Angular; HTML has only the filter widgets |
+| Yahoo! Real Estate | 403 |
+| LIFULL HOME'S | Page loads but sits behind AWS WAF |
+| Tokyu Livable | Search is JavaScript-driven; no listings in the HTML |
+| Sumitomo (stepon) | 403 |
+| Century 21 | 404 on the ward-list URL; no stable server-rendered scheme found |
+| sumai-surfin | 403 |
+| major7 (new builds) | Server-rendered, but new-build pre-sales only — not yet wired in |
+
+Adding any of these means driving a real browser on a slower schedule. Worth
+doing if SUUMO and the two agency sites go quiet.

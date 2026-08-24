@@ -275,13 +275,13 @@ def main():
     now = datetime.now(JST).isoformat(timespec="seconds")
     total = 0
     for label, fn in SOURCES:
-        rows = []
+        rows, ok = [], True
         for sc in WARDS:
             try:
                 r = fn(sc)
             except Exception as e:
                 print(f"  {label}/{WARDS[sc][0]}: {e}", flush=True)
-                r = []
+                r, ok = [], False
             rows += r
         print(f"{label:<9} {len(rows):>4} in scope", flush=True)
         for r in rows:
@@ -292,6 +292,20 @@ def main():
             merged["gone"] = False
             db[r["id"]] = scan.evaluate(merged)
         total += len(rows)
+        # only sweep for delistings when every ward of this source came back clean,
+        # otherwise a transient failure would wipe the source from the report
+        src_name = rows[0]["source"] if rows else None
+        if ok and rows:
+            live = {r["id"] for r in rows}
+            for k, v in db.items():
+                if v.get("source") != src_name:
+                    continue
+                if k in live:
+                    v["misses"] = 0
+                    v["gone"] = False
+                else:
+                    v["misses"] = v.get("misses", 0) + 1
+                    v["gone"] = v["misses"] >= 2
 
     json.dump(db, open(DB, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"gems: +{total} records merged; db now {len(db)}")

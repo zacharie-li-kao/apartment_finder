@@ -231,9 +231,8 @@ def evaluate(r):
         warn.append("Possible floor-area-ratio overage")
     if fees > 30000:
         kill.append(f"Fees ¥{fees:,}/mo (>30,000)")
-    if re.match(r"^[123456]?[KRD]$|^1K$|^1R$|^ワンルーム", layout) or layout in (
-            "1K", "1R", "1DK", "2K", "ワンルーム"):
-        kill.append(f"Layout {layout} (below 1LDK)")
+    if layout and "L" not in layout:
+        kill.append(f"Layout {layout} — no separate living room (below 1LDK)")
     if r.get("direction") == "N":
         kill.append("North-facing only")
     if P and P > 4000:
@@ -312,13 +311,18 @@ def evaluate(r):
 
 # ------------------------------------------------------------------ main ----
 def scan_ward(sc, max_pages=25):
+    """Returns (rows, complete).  complete is False when any page failed to
+    fetch — SUUMO throttles, and a truncated ward must never be read as
+    'these listings are gone'."""
     name = WARDS[sc][0]
     found, seen_ids = [], set()
+    complete = True
     for page in range(1, max_pages + 1):
         url = LIST_URL.format(sc=sc, kt=MAX_PRICE_MAN, mb=int(MIN_AREA),
                               et=9999999, page=page)
         h = get(url)
         if not h:
+            complete = False
             break
         rows = parse_list(h, name)
         if not rows:
@@ -344,8 +348,9 @@ def scan_ward(sc, max_pages=25):
         if len(rows) < 50:
             break
         time.sleep(random.uniform(0.6, 1.2))
-    print(f"  {name:<11} {len(found):>4} listings", flush=True)
-    return found
+    print(f"  {name:<11} {len(found):>4} listings"
+          f"{'' if complete else '  (INCOMPLETE — page fetch failed)'}", flush=True)
+    return found, complete
 
 
 def main():
@@ -356,10 +361,13 @@ def main():
     now = datetime.now(JST).isoformat(timespec="seconds")
 
     print("Scanning SUUMO...", flush=True)
-    listings = []
+    listings, complete_wards = [], set()
     for sc in only:
         if sc in WARDS:
-            listings += scan_ward(sc)
+            rows, ok = scan_ward(sc)
+            listings += rows
+            if ok:
+                complete_wards.add(sc)
 
     live = {r["id"] for r in listings}
     fresh = [r for r in listings if r["id"] not in db]
@@ -388,10 +396,18 @@ def main():
                     {"date": now[:10], "from": old["price"], "to": np_})
         db[r["id"]] = evaluate(merged)
 
-    # mark disappeared listings from wards we just scanned
+    # Mark disappeared listings — but only in wards that scanned cleanly, and
+    # only after two consecutive misses.  SUUMO reshuffles ids and throttles,
+    # so a single absence is not evidence a flat has sold.
     for k, v in db.items():
-        if v.get("ward_code") in only and k not in live:
-            v["gone"] = True
+        if v.get("source") or v.get("ward_code") not in complete_wards:
+            continue
+        if k in live:
+            v["misses"] = 0
+            v["gone"] = False
+        else:
+            v["misses"] = v.get("misses", 0) + 1
+            v["gone"] = v["misses"] >= 2
 
     json.dump(db, open(DB, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     act = [v for v in db.values() if not v.get("gone")]

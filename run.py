@@ -20,11 +20,16 @@ def snapshot():
 
 def main():
     before = snapshot()
+    failed = []
     for script in ("scan.py", "scan_gems.py"):
         p = os.path.join(HERE, script)
-        if os.path.exists(p):
-            subprocess.run([PY, "-u", p], cwd=HERE, env=ENV)
-    subprocess.run([PY, "-u", os.path.join(HERE, "build.py")], cwd=HERE, env=ENV)
+        if not os.path.exists(p):
+            continue
+        if subprocess.run([PY, "-u", p], cwd=HERE, env=ENV).returncode:
+            failed.append(script)
+    if subprocess.run([PY, "-u", os.path.join(HERE, "build.py")],
+                      cwd=HERE, env=ENV).returncode:
+        failed.append("build.py")
 
     db = json.load(open(os.path.join(HERE, "db.json"), encoding="utf-8"))
     new, moved, gone = [], [], []
