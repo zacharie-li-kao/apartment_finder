@@ -1,0 +1,30 @@
+[INFO] Loaded 22 existing listings for deduplication
+
+========================================================================================================================
+SECONDARY WARDS EXHAUSTIVE PAGINATION SCAN - FINAL
+========================================================================================================================
+Start: 2026-07-09 13:19:27.976721
+Criteria: ¥1.5M-¥40M | 30m²+ | 1LDK+ | 1982+ | ≤15min walk | 2F+ | ≤¥30k fees | Freehold
+Existing DB: 22 listings
+Wards: Nakano, Arakawa, Edogawa, Ota, Nerima, Chuo, Minato
+
+
+Arakawa:
+  [SUUMO] Arakawa... 10 qualified
+  [Rehouse] Arakawa... 0 qualified
+
+Chuo:
+  [SUUMO] Chuo... 1 qualified
+  [Rehouse] Chuo... 0 qualified
+
+Edogawa:
+  [SUUMO] Edogawa... 14 qualified
+  [Rehouse] Edogawa... 0 qualified
+
+Minato:
+  [SUUMO] Minato... 6 qualified
+  [Rehouse] Minato... 8 qualified
+
+Nakano:
+  [SUUMO] Nakano... 10 qualified
+  [Rehouse] Nakano...

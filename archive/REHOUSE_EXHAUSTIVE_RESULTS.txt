@@ -1,0 +1,7 @@
+REHOUSE EXHAUSTIVE SWEEP RESULTS
+Generated: 2026-07-01 12:15:53
+================================================================================
+
+Total new viable candidates: 0
+Total duplicates rejected: 7
+

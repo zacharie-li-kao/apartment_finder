@@ -1,0 +1,26 @@
+VERIFICATION TEST — Sample of 2 SUUMO + 2 HOME'S
+
+
+45. サンハイツ泉町 (Itabashi)
+   Database: 2,950万 · ¥19,056/mo
+   URL: https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20534890/
+   Status: ✓ Active
+   Current price: 2950万 (DB: 2,950万)
+   Price: ✓ Price OK
+
+14. センチュリーハイツ赤羽西 (Kita)
+   Database: 3,399万 · ¥23,400/mo
+   URL: https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_20137923/
+   Status: ✓ Active
+   Current price: 3399万 (DB: 3,399万)
+   Price: ✓ Price OK
+
+98. 東大島ハイライズ (Koto)
+   Database: 4,480万 · ¥16,870/mo
+   URL: https://www.homes.co.jp/mansion/b-1481420000454/
+   Status: ⚠ Unable to fetch (HOME'S may be WAF-blocked)
+
+4. ランドステージ墨田ブライトスクエア (Sumida)
+   Database: 3,980万 · ¥29,000/mo
+   URL: https://www.homes.co.jp/mansion/b-1453310000097/
+   Status: ⚠ Unable to fetch (HOME'S may be WAF-blocked)

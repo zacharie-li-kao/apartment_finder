@@ -1,0 +1,102 @@
+SUUMO SEARCH: Itabashi + Taito, Page 1
+Filters: ≤40M, ≥1LDK, ≥30m², 1982+, ≤15min walk, not 1F, not N-only, Freehold
+
+====================================================================================================================================================================================
+QUALIFIED PROPERTIES:
+====================================================================================================================================================================================
+NAME|PRICE|SIZE|FLOOR|YEAR|WALK|STATION|FEES|LAYOUT|DIRECTION|URL
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+====================================================================================================================================================================================
+DISQUALIFIED PROPERTIES:
+====================================================================================================================================================================================
+20382410 (Year < 1982):
+ライオンズマンション赤塚|24.8M|41.08m²|N/AF|1973|5min|地下鉄赤塚|10|2DK+S|南東|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20382410/
+
+20646695 (1F or no floor):
+N/A|34.8M|45.74m²|N/AF|1998|14min|下赤塚|10|3K|南西|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20646695/
+
+20721040 (1F or no floor):
+メゾン蓮根|24.8M|48.19m²|N/AF|1982|10min|蓮根|10|2LDK|東|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20721040/
+
+20750546 (Year < 1982):
+N/A|23.8M|43.9m²|N/AF|1969|8min|中板橋|10|1LDK|南西|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20750546/
+
+20767618 (Year < 1982):
+N/A|21.8M|49.87m²|N/AF|1975|13min|上板橋|10|2LDK|西|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20767618/
+
+20824806 (Year < 1982):
+クオリティ大山|34.0M|51.12m²|N/AF|1980|8min|大山|10|2LDK|南西|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20824806/
+
+20877455 (Year < 1982):
+第２高島平サニーコーポ|16.8M|36.81m²|N/AF|1981|5min|西台|10|2DK|南|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20877455/
+
+20955392 (Year < 1982):
+若木ローヤルコーポ|17.8M|36.54m²|N/AF|1975|6min|上板橋|10|1LDK|南西|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20955392/
+
+20955440 (Year < 1982):
+エルムコーポ西台|24.8M|53.09m²|N/AF|1981|11min|西台|10|3LDK|北|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20955440/
+
+21009151 (Year < 1982):
+リリオ西台|27.9M|47.49m²|N/AF|1977|2min|西台|10|2LDK|南|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21009151/
+
+21025825 (Year < 1982):
+ハイツ要町|34.8M|70.43m²|N/AF|1973|12min|要町|10|2LDK|南東|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21025825/
+
+21087425 (Year < 1982):
+N/A|26.8M|58.06m²|N/AF|1978|6min|蓮根|10|2LDK|北西|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21087425/
+
+21087426 (Year < 1982):
+サンライフマンション|14.8M|30.82m²|N/AF|1978|6min|蓮根|10|1DK|北西|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21087426/
+
+21101829 (Year < 1982):
+N/A|28.0M|42.72m²|N/AF|1978|10min|大山|10|1LDK|南|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21101829/
+
+21128735 (Year < 1982):
+シーボン志村坂上|24.8M|51.66m²|N/AF|1979|6min|志村坂上|10|1LDK|南東|https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21128735/
+
+20089855 (Over 40M):
+ウィンベルコーラス浅草|44.8M|45.88m²|N/AF|1991|13min|浅草|10|2DK|北西|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20089855/
+
+20226335 (Over 40M):
+N/A|43.8M|25.45m²|N/AF|2021|5min|入谷|10|1K|東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20226335/
+
+20318883 (Over 40M):
+N/A|51.0M|45.88m²|N/AF|1991|13min|浅草|10|2DK|北西|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20318883/
+
+20376620 (Over 40M):
+上野ロイヤルハイツ|47.9M|50.96m²|N/AF|1982|1min|入谷|10|2LDK|南東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20376620/
+
+20403661 (Over 40M):
+ライジングプレイス浅草弐番館|51.8M|41.66m²|N/AF|2008|8min|三ノ輪|10|1LDK|北東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20403661/
+
+20493889 (Year < 1982):
+N/A|33.0M|43.53m²|N/AF|1975|9min|入谷|10|2LDK|南東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20493889/
+
+20660596 (Over 40M):
+フォースター浅草今戸|47.0M|50.19m²|N/AF|2015|15min|浅草|10|1LDK|北東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20660596/
+
+20715525 (Over 40M):
+N/A|51.8M|41.66m²|N/AF|2008|8min|三ノ輪|10|1LDK|北東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20715525/
+
+20749811 (Over 40M):
+日神デュオステージ新御徒町|45.8M|30.44m²|N/AF|2008|4min|新御徒町|10|1DK+S|西|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20749811/
+
+20779797 (Over 40M):
+N/A|41.8M|66.67m²|N/AF|1982|18min|南千住|10|2DK+S|東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20779797/
+
+20812540 (Over 40M):
+N/A|51.8M|50.6m²|N/AF|1979|17min|浅草|10|1LDK+S|北西|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20812540/
+
+20962182 (Over 40M):
+N/A|45.8M|38.8m²|N/AF|1978|5min|田原町|10|1LDK|南東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20962182/
+
+20967987 (Over 40M):
+N/A|44.8M|40.68m²|N/AF|2019|15min|三ノ輪|10|1LDK|西|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_20967987/
+
+21005654 (1F or no floor):
+N/A|29.8M|31.95m²|N/AF|1988|11min|浅草|10|1DK|北西|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_21005654/
+
+21067425 (1F or no floor):
+N/A|37.0M|41.82m²|N/AF|1985|2min|入谷|10|1K|南東|https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_21067425/
+

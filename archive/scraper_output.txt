@@ -1,0 +1,35 @@
+[INFO] Loaded 155 existing listings
+
+================================================================================
+OPTIMIZED NOMU SCRAPER - All Wards, All Pages
+================================================================================
+
+Arakawa:
+  Pg 1: qualified: 5
+  Pg 2: qualified: 7
+  Pg 3: qualified: 0
+  Pg 4: qualified: 0
+  Pg 5: qualified: 0
+  Pg 6: qualified: 0
+  Pg 7: qualified: 0
+  Pg 8: qualified: 0
+  Pg 9: qualified: 0
+  Pg 10: qualified: 0
+  Pg 11: qualified: 0
+  Pg 12: qualified: 0
+  Pg 13: qualified: 0
+  Pg 14: qualified: 0
+  Pg 15: qualified: 0
+  Pg 16: qualified: 0
+  Pg 17: qualified: 0
+  Pg 18: qualified: 0
+  Pg 19: qualified: 0
+  Pg 20: qualified: 0
+
+Chuo:
+  Pg 1: qualified: 14
+  Pg 2: qualified: 12
+  Pg 3: qualified: 9
+  Pg 4: qualified: 13
+  Pg 5: qualified: 16
+  Pg 6: 

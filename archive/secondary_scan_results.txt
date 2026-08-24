@@ -1,0 +1,58 @@
+[INFO] Loaded 22 existing listings for deduplication
+
+========================================================================================================================
+SECONDARY WARDS EXHAUSTIVE PAGINATION SCAN
+========================================================================================================================
+Start: 2026-07-09 13:07:33.596962
+Criteria: ¥1.5M-¥40M | 30m²+ | 1LDK+ | 1982+ | ≤15min walk | 2F+ | ≤¥30k fees | Freehold
+Existing DB: 22 listings
+Wards: Nakano, Arakawa, Edogawa, Ota, Nerima, Chuo, Minato
+
+
+Arakawa:
+  [SUUMO] Arakawa... 0 qualified
+  [Rehouse] Arakawa... 0 qualified
+
+Chuo:
+  [SUUMO] Chuo... 0 qualified
+  [Rehouse] Chuo... 0 qualified
+
+Edogawa:
+  [SUUMO] Edogawa... 0 qualified
+  [Rehouse] Edogawa... 0 qualified
+
+Minato:
+  [SUUMO] Minato... 0 qualified
+  [Rehouse] Minato... 8 qualified
+
+Nakano:
+  [SUUMO] Nakano... 0 qualified
+  [Rehouse] Nakano... 0 qualified
+
+Nerima:
+  [SUUMO] Nerima... 0 qualified
+  [Rehouse] Nerima... 0 qualified
+
+Ota:
+  [SUUMO] Ota... 0 qualified
+  [Rehouse] Ota... 0 qualified
+
+========================================================================================================================
+SCAN COMPLETE
+Total new qualified candidates: 8
+End: 2026-07-09 14:03:45.417479
+
+RESULTS BY WARD:
+
+
+Minato (8 candidates):
+Ward | Name | Price | Size | Layout | Floor | Year | Walk | Station | Fees | Direction
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Minato | THE ROPPONGI TOKYOの物件情報（F15BFA06）｜三井のリハウ | ¥180M | 160m² | 3LDK | 39F | 2011 | 3min | 月築向き南西おすすめポイント物件情報取扱店舗交通東京メトロ日比谷線 六本木駅 徒歩 | ? | 南西
+Minato | 三田ガーデンヒルズ パークマンションの物件情報（F40BTA0C）｜三井のリハウ | ¥216M | 163m² | 3LDK | 10F | 2024 | 7min | 月築向き北おすすめポイント物件情報取扱店舗交通東京メトロ南北線 麻布十番駅 徒歩 | ? | 南
+Minato | ザ・レジデンス六本木の物件情報（FSABBA08）｜三井のリハウス | ¥160M | 162m² | 3LDK | 18F | 2019 | 3min | 月築向き南おすすめポイント物件情報取扱店舗交通東京メトロ南北線 六本木一丁目駅 徒歩 | ? | 南東
+Minato | 三田ガーデンヒルズ パークマンションの物件情報（F15BBA06）｜三井のリハウ | ¥220M | 161m² | 3LDK | 11F | 2024 | 7min | 月築向き南おすすめポイント物件情報取扱店舗交通東京メトロ南北線 麻布十番駅 徒歩 | ? | 南
+Minato | パークコート麻布十番ザタワーの物件情報（F40AGA4B）｜三井のリハウス | ¥165M | 162m² | 3LDK | 36F | 2010 | 3min | 月築向き北東おすすめポイント物件情報取扱店舗交通東京メトロ南北線 麻布十番駅 徒歩 | ? | 北東
+Minato | 三田ガーデンヒルズ パークマンションの物件情報（F15ASA02）｜三井のリハウ | ¥160M | 145m² | 3LDK | 10F | 2024 | 7min | 月築向き北おすすめポイント物件情報取扱店舗交通東京メトロ南北線 麻布十番駅 徒歩 | ? | 南
+Minato | 三田ガーデンヒルズ パークマンションの物件情報（FW9APA18）｜三井のリハウ | ¥162M | 158m² | 3LDK | 11F | 2024 | 7min | 月築向き北おすすめポイント物件情報取扱店舗交通東京メトロ南北線 麻布十番駅 徒歩 | ? | 南
+Minato | ブランズ六本木 ザ・レジデンスの物件情報（F5EBDA17）｜三井のリハウス | ¥160M | 183m² | 2LDK | 4F | 2019 | 3min | 月築向き北西おすすめポイント物件情報周辺情報取扱店舗交通東京メトロ日比谷線 六本木駅 徒歩 | ? | 北西

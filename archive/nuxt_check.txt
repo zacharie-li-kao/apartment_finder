@@ -1,0 +1,2 @@
+Page uses Nuxt
+Found __NUXT_DATA__ script

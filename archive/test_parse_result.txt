@@ -1,0 +1,3 @@
+direction: 西
+floor: 4階 / 地上8階建
+year: 1996年09月築

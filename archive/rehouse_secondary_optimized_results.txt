@@ -1,0 +1,31 @@
+[INFO] Loaded 22 existing listings
+
+==============================================================================================================
+SECONDARY WARDS OPTIMIZED SCAN - REHOUSE
+==============================================================================================================
+Start: 2026-07-09 13:35:36.216119
+Criteria: ¥1.5M-¥40M | 30m²+ | 1LDK+ | 1982+ | ≤15min walk | 2F+ | ≤¥30k fees
+Existing DB: 22 listings
+Strategy: Strategic page sampling (first 3, middle samples, last pages)
+Wards: Nakano, Arakawa, Edogawa, Ota, Nerima, Chuo, Minato
+
+  Arakawa: 2 pages detected (fetching 2 pages: [1, 2]) ✓ 0 qualified
+  Chuo: 18 pages detected (fetching 8 pages: [1, 2, 3, 6, 9, 12, 17, 18]) ✓ 0 qualified
+  Edogawa: 4 pages detected (fetching 3 pages: [1, 2, 3]) ✓ 0 qualified
+  Minato: 26 pages detected (fetching 8 pages: [1, 2, 3, 8, 12, 17, 25, 26]) ✓ 1 qualified
+  Nakano: 5 pages detected (fetching 3 pages: [1, 2, 3]) ✓ 0 qualified
+  Nerima: 6 pages detected (fetching 5 pages: [1, 2, 3, 5, 6]) ✓ 0 qualified
+  Ota: 6 pages detected (fetching 5 pages: [1, 2, 3, 5, 6]) ✓ 0 qualified
+
+==============================================================================================================
+SCAN COMPLETE
+Total new qualified candidates: 1
+End: 2026-07-09 13:59:39.361535
+
+RESULTS BY WARD:
+
+
+Minato (1 candidates):
+Name | Price | Size | Layout | Floor | Year | Walk | Station | Fees | Direction
+----------------------------------------------------------------------------------------------------------------------------------
+ブランズ六本木 ザ・レジデンスの物件情報（F5EBDA17）｜三 | ¥160M | 183m² | 2LDK    | 4F   | 2019 | 3m    | 月築向き北西おすすめポイント物件 | ?       | 北西

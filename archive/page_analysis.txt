@@ -1,0 +1,4 @@
+mansion-item count: 0
+list-item count: 13
+__NUXT_DATA__: True
+itemListElement: True

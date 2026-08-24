@@ -1,0 +1,72 @@
+Found at position 94512
+Context:
+href="https://www.rehouse.co.jp/buy/mansion/prefecture/13/city/13107/?page=2"><script type="application/ld+json" data-hid="productList">{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "Product",
+        "name": "ロイヤルステージ菊川",
+        "image": [
+          "https://img2-direct.miraie-net.com/org/20015_21797/13/1534449/384975207.jpg"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "url": "https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA6B/",
+          "priceCurrency": "JPY",
+          "price": "76990000",
+          "itemCondition": "https://schema.org/UsedCondition",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "Product",
+        "name": "ハイシティ両国第2",
+        "image": [
+          "https://img2-direct.miraie-net.com/org/20015_21797/13/1541869/384571226.jpg"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "url": "https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA6C/",
+          "priceCurrency": "JPY",
+          "price": "65800000",
+          "itemCondition": "https://schema.org/UsedCondition",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "Product",
+        "name": "ヴェレーナ森下リグレ",
+        "image": [
+          "https://img2-direct.miraie-net.com/org/20015_21797/13/1535502/384512271.jpg"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "url": "https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA6D/",
+          "priceCurrency": "JPY",
+          "price": "129800000",
+          "itemCondition": "https://schema.org/UsedCondition",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "item": {
+        "@type": "Product",
+        "name": "東急ドエル・アルス向島",
+        "image": [
+          "https://img2-direct.miraie-net.com/org/20015_21797/13/1459197/384516763.jpg"
+       

@@ -1,0 +1,12 @@
+Found itemListElement. Length: 244
+First 3000 chars:
+
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "Product",
+        "name": "ロイヤルステージ菊川",
+        "image": [
+          "https://img2-direct.miraie-net.com/org/20015_21797/13/1534449/384975207.jpg"
+        

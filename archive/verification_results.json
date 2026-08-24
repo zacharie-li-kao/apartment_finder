@@ -1,0 +1,254 @@
+[
+  {
+    "index": 1,
+    "name": "モアステージ隅田",
+    "price": "2380万円",
+    "floor": 3,
+    "fees": 16530,
+    "ownership": "借地権",
+    "direction": "東",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 2,
+    "name": "ビィ・フォルマ亀戸",
+    "price": "3980万円",
+    "floor": null,
+    "fees": null,
+    "ownership": null,
+    "direction": null,
+    "status": null,
+    "verdict": "❌ DATA NOT FOUND",
+    "reasons": [
+      "Unable to fetch or find listing"
+    ]
+  },
+  {
+    "index": 3,
+    "name": "ビィ・フォルマ亀戸",
+    "price": "3980万円",
+    "floor": null,
+    "fees": null,
+    "ownership": null,
+    "direction": null,
+    "status": null,
+    "verdict": "❌ DATA NOT FOUND",
+    "reasons": [
+      "Unable to fetch or find listing"
+    ]
+  },
+  {
+    "index": 4,
+    "name": "ＮＩＣアーバンハイム亀戸",
+    "price": "3990万円",
+    "floor": null,
+    "fees": null,
+    "ownership": null,
+    "direction": null,
+    "status": null,
+    "verdict": "❌ DATA NOT FOUND",
+    "reasons": [
+      "Unable to fetch or find listing"
+    ]
+  },
+  {
+    "index": 5,
+    "name": "サンシャインハイツ",
+    "price": "3290万円",
+    "floor": 6,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "東",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 6,
+    "name": "大島ロイヤルマンション",
+    "price": "3380万円",
+    "floor": 2,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "北",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 7,
+    "name": "ツインシティ壱番館エトランズ東砂",
+    "price": "3490万円",
+    "floor": 8,
+    "fees": 10600,
+    "ownership": "借地権",
+    "direction": "南",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 8,
+    "name": "ツインシティ東砂アネックス",
+    "price": "3980万円",
+    "floor": 2,
+    "fees": 7420,
+    "ownership": "借地権",
+    "direction": "南",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 9,
+    "name": "グリーンパーク第2南綾瀬602号室",
+    "price": "2699万円",
+    "floor": null,
+    "fees": null,
+    "ownership": null,
+    "direction": null,
+    "status": null,
+    "verdict": "❌ DATA NOT FOUND",
+    "reasons": [
+      "Unable to fetch or find listing"
+    ]
+  },
+  {
+    "index": 10,
+    "name": "ライオンズマンション柴又",
+    "price": "2980万円",
+    "floor": 2,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "東",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 11,
+    "name": "ネオコーポ金町",
+    "price": "2980万円",
+    "floor": 4,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "東",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 12,
+    "name": "NICアーバンハイム四つ木第２",
+    "price": "3100万円",
+    "floor": 2,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "西",
+    "status": "居住中",
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 13,
+    "name": "ライオンズマンション綾瀬",
+    "price": "3580万円",
+    "floor": null,
+    "fees": null,
+    "ownership": null,
+    "direction": null,
+    "status": null,
+    "verdict": "❌ DATA NOT FOUND",
+    "reasons": [
+      "Unable to fetch or find listing"
+    ]
+  },
+  {
+    "index": 14,
+    "name": "GSハイム第二金町",
+    "price": "3790万円",
+    "floor": 7,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "南",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 15,
+    "name": "コスモ西亀有",
+    "price": "3790万円",
+    "floor": 2,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "西",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 16,
+    "name": "新小岩パーク・ホームズ",
+    "price": "3890万円",
+    "floor": 5,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "南",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  },
+  {
+    "index": 17,
+    "name": "ニックハイム渋江公園",
+    "price": "3980万円",
+    "floor": null,
+    "fees": null,
+    "ownership": null,
+    "direction": null,
+    "status": null,
+    "verdict": "❌ DATA NOT FOUND",
+    "reasons": [
+      "Unable to fetch or find listing"
+    ]
+  },
+  {
+    "index": 18,
+    "name": "ディナ・スカーラお花茶屋",
+    "price": "3980万円",
+    "floor": 3,
+    "fees": null,
+    "ownership": "借地権",
+    "direction": "東",
+    "status": null,
+    "verdict": "✗ FAIL",
+    "reasons": [
+      "Ownership: 借地権"
+    ]
+  }
+]

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apartment Shortlist — Ranked</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #0f1117; color: #e2e8f0; margin: 0; padding: 20px 16px 60px; max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+  h1 { font-size: 1.5rem; color: #f0f4ff; margin-bottom: 4px; }
+  .subtitle { color: #64748b; font-size: 0.88rem; margin-bottom: 8px; }
+  .scoring-note { background: #1e2130; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 8px; margin-bottom: 32px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; }
+  .scoring-note strong { color: #fcd34d; }
+
+  /* Cards */
+  .card { background: #141824; border: 1px solid #232840; border-radius: 12px; margin-bottom: 20px; overflow: hidden; transition: border-color 0.15s; }
+  .card:hover { border-color: #3b4a70; }
+  .card.flag-red { border-left: 4px solid #ef4444; }
+  .card.flag-yellow { border-left: 4px solid #f59e0b; }
+  .card.flag-green { border-left: 4px solid #22c55e; }
+
+  /* Card header */
+  .card-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px 14px; border-bottom: 1px solid #1e2438; }
+  .rank-badge { flex-shrink: 0; width: 52px; height: 52px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; }
+  .rank-badge .rank-num { font-size: 1.35rem; line-height: 1; }
+  .rank-badge .rank-score { font-size: 0.65rem; color: rgba(255,255,255,0.7); margin-top: 1px; }
+  .score-s { background: linear-gradient(135deg, #065f46, #059669); }
+  .score-a { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
+  .score-b { background: linear-gradient(135deg, #92400e, #d97706); }
+  .score-c { background: linear-gradient(135deg, #4c0519, #be123c); }
+  .score-d { background: linear-gradient(135deg, #27272a, #52525b); }
+
+  .card-title-block { flex: 1; min-width: 0; }
+  .card-name { font-size: 1.05rem; font-weight: 700; color: #e2e8f0; margin: 0 0 3px; }
+  .card-location { font-size: 0.8rem; color: #94a3b8; }
+  .card-price { flex-shrink: 0; text-align: right; }
+  .price-main { font-size: 1.2rem; font-weight: 800; color: #4ade80; }
+  .price-over { color: #f87171; }
+  .price-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+
+  /* Score bar */
+  .score-bar-wrap { padding: 8px 20px 0; }
+  .score-bar-bg { background: #1a1f35; border-radius: 4px; height: 6px; }
+  .score-bar-fill { height: 6px; border-radius: 4px; transition: width 0.4s; }
+
+  /* Stats grid */
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; padding: 14px 20px; }
+  .stat { }
+  .stat-label { font-size: 0.68rem; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+  .stat-val { font-size: 0.88rem; font-weight: 600; color: #cbd5e1; }
+  .stat-val.good { color: #4ade80; }
+  .stat-val.warn { color: #fbbf24; }
+  .stat-val.bad { color: #f87171; }
+
+  /* Special features */
+  .specials { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 20px 14px; }
+  .special-tag { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; }
+  .tag-view { background: #0c2340; color: #60a5fa; border: 1px solid #1e3a5f; }
+  .tag-garden { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
+  .tag-reno { background: #1c1a0d; color: #fbbf24; border: 1px solid #78350f; }
+  .tag-warn { background: #2c1515; color: #f87171; border: 1px solid #7f1d1d; }
+  .tag-flag { background: #1f1835; color: #a78bfa; border: 1px solid #4c1d95; }
+  .tag-loc { background: #0d1f17; color: #34d399; border: 1px solid #065f46; }
+
+  /* Footer */
+  .card-footer { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; border-top: 1px solid #1e2438; gap: 12px; flex-wrap: wrap; }
+  .commute-badge { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #94a3b8; }
+  .commute-time { font-weight: 700; font-size: 0.9rem; }
+  .commute-time.fast { color: #4ade80; }
+  .commute-time.ok { color: #fbbf24; }
+  .commute-time.far { color: #f87171; }
+  .verdict { font-size: 0.78rem; color: #64748b; flex: 1; min-width: 160px; line-height: 1.4; }
+  .link-btn { flex-shrink: 0; display: inline-block; padding: 7px 16px; background: #1e3050; border: 1px solid #3b82f6; color: #93c5fd; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+  .link-btn:hover { background: #263f6a; }
+  .link-btn.secondary { background: #1e2130; border-color: #475569; color: #94a3b8; }
+
+  /* Divider labels */
+  .tier-label { font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.1em; margin: 28px 0 12px; padding-left: 4px; }
+  .tier-label span { background: #1e2130; padding: 4px 12px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Your Shortlist — Ranked by Bang-for-Buck</h1>
+<p class="subtitle">17 properties · Scored 2026-05-24 · All prices in 万円</p>
+
+<div class="scoring-note">
+  <strong>Scoring method (1–10):</strong> Weighted across four factors — <strong>Location &amp; commute to Tokyo Station</strong> (30%), <strong>Value for money</strong> (size, fees, price per m²) (25%), <strong>Special features</strong> (view, garden, renovation — you said these matter a lot) (25%), <strong>Building quality</strong> (year, structure, condition) (20%). Fees cap and ground-floor rule are noted as flags but don't auto-zero the score since you've included them intentionally. The "nearly 45M" property you want to negotiate is #9 — it jumps significantly if you land below 4,000万.
+</div>
+
+<!-- ===== S-TIER ===== -->
+<div class="tier-label"><span>S — View it this weekend</span></div>
+
+<!-- #1 Hirai Park Homes -->
+<div class="card flag-green">
+  <div class="card-header">
+    <div class="rank-badge score-s"><div class="rank-num">#1</div><div class="rank-score">9.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">平井パーク・ホームズ</div>
+      <div class="card-location">Sumida-ku · Tachibana 3-chome · <strong>東あずま駅 3分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,470万</div>
+      <div class="price-sub">21,830/mo fees</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:95%; background: linear-gradient(90deg,#059669,#34d399);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val good">51.61 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">2LDK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val good">6F / 9F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1984年9月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南東 (corner)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">21,830円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 9F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🌃 Tokyo Skytree visible</span>
+    <span class="special-tag tag-view">🎆 Fireworks season views</span>
+    <span class="special-tag tag-view">☀️ 13.85m² dual balcony (SE + SW)</span>
+    <span class="special-tag tag-reno">🔨 Renovated Feb 2024</span>
+    <span class="special-tag tag-loc">🏅 Best all-around candidate</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time fast">&nbsp;~20 min</span></div>
+    <div class="verdict">東あずま → 亀戸 → JR総武快速 → 東京. Corner unit on 6F with massive split balcony (13.85m²) — sky is wide open. Skytree is right there from your terrace. Low fees, SRC construction, south-east light all day. The 3-min walk to station is unbeatable.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_73561686/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- #2 Vera Heights -->
+<div class="card flag-green">
+  <div class="card-header">
+    <div class="rank-badge score-s"><div class="rank-num">#2</div><div class="rank-score">9.0 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">ヴェラハイツ亀戸文花ユーフォニアス</div>
+      <div class="card-location">Sumida-ku · Bunka 2-chome · <strong>小村井駅 3分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,600万</div>
+      <div class="price-sub">26,000/mo fees</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:90%; background: linear-gradient(90deg,#059669,#34d399);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val good">50.28 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">3DK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val good">9F / 10F — top!</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1990年3月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南 (south)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">26,000円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 10F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🎆 Fireworks viewing from balcony (Sumidagawa)</span>
+    <span class="special-tag tag-view">🏙️ Excellent open view — near-penthouse</span>
+    <span class="special-tag tag-reno">🔨 Full renovation 2014 (kitchen, bath, all fixtures)</span>
+    <span class="special-tag tag-loc">🏅 Top floor in the building · 3 rooms</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time ok">&nbsp;~33 min</span></div>
+    <div class="verdict">小村井 → 亀戸 → JR総武 → 東京. Near-penthouse (9F of 10F), south-facing, 3DK gives you a real third room for baby. Sumidagawa fireworks from your own balcony is the crown jewel. Comprehensively renovated. Only 28 units in the building.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_20204836/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- ===== A-TIER ===== -->
+<div class="tier-label"><span>A — Strong, schedule a viewing</span></div>
+
+<!-- #3 Sakura Komatsugawa -->
+<div class="card flag-green">
+  <div class="card-header">
+    <div class="rank-badge score-a"><div class="rank-num">#3</div><div class="rank-score">8.0 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">さくらマンション小松川</div>
+      <div class="card-location">Edogawa-ku · Komatsugawa 2-chome · <strong>東大島駅 14分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,980万</div>
+      <div class="price-sub">17,570/mo fees — ultra-low</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:80%; background: linear-gradient(90deg,#1d4ed8,#60a5fa);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val good">55.05 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">2LDK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val good">11F / 13F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val good">1997年3月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val warn">東 (east)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">17,570円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 13F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🌊 Arakawa River panorama — unobstructed from 11F</span>
+    <span class="special-tag tag-view">🏗️ 13.09m² balcony facing the riverbed</span>
+    <span class="special-tag tag-reno">🔨 Full renovation (complete)</span>
+    <span class="special-tag tag-warn">⚠ East-facing — morning sun only, no afternoon light</span>
+    <span class="special-tag tag-warn">⚠ 14-min walk — longest station walk on the list</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time ok">&nbsp;~40 min</span></div>
+    <div class="verdict">東大島 → 都営新宿線 → 馬喰横山 → 東京. The view is the story here — Arakawa riverbed panorama from 11F with a huge balcony is genuinely spectacular. Fees are the 2nd lowest on the list. The 14-min walk and east-facing are the trade-offs. For someone who values "special things," this is it.</div>
+    <a href="https://www.homes.co.jp/mansion/b-1420270002877/" target="_blank" class="link-btn">View on HOME'S →</a>
+  </div>
+</div>
+
+<!-- #4 Olympos Yotsugi -->
+<div class="card flag-green">
+  <div class="card-header">
+    <div class="rank-badge score-a"><div class="rank-num">#4</div><div class="rank-score">7.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">オリンポス四つ木</div>
+      <div class="card-location">Katsushika-ku · Yotsugi 1-chome · <strong>四ツ木駅 6分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,480万</div>
+      <div class="price-sub">26,400/mo fees</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:75%; background: linear-gradient(90deg,#1d4ed8,#60a5fa);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val good">54.87 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">2LDK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val warn">3F / 5F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1992年4月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南 (south)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">26,400円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">RC 5F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">☀️ South-facing, unobstructed open view</span>
+    <span class="special-tag tag-reno">🔨 Full renovation completed May 2026 — brand new inside</span>
+    <span class="special-tag tag-warn">⚠ 3F of 5 — mid-low floor</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time ok">&nbsp;~33 min</span></div>
+    <div class="verdict">四ツ木 → 押上 → 都営浅草線 → 日本橋 → 東京. Solid south-facing 2LDK with 8.85m² south balcony, freshly renovated top-to-bottom this year. 6-min walk is comfortable. The lack of a dramatic view is the main trade-off vs. the top 3.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20779335/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- #5 Daiya Palace Sumida Koen -->
+<div class="card flag-green">
+  <div class="card-header">
+    <div class="rank-badge score-a"><div class="rank-num">#5</div><div class="rank-score">7.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">ダイアパレス隅田公園</div>
+      <div class="card-location">Sumida-ku · Mukojima 2-chome · <strong>本所吾妻橋駅 8分</strong> · Sumida Park 1分</div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,480万</div>
+      <div class="price-sub">18,210/mo fees</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:75%; background: linear-gradient(90deg,#1d4ed8,#60a5fa);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val warn">37.19 m² — compact</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">1LDK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val good">7F / 9F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1983年10月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南東 (SE)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes (monitor)</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">18,210円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 9F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🌃 Tokyo Skytree from SE balcony</span>
+    <span class="special-tag tag-view">🌳 Sumida Park 1-minute walk (cherry blossoms!)</span>
+    <span class="special-tag tag-reno">🔨 Full renovation May 2026 — brand new</span>
+    <span class="special-tag tag-warn">⚠ Only 37m² — smallest viable size on your list</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time fast">&nbsp;~28 min</span></div>
+    <div class="verdict">本所吾妻橋 → 都営浅草線 → 日本橋 → 東京. Location is magical — 1 min to Sumida Park, Skytree framed in your window. Ultra-low fees, 7F view, fully renovated. The 37m² is genuinely small for family life, but if you can live with it, everything else is exceptional.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_20913401/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- #6 Lions Higashi-Yotsugi -->
+<div class="card flag-green">
+  <div class="card-header">
+    <div class="rank-badge score-a"><div class="rank-num">#6</div><div class="rank-score">7.0 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">ライオンズマンション東四つ木</div>
+      <div class="card-location">Katsushika-ku · Higashi-Yotsugi 1-chome · <strong>四ツ木駅 13分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,780万</div>
+      <div class="price-sub">29,130/mo fees</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:70%; background: linear-gradient(90deg,#1d4ed8,#60a5fa);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val good">63.78 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">2LDK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val good">9F / 9F — TOP FLOOR</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1991年1月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南西 corner</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val warn">29,130円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 9F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🌃 Tokyo Skytree visible from balcony</span>
+    <span class="special-tag tag-view">🌇 SW corner penthouse — wide sky views</span>
+    <span class="special-tag tag-view">🏗️ Roof balcony 4.84m² (extra outdoor space)</span>
+    <span class="special-tag tag-warn">⚠ 13-min walk — long</span>
+    <span class="special-tag tag-flag">ℹ Top floor = roof heat in summer, possible rain noise</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time ok">&nbsp;~33 min</span></div>
+    <div class="verdict">四ツ木 → 押上 → 浅草線 → 日本橋 → 東京. Top-floor SW corner is premium living — most space on your list at 63.78m², wide open sky, Skytree view, roof balcony. The 13-min walk and being on the 9th of 9F (more sun/rain exposure) are the compromises. For views and volume, nothing beats it.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20696955/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- ===== B-TIER ===== -->
+<div class="tier-label"><span>B — Interesting, but with caveats</span></div>
+
+<!-- #7 Hi-Lark Ohshima -->
+<div class="card flag-yellow">
+  <div class="card-header">
+    <div class="rank-badge score-b"><div class="rank-num">#7</div><div class="rank-score">6.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">ハイラーク大島</div>
+      <div class="card-location">Koto-ku · Higashisuna 1-1-11 · <strong>大島駅 15分</strong> · Sendai-bori Park adjacent</div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,580万</div>
+      <div class="price-sub warn">30,630/mo — borderline cap</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:65%; background: linear-gradient(90deg,#92400e,#f59e0b);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val good">60.28 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">1LDK + walk-in closet</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val good">6F / 8F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1982年12月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val warn">西 (west)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes (monitor)</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val warn">30,630円 ⚠</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 8F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🌃 Tokyo Skytree visible</span>
+    <span class="special-tag tag-view">🌳 Sendai-bori Park next door</span>
+    <span class="special-tag tag-reno">🔨 Renovated Oct 2020 (kitchen, bath, toilet, floors)</span>
+    <span class="special-tag tag-warn">⚠ West-facing — afternoon light only, hot summers</span>
+    <span class="special-tag tag-warn">⚠ Fees 630¥ over 30,000 cap (borderline)</span>
+    <span class="special-tag tag-warn">⚠ 15-min walk to station</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time ok">&nbsp;~40 min</span></div>
+    <div class="verdict">大島 → 都営新宿線 → 馬喰横山 → 東京. Very spacious 1LDK at 60m² with walk-in closet, park at the door, Skytree view. Renovated. The west-facing direction means mornings are dark, and summer afternoons get hot. Fees technically exceed the 30,000 cap by 630¥ — negotiate with agent to reduce.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_koto/nc_78870471/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- #8 Higashisuna 3-chome Heights -->
+<div class="card flag-yellow">
+  <div class="card-header">
+    <div class="rank-badge score-b"><div class="rank-num">#8</div><div class="rank-score">6.0 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">東砂三丁目ハイツ6号棟</div>
+      <div class="card-location">Koto-ku · Higashisuna 3-chome · <strong>東大島駅 15分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,800万</div>
+      <div class="price-sub">20,000/mo fees — very low</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:60%; background: linear-gradient(90deg,#92400e,#f59e0b);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val good">80.47 m² — largest!</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">3LDK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val warn">2F / 11F — low</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val warn">1982年8月 ⚠</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南 (dual balcony)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val warn">Not confirmed</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">20,000円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 11F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🏠 80m² 3LDK — most living space on the list</span>
+    <span class="special-tag tag-view">☀️ North &amp; south dual balconies — cross ventilation</span>
+    <span class="special-tag tag-warn">⚠ 2nd floor — private but dark, no view</span>
+    <span class="special-tag tag-warn">⚠ 1982年8月 seismic risk — SRC 11F building likely needs permit before June 1981 (旧耐震). Request 建築確認年月日 before signing.</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time ok">&nbsp;~38 min</span></div>
+    <div class="verdict">東大島 → 都営新宿線 → 東京. Pure space play — 80m² 3LDK for 3,800万 is unbeatable m²/yen. The two non-negotiables before buying: (1) confirm the building permit date is after June 1981 (SRC 11F buildings took 18–24 months = permit likely 1980). (2) Accept that 2F means minimal view and more street noise. If seismic is confirmed OK, this is fantastic value for a family.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_koto/nc_78254902/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- #9 Koken Hamacho -->
+<div class="card flag-yellow">
+  <div class="card-header">
+    <div class="rank-badge score-b"><div class="rank-num">#9</div><div class="rank-score">6.0 / 10<br><span style="font-size:0.55rem; color:#fcd34d">→ 8.0 if &lt;4000万</span></div></div>
+    <div class="card-title-block">
+      <div class="card-name">光建ハイムブリリアンス日本橋浜町五番館</div>
+      <div class="card-location">Chuo-ku · Nihonbashi Hamacho 2-chome · <strong>浜町駅 4分</strong> (都営新宿線)</div>
+    </div>
+    <div class="card-price">
+      <div class="price-main price-over">4,480万 ↑</div>
+      <div class="price-sub">19,500/mo fees · Negotiate!</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:60%; background: linear-gradient(90deg,#92400e,#f59e0b);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val warn">33.05 m² — very small</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">1LDK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val warn">3F / 8F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1987年1月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val warn">北西 (NW)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes (video intercom)</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">19,500円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 8F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-loc">📍 Chuo-ku — the only one on your list</span>
+    <span class="special-tag tag-reno">🔨 Interior renovation June 2024</span>
+    <span class="special-tag tag-warn">⚠ NW-facing — no direct sunlight</span>
+    <span class="special-tag tag-warn">⚠ 4,480万 — 480万 over budget</span>
+    <span class="special-tag tag-warn">⚠ 33m² is very tight for a newborn household</span>
+    <span class="special-tag tag-flag">💡 Negotiate to 3,980万 and this becomes a tier-A property by location alone</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time fast">&nbsp;~16 min</span></div>
+    <div class="verdict">浜町 → 都営新宿線 → 馬喰横山 → Akihabara → 東京. The location is the entire argument. 4 minutes to the station, 16 minutes to Tokyo Station, Chuo-ku address. The Achilles heel is the size (33m² with a baby) and NW-facing (zero direct sun). If you can negotiate 500万 off, this becomes the closest thing to a Chuo-ku opportunity within budget on the market.</div>
+    <a href="https://www.homes.co.jp/mansion/b-1545030000085/" target="_blank" class="link-btn">View on HOME'S →</a>
+  </div>
+</div>
+
+<!-- #10 Nihonbashi Green Heights -->
+<div class="card flag-yellow">
+  <div class="card-header">
+    <div class="rank-badge score-b"><div class="rank-num">#10</div><div class="rank-score">5.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">日本橋グリーンハイツ</div>
+      <div class="card-location">Chuo-ku · Nihonbashi Nakasu · <strong>水天宮前駅 7分</strong> (半蔵門線)</div>
+    </div>
+    <div class="card-price">
+      <div class="price-main price-over">4,280万 ↑</div>
+      <div class="price-sub">Fees TBD · 280万 over budget</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:55%; background: linear-gradient(90deg,#92400e,#f59e0b);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val warn">35.89 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">1LDK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val warn">? / 13F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1983年7月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南東 (SE)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes (monitor)</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val warn">Not confirmed</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 13F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val good">✓ 14.8m² private (¥500/mo)</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-garden">🌿 14.8m² private garden — rare in central Tokyo</span>
+    <span class="special-tag tag-loc">📍 Chuo-ku · 13F SRC building</span>
+    <span class="special-tag tag-warn">⚠ 4,280万 — 280万 over budget, negotiate</span>
+    <span class="special-tag tag-warn">⚠ 35m² is very small</span>
+    <span class="special-tag tag-flag">ℹ Garden is a leased extra — not guaranteed permanently</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time fast">&nbsp;~19 min</span></div>
+    <div class="verdict">水天宮前 → 半蔵門線 → 大手町 → 東京. If you love gardens, this is the most surprising find — a 14.8m² private garden in Chuo-ku is almost unheard of. SE-facing in a 13-floor SRC building is excellent. The issues: it's over budget, small (35m²), and the garden usage is a monthly lease, not deeded. Confirm fees before visiting.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_chuo/nc_20838470/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- ===== C-TIER ===== -->
+<div class="tier-label"><span>C — Conditional or criteria concerns</span></div>
+
+<!-- #11 Kobayashi Nickheim Kiba -->
+<div class="card flag-yellow">
+  <div class="card-header">
+    <div class="rank-badge score-c"><div class="rank-num">#11</div><div class="rank-score">5.0 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">小林ニックハイム木場公園第２</div>
+      <div class="card-location">Koto-ku · Kiba 5-chome · <strong>木場駅 1分</strong> (東西線)</div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">2,980万</div>
+      <div class="price-sub">16,634/mo fees</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:50%; background: linear-gradient(90deg,#4c0519,#e11d48);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val warn">36.97 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val warn">2DK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val">4F / 9F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val warn">1982年3月 ⚠</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val warn">西 (west)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">16,634円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val warn">RC 9F ⚠</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🌳 Park views</span>
+    <span class="special-tag tag-reno">🔨 Full renovation Mar 2025</span>
+    <span class="special-tag tag-warn">⚠ 1982年3月: RC 9F building → permit likely pre-June 1981 = 旧耐震 risk</span>
+    <span class="special-tag tag-warn">⚠ West-facing, 2DK layout (not 1LDK)</span>
+    <span class="special-tag tag-loc">🚇 1-minute walk to 木場 is exceptional convenience</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time fast">&nbsp;~22 min</span></div>
+    <div class="verdict">木場 → 東西線 → 大手町 → 東京. The 1-min station walk and 22-min commute are genuinely excellent. But 1982年3月 for a 9-story RC implies a permit likely around late 1980–early 1981 = possible 旧耐震. Confirm before proceeding. Also, 2DK is technically below 1LDK standard (separate rooms without combined living area).</div>
+    <a href="https://www.century21.jp/mansion/tokyo/13108/detail/036501-222174" target="_blank" class="link-btn">View on Century21 →</a>
+  </div>
+</div>
+
+<!-- #12 Lebenheim Tobu-Nerima -->
+<div class="card flag-red">
+  <div class="card-header">
+    <div class="rank-badge score-c"><div class="rank-num">#12</div><div class="rank-score">4.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">レーベンハイム東武練馬 <span style="font-size:0.75em; color:#94a3b8; font-weight:400">(2 units: nc_79115873 · nc_79109231)</span></div>
+      <div class="card-location">Itabashi-ku · Tokumaru 4-chome · <strong>東武練馬駅 11分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">3,699万</div>
+      <div class="price-sub bad">35,300/mo — OVER CAP</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:45%; background: linear-gradient(90deg,#4c0519,#e11d48);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val">55.73 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">1LDK+S</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val bad">1F / 6F — GROUND FLOOR</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val good">1999年</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val">東 / 南東</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val bad">35,300円 ❌</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">RC 6F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val good">✓ 6m² private (free!)</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-garden">🌿 6m² private garden — no usage fee</span>
+    <span class="special-tag tag-reno">🔨 Full renovation Dec 2025</span>
+    <span class="special-tag tag-warn">❌ Ground floor (1F) — security &amp; privacy concern</span>
+    <span class="special-tag tag-warn">❌ Fees 35,300/mo — 5,300 over the 30,000 hard cap</span>
+    <span class="special-tag tag-warn">⚠ 19 of 25 units simultaneously for sale — investigate why</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time far">&nbsp;~41 min</span></div>
+    <div class="verdict">東武練馬 → 池袋 → JR → 東京. The garden is genuinely charming and the renovation is fresh. But ground floor in a 25-unit building where 19 owners are simultaneously selling is a serious alarm bell — something is wrong with this building's community or association. Fees are also 5,300/mo over your cap. Don't buy until you understand why 76% of owners are leaving.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_79109231/" target="_blank" class="link-btn">View Unit A →</a>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_79115873/" target="_blank" class="link-btn secondary">View Unit B →</a>
+  </div>
+</div>
+
+<!-- #13 Domiru Minowa -->
+<div class="card flag-yellow">
+  <div class="card-header">
+    <div class="rank-badge score-c"><div class="rank-num">#13</div><div class="rank-score">4.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">ドミール三ノ輪</div>
+      <div class="card-location">Arakawa-ku · Minamisenju 1-chome · <strong>三ノ輪駅 3分 + 荒川線 三ノ輪橋 1分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">2,698万</div>
+      <div class="price-sub">17,521/mo fees</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:45%; background: linear-gradient(90deg,#4c0519,#e11d48);"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val warn">31.61 m² — very small</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val warn">1DK (not 1LDK)</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val">3F / 11F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1982年7月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南東 (SE)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes (monitor)</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">17,521円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">SRC 11F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">☀️ Open SE view from 3F of 11</span>
+    <span class="special-tag tag-reno">🔨 Renovation scheduled May 2026</span>
+    <span class="special-tag tag-warn">⚠ 1DK layout — kitchen not integrated with living room</span>
+    <span class="special-tag tag-warn">⚠ 31.61m² — genuinely tight for baby + two adults</span>
+    <span class="special-tag tag-loc">🚇 3 min to Hibiya Line + 1 min to the charming Arakawa tram line</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time fast">&nbsp;~25 min</span></div>
+    <div class="verdict">三ノ輪 → 日比谷線 → 日比谷 → 東京. Incredibly cheap and close to multiple lines including the nostalgic Arakawa tram. The hard limit is the layout (1DK = separate kitchen, no open living) and 31.6m² with a newborn. A starter unit, not a family home. Could work as a short-term move while waiting for something better.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_arakawa/nc_20714190/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- ===== D-TIER ===== -->
+<div class="tier-label"><span>D — Hard fails, included for reference</span></div>
+
+<!-- #14 Canyon Corp Shakujii Park -->
+<div class="card flag-red">
+  <div class="card-header">
+    <div class="rank-badge score-d"><div class="rank-num">#14</div><div class="rank-score">3.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">キャニオンコープ石神井公園</div>
+      <div class="card-location">Nerima-ku · Tanihara 6-chome · <strong>石神井公園駅 19分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">2,580万</div>
+      <div class="price-sub bad">36,709/mo — far over cap</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:35%; background: #3f3f46;"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val">53.36 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val">3DK</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val">3F / 5F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1992年6月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val good">南 (south)</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val good">✓ Yes (monitor)</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val bad">36,709円 ❌</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">RC 5F</div></div>
+    <div class="stat"><div class="stat-label">Roof balcony</div><div class="stat-val">9.66m² (¥190/mo)</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-view">🌳 Park &amp; city views from roof balcony</span>
+    <span class="special-tag tag-warn">❌ Fees 36,709/mo — 6,709 over cap. Adds ~80,000/yr extra vs. a 30,000 cap property</span>
+    <span class="special-tag tag-warn">❌ 19-min walk — right at the limit</span>
+    <span class="special-tag tag-warn">❌ Shakujii-koen: commute is ~55 min. "If it's far, I may as well go to Saitama" — this applies here</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time far">&nbsp;~55 min</span></div>
+    <div class="verdict">石神井公園 → 西武池袋線 → 練馬 → various → 東京. You said it yourself. The fees alone cost you an extra 6,700¥/month (~80,000/year) forever. Add the commute and you're paying more, living farther. The south-facing rooms and roof balcony with park views are genuinely nice, but the math doesn't work.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_nerima/nc_78818245/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<!-- #15 More Stage Sumida -->
+<div class="card flag-red">
+  <div class="card-header">
+    <div class="rank-badge score-d"><div class="rank-num">#15</div><div class="rank-score">2.5 / 10</div></div>
+    <div class="card-title-block">
+      <div class="card-name">モアステージ隅田</div>
+      <div class="card-location">Sumida-ku · Sumida 3-chome · <strong>東向島駅 8分</strong></div>
+    </div>
+    <div class="card-price">
+      <div class="price-main">2,480万</div>
+      <div class="price-sub">16,530/mo fees</div>
+    </div>
+  </div>
+  <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:25%; background: #3f3f46;"></div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val warn">32.85 m²</div></div>
+    <div class="stat"><div class="stat-label">Layout</div><div class="stat-val bad">2K (not 1LDK)</div></div>
+    <div class="stat"><div class="stat-label">Floor</div><div class="stat-val">3F / 5F</div></div>
+    <div class="stat"><div class="stat-label">Year</div><div class="stat-val">1987年8月</div></div>
+    <div class="stat"><div class="stat-label">Facing</div><div class="stat-val bad">北 (NORTH) ❌</div></div>
+    <div class="stat"><div class="stat-label">Auto-lock</div><div class="stat-val warn">Not confirmed</div></div>
+    <div class="stat"><div class="stat-label">Monthly fees</div><div class="stat-val good">16,530円</div></div>
+    <div class="stat"><div class="stat-label">Land rights</div><div class="stat-val good">所有権</div></div>
+    <div class="stat"><div class="stat-label">Structure</div><div class="stat-val">RC 5F</div></div>
+    <div class="stat"><div class="stat-label">Garden</div><div class="stat-val">—</div></div>
+  </div>
+  <div class="specials">
+    <span class="special-tag tag-warn">❌ North-facing — no direct sunlight ever. Damp, cold.</span>
+    <span class="special-tag tag-warn">❌ 2K layout — not 1LDK. Separate rooms with only a kitchen.</span>
+    <span class="special-tag tag-warn">⚠ 32.85m² — very small for a family</span>
+    <span class="special-tag tag-flag">💡 Cheapest on the list — why did you include this?</span>
+  </div>
+  <div class="card-footer">
+    <div class="commute-badge">🚃 To Tokyo Station: <span class="commute-time ok">&nbsp;~33 min</span></div>
+    <div class="verdict">東向島 → 押上 → 浅草線 → 日本橋 → 東京. The cheapest property on the list by a wide margin — but north-facing and 2K means no natural light and a kitchen-only "common area." With a newborn, the lack of sun and very small space would become a daily quality-of-life problem. Unless you're buying as an investment to rent out, this is one to skip.</div>
+    <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_20880603/" target="_blank" class="link-btn">View on SUUMO →</a>
+  </div>
+</div>
+
+<hr style="border-color:#1e2438; margin: 40px 0 24px;">
+<p style="color:#475569; font-size:0.8rem; line-height:1.7;">
+  Scores are subjective and weighted toward your stated preferences (special views, gardens) and location. <strong style="color:#94a3b8;">Properties #1 and #2 (平井 and ヴェラハイツ) are the clear leaders</strong> on all metrics. #3 (さくら小松川) wins on views alone. #9 (光建ハイムブリリアンス) depends entirely on whether you can negotiate the price — at list price it's hard to justify; at 3,980万 it becomes compelling for the Chuo-ku address.<br>
+  Key action items: (1) Request 建築確認年月日 for #8 (東砂ハイツ) before any offer. (2) Ask #12 (レーベンハイム) agent why 19/25 owners are selling simultaneously before viewing. (3) For #9, ask for negotiation room — 4,480万 → 3,980万 is a large ask but their fees are low and the unit has been sitting.<br>
+  Generated 2026-05-24 · Loop stopped by user
+</p>
+
+</body>
+</html>

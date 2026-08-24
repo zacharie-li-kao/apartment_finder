@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tokyo Apartment Finder — Live</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f1117; color: #e2e8f0; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; color: #f0f4ff; margin-bottom: 4px; }
+  .subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 32px; }
+
+  .summary { background: #1e2130; border-left: 4px solid #f59e0b; padding: 18px 22px; border-radius: 8px; margin-bottom: 36px; }
+  .summary h2 { margin: 0 0 10px; color: #f59e0b; font-size: 1.1rem; }
+  .summary p { margin: 6px 0; font-size: 0.92rem; color: #cbd5e1; }
+  .summary .green { color: #4ade80; font-weight: 600; }
+  .summary .red { color: #f87171; font-weight: 600; }
+
+  .ward { margin-bottom: 48px; }
+  .ward-title { font-size: 1.15rem; font-weight: 700; color: #93c5fd; border-bottom: 1px solid #2d3554; padding-bottom: 8px; margin-bottom: 14px; }
+  .ward-count { font-size: 0.8rem; color: #64748b; font-weight: 400; margin-left: 10px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th { background: #1a1f35; color: #94a3b8; text-align: left; padding: 8px 10px; border-bottom: 2px solid #2d3554; white-space: nowrap; }
+  td { padding: 7px 10px; border-bottom: 1px solid #1e2438; vertical-align: top; }
+  tr:hover td { background: #161b2e; }
+
+  tr.pass td { background: #0d1f17; }
+  tr.pass:hover td { background: #102218; }
+  tr.warn td { background: #1c1a0e; }
+  tr.warn:hover td { background: #201e12; }
+  tr.fail td { background: #1a1015; opacity: 0.7; }
+  tr.fail:hover td { opacity: 1; }
+
+  .flag { display: inline-block; font-size: 0.72rem; padding: 2px 7px; border-radius: 4px; margin: 2px 2px 2px 0; white-space: nowrap; }
+  .flag.red { background: #7f1d1d; color: #fca5a5; }
+  .flag.yellow { background: #78350f; color: #fcd34d; }
+  .flag.green { background: #064e3b; color: #6ee7b7; }
+
+  .price { color: #e2e8f0; font-weight: 600; white-space: nowrap; }
+  .over-budget { color: #f87171; }
+  .good-price { color: #4ade80; }
+  .fees-warn { color: #fcd34d; }
+
+  a { color: #60a5fa; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .legend { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #94a3b8; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+  .dot-pass { background: #166534; }
+  .dot-warn { background: #92400e; }
+  .dot-fail { background: #3b0764; }
+
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: #e2e8f0; background: #242840; }
+  th.sort-asc::after { content: ' ↑'; color: #4ade80; font-size: 0.85em; }
+  th.sort-desc::after { content: ' ↓'; color: #f59e0b; font-size: 0.85em; }
+  .view-controls { display: flex; gap: 8px; margin-bottom: 28px; align-items: center; flex-wrap: wrap; }
+  .view-controls-label { color: #475569; font-size: 0.8rem; margin-right: 4px; }
+  .view-btn { background: #1e2130; border: 1px solid #2d3554; color: #94a3b8; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-family: inherit; transition: background 0.12s, border-color 0.12s, color 0.12s; }
+  .view-btn:hover { background: #242840; border-color: #4b5a80; color: #e2e8f0; }
+  .view-btn.active { background: #1e3050; border-color: #3b82f6; color: #93c5fd; font-weight: 600; }
+  #global-view { display: none; margin-bottom: 48px; }
+  #global-view .ward-title { font-size: 1.15rem; font-weight: 700; color: #93c5fd; border-bottom: 1px solid #2d3554; padding-bottom: 8px; margin-bottom: 14px; }
+
+  tr.new-listing td { border-left: 3px solid #3b82f6; }
+  p.new-scoreboard-entry { border-left: 2px solid #3b82f6; padding-left: 10px; background: rgba(30,58,95,0.25); border-radius: 0 4px 4px 0; }
+  tr.new-listing.pass td { background: #0d1a2e; }
+  tr.new-listing.warn td { background: #141624; }
+  tr.new-listing.pass:hover td { background: #112238; }
+  tr.new-listing.warn:hover td { background: #171c30; }
+  .badge-new { display: inline-block; font-size: 0.68rem; padding: 1px 6px; border-radius: 3px; background: #1e3a5f; color: #60a5fa; border: 1px solid #3b82f6; margin-right: 4px; font-weight: 700; vertical-align: middle; }
+
+  .empty-note { color: #475569; font-style: italic; font-size: 0.85rem; padding: 12px 0; }
+
+  /* Scoreboard */
+  #scoreboard { background: #111827; border: 1px solid #1e2d45; border-radius: 10px; padding: 22px 26px; margin-bottom: 48px; }
+  #scoreboard h2 { color: #93c5fd; font-size: 1.05rem; margin: 0 0 6px; }
+  #scoreboard .score-header { color: #64748b; font-size: 0.82rem; margin-bottom: 18px; }
+</style>
+</head>
+<body>
+
+<h1>Tokyo Apartment Finder</h1>
+<p class="subtitle">Criteria: ~40M yen <em>(soft — slight-over gems flagged, not cut)</em> · ≥30m² · 1LDK+ · Post-1982 (Post-1982 seismic standard) · ≤15 min walk · Not ground floor · Freehold land · Fees ~30,000¥/mo <em>(soft)</em> · ≤45 min to Tokyo (Setagaya ~50)<br>
+Fresh search started: 2026-06-23 · Sources: SUUMO, HOME'S, Yahoo不動産, nomu.com, 三井のリハウス, 東急リバブル, 住友不動産販売, Century21, athome</p>
+
+<div class="summary">
+  <h2>Market Context (as of June 2026)</h2>
+  <p><span class="red">Wards confirmed empty at ≤40M (post-1982 1LDK+):</span> Chuo (~58M+), Chiyoda, Minato (~50M+; one south-corner "deal" was leasehold), Shibuya, Meguro, Shinagawa, Nakano, Taito, Nerima (fees/commute), Shinjuku (floor ~4,180万+), Bunkyo (5,000万+), Toshima, Setagaya (45-min commute) — none clear all criteria. Watch-list near-misses: メゾンランジェ早稲田 (Shinjuku, 1983 SE, 4,199万), 新大塚タウンプラザ (Toshima, 1982 1LDK, 4,180万).</p>
+  <p><span class="green">Best hunting grounds: Katsushika-ku (13), Itabashi-ku (11), Kita-ku (5), Edogawa-ku (3), Sumida-ku (3), Koto-ku (2).</span> Deep paginated re-search + 7-portal sweep (2026-06-23) added 21 candidates the earlier page-1-only pass had missed. Koto's modern-looking sub-budget units (モナーク東大島 2009, ラブリハイツ亀戸 south/2-min) are nearly all Leasehold leasehold → excluded. Note: 不動産ジャパン(REINS), Yahoo!不動産, at-home were bot-blocked from scraping — worth a manual browser check.</p>
+  <p>Search covering all 23 wards — new listings added automatically. <strong id="candidate-count">116 viable candidates found so far.</strong></p>
+  <p style="color: #fca5a5; background: rgba(127,29,29,0.2); padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 0.9rem;"><strong>Quick-sweep review (2026-07-07):</strong> 12 candidates from Sumida/Koto rescanned. Findings: Candidate 6 (クレド・ハイツリー両国) is duplicate; Sumida candidates 1-4,7-8 exceed ¥40M budget when correctly interpreted (¥50-130M); Koto candidates 9-11 all confirmed 借地権 (leasehold, excluded); candidate 12 likely leasehold; candidate 5 under-budget but NIC series carries high leasehold risk. Net adds: 0. Conclusion: Quick sweep did not yield qualifying new listings.</p>
+</div>
+
+<!-- ==================== TOP PICKS ==================== -->
+<div id="top-picks" style="background:#13211a; border:1px solid #2d5a45; border-left:4px solid #4ade80; border-radius:8px; padding:18px 24px; margin-bottom:36px;">
+  <h2 style="color:#4ade80; font-size:1.1rem; margin:0 0 4px;">★ Top 10 picks — ranked for your priorities</h2>
+  <p style="color:#94a3b8; font-size:0.82rem; margin:0 0 14px;">Weighted by view/light (near-essential), ward preference (Sumida/Koto), vacant, professional management, and zero seismic doubt. Suggest viewing #1–4 first.</p>
+  <ol style="margin:0; padding-left:22px; color:#cbd5e1; font-size:0.88rem; line-height:1.75;">
+    <li><strong style="color:#e2e8f0;">ピュアシティすみだ堤通</strong> (Sumida · 鐘ヶ淵4分) — 8F, <span style="color:#6ee7b7;">Skytree view</span>, vacant, freehold, ¥23,100, 1993 — <em>top fit: ward + view + high floor</em></li>
+    <li><strong style="color:#e2e8f0;">エンゼル柴又プロムテラス</strong> (Katsushika · 柴又12分) — <span style="color:#6ee7b7;">2005</span> (cleanest build), SE, 67㎡ 3LDK, vacant, freehold, ¥29,350 — <em>best family size + build quality</em></li>
+    <li><strong style="color:#e2e8f0;">四つ木パーク・ホームズ</strong> (Katsushika · 四ツ木13分) — 11F, SW, 63㎡ 3LDK, vacant, Skytree-view potential, ¥22,980</li>
+    <li><strong style="color:#e2e8f0;">コスモウィル大島</strong> (Koto · 大島7分) — SE, 65㎡ 2LDK, vacant, renovated, freehold, ¥28,820 (4,198万)</li>
+    <li><strong>青砥東パーク・ホームズ 13F</strong> (Katsushika · 青砥8分) — 13F (highest), SE, 2SLDK, vacant, freehold</li>
+    <li><strong>プレシス堀切菖蒲園</strong> (Katsushika · 堀切菖蒲園6分) — 2016 (newest building), south, 3LDK</li>
+    <li><strong>ガーデンプラザ柴又弐番館</strong> (Katsushika · 柴又9分) — 68㎡ (biggest 3LDK), SE, 5F, vacant, 2,980万</li>
+    <li><strong>御殿山デュープレックス</strong> (Katsushika · 青砥15分) — 10F SW corner, 62㎡, 1999</li>
+    <li><strong>グレースジュン</strong> (Sumida · スカイツリー4分) — south, vacant, renovated — compact 37㎡ / 3F</li>
+    <li><strong>スカイハイツ広沢</strong> (Setagaya · 桜新町4分) — south, vacant, ¥10k fees, renovated — 36㎡, ~48min</li>
+  </ol>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-pass"></div> Passes all criteria</div>
+  <div class="legend-item"><div class="legend-dot dot-warn"></div> Borderline — investigate</div>
+  <div class="legend-item"><div class="legend-dot dot-fail"></div> Disqualified (shown for reference)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1e3a5f; border: 1px solid #3b82f6;"></div> Added today</div>
+</div>
+
+<div class="view-controls">
+  <span class="view-controls-label">View:</span>
+  <button class="view-btn active" id="btn-wards" onclick="showView('wards')">⊞ By ward</button>
+  <button class="view-btn" id="btn-price" onclick="showView('price')">↑ All · cheapest first</button>
+  <button class="view-btn" id="btn-fees" onclick="showView('fees')">↑ All · lowest fees first</button>
+  <button class="view-btn" id="btn-date" onclick="showView('date')">📅 By date found</button>
+</div>
+
+<div id="global-view">
+  <div class="ward-title">All viable listings — <span id="global-sort-label" style="color:#4ade80;">sorted by price ↑</span></div>
+  <table id="global-table">
+    <tr>
+      <th>Ward</th><th>Name</th><th class="sortable" id="gh-price" onclick="showView('price')">Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th class="sortable" id="gh-fees" onclick="showView('fees')">Fees/mo</th><th>Layout</th><th>Direction</th><th>Found</th><th>Flags</th>
+    </tr>
+  </table>
+</div>
+
+<!-- ==================== SCOREBOARD ==================== -->
+<div id="scoreboard">
+  <h2>Ranked Shortlist</h2>
+  <p class="score-header" id="score-header">112 viable candidates · verified · soft price/fee limits (slight-over gems flagged, not cut)</p>
+  <!-- SCOREBOARD_ENTRIES_START -->
+  <p class="new-scoreboard-entry"><strong>#1 ガーデンプラザ柴又弐番館</strong> (Katsushika · 柴又9分) — 2,980万 · 68m² 3LDK · 1984年 · 費¥22,599/mo · 南東 · 5F/11F · Vacant — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20738365/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#2 青砥東パーク・ホームズ 13F</strong> (Katsushika · 青砥8分) — 3,980万 · 62.8m² 2SLDK · 1995年 · 費¥27,674/mo · 南東 · 13F/15F · Vacant — <a href="https://www.homes.co.jp/mansion/b-1267650037665/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#3 グレースジュン</strong> (Sumida · スカイツリー4分) — 3,150万 · 37m² 1LDK · 1989年 · 費¥21,230/mo · 南 · 3F/6F · Vacant · 2025/4大規模修繕済 — <a href="https://www.homes.co.jp/mansion/b-1372180000062/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#4 ランドステージ墨田ブライトスクエア</strong> (Sumida · 鐘ヶ淵4分) — 3,980万 · 54m² 2LDK · 2011年 · 費¥29,000/mo · 南西 · 2F/10F ⚠️ Low floor/Owner-occupied — <a href="https://www.homes.co.jp/mansion/b-1453310000097/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#5 サンデュエルお花茶屋</strong> (Katsushika · お花茶屋10分) — 3,188万 · 58m² 2LDK · 2004年 · 費¥23,540/mo · 南西 · 8F/12F ⚠️ Owner-occupied/Investment only — <a href="https://www.homes.co.jp/mansion/b-1566350000125/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#6 グリーンキャピタル第三金町</strong> (Katsushika · 金町5分) — 2,650万 · 44m² 1LDK+S · 1986年 · 費¥27,900/mo · 西 · 2F/11F ⚠️ Low floor/West-facing — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20758971/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#7 西巣鴨ローヤルコーポ</strong> (Kita · 西巣鴨7分) — 3,890万 · 52.7m² 2LDK · 1983年 · 費¥20,000/mo · 南 · 3F/3F · Vacant ⚠️ 低3F建 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_21077146/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#8 クイーンズプライム練馬北町</strong> (Nerima · 東武練馬8分) — 3,980万 · 36m² 1SLDK · 2016年 · 費¥27,310/mo · 西 · 3F/6F ⚠️ 小さめ/West-facing — <a href="https://www.homes.co.jp/mansion/b-1572160000031/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#9 メゾン蓮根</strong> (Itabashi · 蓮根10分) — 2,480万 · 48m² 2LDK · 1982年 · 費¥21,204/mo · 東 · 2F/5F ⚠️ Low floor/東向き/通勤ギリギリ42分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20721040/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#10 キャピタルビュー滝野川</strong> (Kita · 西巣鴨8分) — 2,480万 · 33.85m² 1LDK · 1988年 · 費¥24,055/mo · 南東 · 3F/4F ⚠️ S造/小面積/小建物 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_21070923/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#11 ダイアパレス柴又</strong> (Katsushika · 柴又10分) — 3,980万 · 50m² 2LDK · 1994年 · 費¥18,380/mo · 西 · 4F/8F · Vacant(7月改装) ⚠️ West-facing — <a href="https://www.homes.co.jp/mansion/b-35007210000231/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#12 マイキャッスル小豆沢公園</strong> (Itabashi · 志村坂上8分) — 3,780万 · 59.85m² 3LDK · 1995年 · 費¥26,640/mo · 南西×南東 · 2F/5F ⚠️ Low floor2F/小規模 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21081835/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#13 東砂三丁目ハイツ4号棟</strong> (Koto · 東大島15分) — 3,280万 · 82m² 3LDK · 1982年 · 費¥17,500/mo · 南 · 4F/4FTop floor · Freehold ⚠️Pre-1982 seismic要確認 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_koto/nc_21076849/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#14 センチュリーハイツ赤羽西</strong> (Kita · 本蓮沼10分) — 3,399万 · 44m² 2DK+S · 1990年 · 費¥23,400/mo · 南東 · 2F/6F · Vacant(2026/3改装) — <a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_20137923/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#16 若木原公園サニーハイツ</strong> (Itabashi · 上板橋8分) — 2,980万 · 46m² 2DK · 1983年 · 費¥24,470/mo · 南西 · 6F/6FTop floor · Vacant(2026/5改装) — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21131647/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#17 藤和稲付公園コープ</strong> (Kita · 赤羽15分) — 3,380万 · 52m² 2LDK · 1986年 · 費¥28,860/mo · 南東 · 2F/5F · 公園隣接 ⚠️徒歩15分/費上限近い — <a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_21064109/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#18 グランヴェルジェ蓮根</strong> (Itabashi · 蓮根13分) — 3,750万 · 56m² 2LDK · 1990年 · 費¥21,910/mo · 南 · 6F/6FTop floor · ⚠️通勤~48分(45分超) — <a href="https://www.nomu.com/mansion/id/R5471123/" target="_blank">nomu</a></p>
+  <p class="new-scoreboard-entry"><strong>#19 メッツ立石</strong> (Katsushika · お花茶屋11分) — 2,800万 · 57m² 3DK · 1995年 · 費 要確認 · 南西 · 9F/13F · Freehold ⚠️費未確認/High-rise階SW — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_74385576/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#20 エンゼルハイム金町</strong> (Katsushika · 金町10分) — 3,280万 · 52m² 2LDK · 1985年 · 費¥25,710/mo · 東 · 2F/4F · Vacant ⚠️東向き/2F/建物EVなし — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21042254/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#21 ピュアシティすみだ堤通</strong> (Sumida · 鐘ヶ淵4分) — 3,980万 · 53m² 1LDK+S · 1993年 · 費¥23,100/mo · 東 · 8F/12F · Vacant · スカイツリー眺望 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_20937054/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#22 プレシス堀切菖蒲園</strong> (Katsushika · 堀切菖蒲園6分) — 3,880万 · 55m² 3LDK · 2016年 · 費¥23,310/mo · 南(全戸南向き)✓ · 4F/12F ⚠️階数要確認 — <a href="https://www.ieshil.com/buildings/326492/" target="_blank">ieshil</a></p>
+  <p class="new-scoreboard-entry"><strong>#23 ハイラーク新赤羽</strong> (Kita · 浮間舟渡9分) — 3,280万 · 61m² 3LDK · 1985年 · 費¥16,940/mo · 東 · 6F/10F · Occupied — <a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_20984049/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#24 メゾン・リバーサイド4号棟</strong> (Edogawa · 東大島2分) — 3,680万 · 78m² 3LDK · 1989年 · 費¥19,665/mo · 西 · 3F/6F · 公園/荒川近接 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21023954/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#26 コスモ葛西シティフォルム</strong> (Edogawa · 葛西15分) — 3,880万 · 55m² 2LDK · 1995年 · 費¥25,873/mo · 東 · 8F/9F · 改装済 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_20872448/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#28 御殿山デュープレックス</strong> (Katsushika · 青砥15分) — 3,980万 · 62m² 2LDK · 1999年 · 費¥22,706/mo ✓ · 南西角 · 10F/13F · High-rise — <a href="https://www.daikyo-anabuki.co.jp/building/TO00073525" target="_blank">大京</a></p>
+  <p class="new-scoreboard-entry"><strong>#30 三生エンゼルハイム中葛西</strong> (Edogawa · 葛西10分) — 3,980万 · 60m² 2LDK+S · 1995年 · 費¥28,730/mo · 東 · 6F/9F · 改装済 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21023952/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#31 エスペランサ堀切菖蒲園</strong> (Katsushika · 堀切菖蒲園13分) — 3,200万 · 61m² 2SLDK · 1996年 · 費¥19,719/mo ✓ · 南西 · 2F/6F · 最安級 ⚠️修繕薄い — <a href="https://mansion-market.com/mansions/detail/12793" target="_blank">マンションマーケット</a></p>
+  <p class="new-scoreboard-entry"><strong>#34 四つ木パーク・ホームズ</strong> (Katsushika · 四ツ木13分) — 3,550万 · 63m² 3LDK · 1994年 · 費¥22,980/mo · 南西 · 11F/14F · Vacant · スカイツリー眺望可 — <a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BEA0E/" target="_blank">三井のリハウス</a></p>
+  <p class="new-scoreboard-entry"><strong>#35 ライオンズマンション上板橋</strong> (Itabashi · 上板橋8分) — 3,780万 · 52m² 2LDK · 1984年 · 費¥28,800(僅差) · 南 · /10F · Vacant·Professional management · 通勤~40分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_77124561/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#36 キャニオンビュー成増</strong> (Itabashi · 成増7分) — 3,990万 · 52m² 2LDK+S · 1984年 · 費¥18,510/mo · 南東 · 3F/5F · 改装済 ⚠️通勤~45分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20089231/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#37 ゼファー大山ファムエール</strong> (Itabashi · 大山8分) — 3,980万 · 52m² 2LDK · 1998年 · 費¥22,007/mo ✓ · 南西角 · /11F · Freehold · 通勤~40分 — <a href="https://suumo.jp/library/tf_13/sc_13119/to_1000744511/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#39 オリンポス板橋栄町</strong> (Itabashi · 中板橋9分) — 3,590万 · 51m² 2LDK · 1990年 · 費¥24,910/mo · 南/角(3面採光) · 4F/4F最上角 · Vacant·改装2018 ⚠️方角要確認 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21040571/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#40 サンハイツ千田</strong> (Koto · 住吉7分) — 3,980万 · 40m² 1LDK · 1984年 · 費¥17,460(修繕¥0) · 西 · 7F/11F · Freehold ⚠️Repair reserve¥0/Self-managed/Tenant-occupied — <a href="https://www.homes.co.jp/mansion/b-1552210002964/" target="_blank">ホームズ</a></p>
+  <p class="new-scoreboard-entry"><strong>#42 朝日プラザ志村坂上</strong> (Itabashi · 志村坂上6分) — 2,997万 · 43m² 1LDK · 1986年 · 費¥24,080/mo · 南 · 6F/7F · Freehold·改装Apr'26 · 通勤~38分 ⚠️1LDKコンパクト — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20627307/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#43 ウエストハイツ高島平</strong> (Itabashi · 西台5分) — 3,590万 · 58m² 3LDK · 1982年 · 費¥19,050/mo · 南 · 3F/5F · Freehold·改装Jun'26 ⚠️通勤~43-46分/Building permit要確認 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21010488/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#45 サンハイツ泉町</strong> (Itabashi · 本蓮沼5分) — 2,950万 · 50m² 3DK · 1982年 · 費¥19,056/mo · 南 · 3F/5F · Vacant·Freehold · 通勤~35分 ⚠️Self-managed/Building permit要確認 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20534890/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#46 エンゼル柴又プロムテラス</strong> (Katsushika · 柴又12分) — 3,650万 · 67m² 3LDK · 2005年 · 費¥29,350/mo · 南東 · 4F/6F · Vacant·Freehold·Professional management · Post-1982 seismic standard ⚠️費上限近い — <a href="https://www.homes.co.jp/mansion/b-1267650037514/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#47 セザールお花茶屋</strong> (Katsushika · お花茶屋4分) — 3,490万 · 50m² 2LDK · 1988年 · 費¥21,550/mo · 西 · 2F/6F · Vacant·Freehold ⚠️West-facing/Low floor2F — <a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BGA34/" target="_blank">三井のリハウス</a></p>
+  <p class="new-scoreboard-entry"><strong>#48 ゼファー一之江</strong> (Edogawa · 一之江14分) — 3,200万 · 52m² 2LDK · 1997年 · 費¥23,360/mo · 南西 · 5F/10F · Vacant·Freehold·低費 ⚠️通勤~40分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21105788/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#49 新小岩パーク・ホームズ</strong> (Katsushika · 新小岩15分) — 3,890万 · 56m² 2LDK · 1995年 · 費¥30,516/mo(¥516超·許容) · 南 · 5F/9F · Occupied — <a href="https://www.nomu.com/mansion/id/F98C2013/" target="_blank">ノムコム</a></p>
+  <p class="new-scoreboard-entry"><strong>#50 コスモ柴又駅前</strong> (Katsushika · 柴又2分) — 4,090万(微超) · 56m² 2LDK · 1994年 · 費¥30,400/mo(微超) · 南東 · 3F/8F · Vacant·Professional management — <a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BGA20/" target="_blank">三井のリハウス</a></p>
+  <p class="new-scoreboard-entry"><strong>#51 セブンスターマンション南烏山</strong> (Setagaya · 千歳烏山12分) — 3,990万 · 47m² 1LDK+S · 1983年 · 費¥31,740/mo(微超) · 南 · 4F/7F · Freehold·EV ⚠️通勤~50分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_20161975/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#52 日神パレステージお花茶屋</strong> (Katsushika · お花茶屋8分) — 3,990万 · 56m² 2LDK · 2008年 · 費¥33,230/mo(¥3,230超) · 南西 · 2F/9F · Freehold — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_76856914/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#54 クレストコート篠崎</strong> (Edogawa · 篠崎14分) — 3,980万 · 61m² 3LDK · 1996年 · 費¥31,450/mo(¥1,450超·許容) · 南西 · 3F/4F · Vacant·Freehold·リフォーム済·Post-1982 seismic standard ⚠️通勤~45-48分 — <a href="https://mansion-market.com/mansions/detail/12900" target="_blank">マンションマーケット</a></p>
+  <p class="new-scoreboard-entry"><strong>#55 スカイハイツ広沢</strong> (Setagaya · 桜新町4分) — 2,997万 · 36m² 2DK · 1984年 · 費¥10,000/mo(激安) · 南 · 4F/5F · Vacant·改装·Freehold ⚠️通勤~47-50分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_20163245/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#56 ソレイユ玉川台</strong> (Setagaya · 用賀7分) — 3,290万 · 35m² 1LDK · 1989年 · 費¥15,050/mo · 南西 · 2F/3F · Freehold ⚠️通勤~48-50分/Low floor — <a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_78199201/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#57 キャニオンコープ第３経堂</strong> (Setagaya · 経堂11分) — 2,980万 · 39m² 2DK · 1984年 · 費¥24,960/mo · 東 · 3F/3FTop floor · Vacant·Freehold ⚠️通勤~52-55分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_21094369/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#58 スターハイツ芦花公園</strong> (Setagaya · 芦花公園7分) — 3,680万 · 38m² 1LDK · 1983年 · 費¥23,440/mo · 南西 · 2F/3F · 改装·Freehold ⚠️通勤~52-55分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_21069417/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#59 セザール第２上北沢</strong> (Setagaya · 上北沢14分) — 3,899万 · 55m² 2LDK · 1991年 · 費¥33,880/mo(微超) · 西 · 2F/4F · Vacant·Freehold ⚠️通勤~52-55分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_20583927/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#60 コスモウィル大島</strong> (Koto · 大島7分) — 4,198万(微超) · 65m² 2LDK · 1987年 · 費¥28,820/mo · 南東 · 6F/13F · Vacant·Freehold·Professional management·リフォーム済 ⚠️予算微超(¥198万) — <a href="https://www.st-line.co.jp/buy/detail/14978" target="_blank">スタートライン</a></p>
+  <p class="new-scoreboard-entry"><strong>#61 クレド・ハイツリー両国</strong> (Sumida · 両国7分) — 4,199万(微超) · 40m² 1LDK · 1988年 · 費¥27,605/mo · 南東 · 6F/8F · Vacant·Freehold·リフォーム済 · 通勤~30分 ⚠️40m²狭小/予算微超 — <a href="https://www.homes.co.jp/mansion/b-1216390038547/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#62 ライオンズ西高島平溝下公園弐番館</strong> (Itabashi · 西高島平7分) — 4,099万(微超) · 61m² 3LDK · 1998年 · 費¥30,900/mo(微超) · 南東 · 2F/6F · Vacant·Freehold·改装 ⚠️通勤~48-50分(三田線終点) — <a href="https://www.homes.co.jp/mansion/b-1191550007246/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#63 バロンハイツ大島</strong> (Koto · 大島5分) — 3,780万 · 53m² 2LDK · 1982年9月 · 費¥24,970/mo · 南 · 8F/11F · Vacant·Freehold·Professional management·リフォーム済 ⚠️1982/9 11階建—Post-1982 seismic standard要確認(Building permit) — <a href="https://www.st-line.co.jp/buy/detail/15350" target="_blank">スタートライン</a></p>
+  <p class="new-scoreboard-entry"><strong>#64 日興パレス志村坂上</strong> (Itabashi · 志村坂上10分) — 2,480万(最安) · 46m² 1LDK · 1987年 · 費 要確認 · 方角要確認 · 4F/4FTop floor · Vacant·Freehold·改装2022 ⚠️Repair reserve¥49/㎡Critically low/方角不明 — <a href="https://cowcamo.jp/short_stories/xYtPDbzRP6k" target="_blank">cowcamo</a></p>
+  <p class="new-scoreboard-entry"><strong>#65 メイフラワー西大島</strong> (Koto · 西大島10分) — 4,280万(微超) · 64m² 3LDK · 1990年7月 · 費¥30,400/mo(微超) · 東 · 6F/8F · Freehold ⚠️東向き(南面なし)/予算¥280万超/費¥400超 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_koto/nc_20402603/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#66 東砂三丁目ハイツ6号棟</strong> (Koto · 東大島15分) — 3,800万 · 80m² 3LDK · 1982年8月 · 費¥20,000/mo · 南 · 2F/11F · Freehold ⚠️2FLow floor/15分ウォーク限界/1982/8竣工—Post-1982 seismic standard要確認 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_koto/nc_21087361/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#67 ライオンズマンション綾瀬</strong> (Katsushika · 綾瀬2分) — 3,580万 · 43m² 1LDK · 1983年7月 · 費¥31,866/mo(微超) · 南 · 6F/10F · Freehold·Professional management ⚠️費用微超/1LDK小 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20598766/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#68 コスモお花茶屋参番館</strong> (Katsushika · お花茶屋9分) — 4,250万(微超) · 53m² 3LDK · 1993年 · 費¥33,670/mo(微超) · 南西 · 11F/13F · Freehold ⚠️予算+費用両方微超 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21000108/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#69 エンゼルハイム金町</strong> (Katsushika · 金町10分) — 3,280万 · 52m² 2LDK · 1985年 · 費¥25,710/mo · 東 · 2F/4F · Freehold ⚠️東向き/2FLow floor/管理員なし — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21042254/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#70 グリーンキャピタル第三金町</strong> (Katsushika · 金町5分) — 2,650万(Cheapest圏) · 44m² 1LDK+S · 1986年 · 費¥27,900/mo · 西 · 2F/11F · Freehold ⚠️West-facing/2FLow floor/巡回管理 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20758971/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#71 若木原公園サニーハイツ</strong> (Itabashi · 上板橋8分) — 2,980万 · 46m² 2DK · 1983年 · 費¥24,470/mo · 南西 · 6F/6FTop floor · Vacant·Freehold·Professional management ⚠️2DK(Lなし)/上板橋(遠い) — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/?sort=1" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#72 キャニオンビュー光が丘</strong> (Itabashi · 地下鉄赤塚7分) — 4,299万(微超) · 53m² 1LDK+S · 1982年11月 · 費¥26,085/mo · 南 · 4F/9F · Freehold ⚠️予算微超/巡回管理 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/?sort=1" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#73 サンライズ大山マンション</strong> (Itabashi · 大山6分) — 3,980万 · 52m² 2LDK · 建年不明 · 費¥32,000/mo(微超) · 北西 · 8F/11F · Freehold·Professional management ⚠️北West-facing(南面なし)/費微超 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/?sort=1" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#74 ランデン池袋</strong> (Itabashi · 大山7分) — 4,300万(上限) · 48m² 2LDK · 1988年 · 費¥25,500/mo · 南 · 2F/4F · Freehold·改装2026/04 ⚠️Repair reserve¥4,700Critically low(大規模修繕リスク)/2FLow floor — <a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/?sort=1" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#75 清新北ハイツ5号棟</strong> (Edogawa · 西葛西10分) — 4,380万(超過) · 57m² 2LDK · 1983年 · 費¥21,780/mo · 南 · <strong>12F/23F</strong> · Vacant·Freehold·Professional management ⚠️¥380万超/低優先度区 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21127785/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#76 モア・ステージ一之江</strong> (Edogawa · 一之江10分) — 4,380万(超過) · 66m² 3LDK · 1993年 · 費¥21,760/mo · 南 · 5F/8F · Vacant·Freehold·Professional management ⚠️¥380万超/一之江(遠い) — <a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_20904285/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#77 大捷アメニティハイム</strong> (Edogawa · 小岩5分) — 4,180万(微超) · 52m² 3DK · 1994年 · 費¥23,490/mo · 南東 · 5F/10F · Freehold·Professional management ⚠️3DK(Lなし)/¥180万超 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_20944696/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#78 エスカイア等々力</strong> (Setagaya · 等々力13分) — 3,380万 · 37m² 1LDK · 1984年 · 費¥20,920/mo · 南 · 3F/3FTop floor · Freehold ⚠️37m²小/巡回管理/等々力(遠い) — <a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_78796349/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#79 セザール練馬高野台</strong> (Nerima · 練馬高野台7分) — 4,180万(微超) · 55m² 2LDK+S · 1998年 · 費¥31,460/mo(微超) · 南 · 2F/6F · Freehold·Professional management ★値下げ4,680→4,180万 ⚠️2F/両方微超 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_nerima/?sort=1" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#81 向島パークハイツ</strong> (Sumida · スカイツリー駅6分) — 3,990万 · 45m² 1LDK · 1982年8月 · 費¥13,630/mo(最低水準) · 南西 · 5F/11F · Vacant·Freehold ⚠️Pre-1982 seismicリスク高(11F Steel-reinforced concrete 1982/8=Building permit必須)/Repair reserve¥2,270Critically low — <a href="https://www.homes.co.jp/mansion/b-1216390037921/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#82 MACシバマタコート</strong> (Katsushika · 柴又1分) — 4,170万(微超) · 54m² 2LDK · 1990年 · 費¥28,100/mo · 南東 · 6F/6FTop floor · Vacant·Freehold ⚠️¥170万超/修繕¥10,400要確認 — <a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FL7BGA21/" target="_blank">rehouse</a></p>
+  <p class="new-scoreboard-entry"><strong>#83 ライオンズマンション言問</strong> (Sumida · 曳舟9分) — 4,080万 · 44m² 2DK · 1982年10月 · 費¥24,980/mo · 南西 · 7F/10F · Occupied·Freehold·Professional management ⚠️2DK(Lなし)/Occupied/1982/10-Building permit要確認 — <a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BEA1A/" target="_blank">rehouse</a></p>
+  <p class="new-scoreboard-entry"><strong>#84 エンゼル柴又プロムテラス</strong> (Katsushika · 柴又12分) — 3,650万 · 66.7m² 3LDK · 2005年9月 · 費¥29,350/mo · 南東 · 4F/6F · Vacant·Freehold ⚠️葛飾区/12分歩 — <a href="https://menoreno.jp/bukkens/z_2d357fe8cfaa12ff1c1daa09" target="_blank">ミノリノ</a></p>
+  <p class="new-scoreboard-entry"><strong>#85 ヴェルアージュ亀有</strong> (Katsushika · 亀有13分) — 4,180万 · 61m² 2LDK · 1998年2月 · 費¥29,890/mo · 南Corner unit · 4F/11F · Vacant·Freehold·Professional management·リノベ2025 ⚠️葛飾区/13分歩/+180万soft — <a href="https://www.livable.co.jp/kounyu/mansion/bkdetail/C4825X437/" target="_blank">Livable</a></p>
+  <p class="new-scoreboard-entry"><strong>#86 ライオンズマンション高砂第５</strong> (Katsushika · 柴又6分) — 3,380万 · 61.79m² 2LDK · 1999年3月 · 費¥34,090/mo · 西 · 4F/6F · Vacant·Freehold·Professional management ⚠️費用soft-over +3,090/費用·West-facing·葛飾区 — <a href="https://www.livable.co.jp/kounyu/mansion/bkdetail/C13265P19/" target="_blank">Livable</a></p>
+  <p class="new-scoreboard-entry"><strong>#87 朝日プラザ堀切菖蒲園</strong> (Katsushika · 堀切菖蒲園2分) — 3,490万 · 54.72m² 2LDK · 1986年3月 · 費¥21,880/mo · 南東 · 3F/5F · Vacant·Freehold ⚠️葛飾区 / SE unit nc_21021692のみ(他は北西) — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21021692/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#88 セザールお花茶屋</strong> (Katsushika · お花茶屋3分) — 3,490万 · 50.4m² 2LDK · 1988年4月 · 費¥21,550/mo · 南 · 2F/6F · Freehold·大規模修繕済 ⚠️葛飾区·2F(Low floor)·南向き unit nc_21111938のみ — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21111938/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#89 エスペランサ堀切菖蒲園</strong> (Katsushika · 堀切菖蒲園13分) — 3,200万 · 61.43m² 2SLDK · 1996年 · 費¥19,700/mo est · 南西 · 2F/6F · Freehold ⚠️2F·13分歩·修繕積立49円/㎡ severely underfunded — <a href="https://www.daikyo-anabuki.co.jp/building/TO00055218/" target="_blank">大京穴吹</a></p>
+  <p class="new-scoreboard-entry"><strong>#90 ライオンズガーデンお花茶屋</strong> (Katsushika · お花茶屋10分) — 3,980万 · 61.93m² 3LDK · 1998年2月 · 費¥19,400/mo · 西 · 3F/8F · Freehold ⚠️West-facingのみ(南なし)·3F·葛飾区 — <a href="https://www.pitat.com/sale/address/4/13/122/" target="_blank">ピタット</a></p>
+  <p class="new-scoreboard-entry"><strong>#91 平井パーク・ホームズ ⭐⭐</strong> (Sumida · 東あずま3分) — 3,470万 · 51.6m² 2LDK · 1984年9月 · 費¥21,830/mo · 南東角 · 6F/9F · Vacant·Freehold·Steel-reinforced concrete · スカイツリー眺望 ✓ 同建物3DK 3,198-3,298万も — <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_73561686/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#92 東白鬚第二マンション11号棟</strong> (Sumida · 鐘ヶ淵5分) — 2,880万(最安) · 53.4m² 2DK · 1982年3月 · 費¥20,354/mo · 南西 · 13FTop floor · Freehold ⚠️1982/03-13F Steel-reinforced concretePre-1982 seismic高リスク/Building permit要·2DK·一部委託 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_21069415/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#93 パークサイド八広</strong> (Sumida · 八広5分) — 3,500万 · 61m² 3DK · 1987年3月 · 費要確認(SUUMO¥0/Self-managed vs C21 52,900) · 南東角 · 4F/5F · Vacant·Freehold ⚠️Self-managed·費用矛盾要確認 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_21081640/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#94 ガーデンプラザ柴又弐番館 ⭐</strong> (Katsushika · 柴又9分) — 2,980万 · 68.43m² 3LDK · 1984年11月 · 費¥22,899/mo · 南東 · 5F/11F · 空室·Freehold·Professional management ⚠️葛飾区/9分歩 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20738365/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#95 スカイワード亀有</strong> (Katsushika · 亀有4分) — 2,950万 · 48.08m² 2DK · 1982年3月 · 費¥19,580/mo · 南西角 · 2F/7F · Freehold ⚠️Self-managed·2F·2DK·1982/03Building permitTBC — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20482455/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#96 向島ダイヤモンドマンション</strong> (Sumida · 小村井9分) — 3,300万 · 50.4m² 3DK · 1991年8月 · 費¥27,900/mo · 西 · 9F/10F · Vacant·Freehold·Professional management·Steel-reinforced concrete ⚠️West-facing(南なし) — <a href="https://www.homes.co.jp/mansion/b-1449550000025/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#97 ランドステージ墨田ブライトスクエア</strong> (Sumida · 鐘ヶ淵4分) — 3,980万 · 54m² 2LDK · 2011年4月(新しい) · 費¥29,000/mo · 南西 · 2F/10F · Freehold·Professional management ⚠️Tenant-occupied(OC)·2F — <a href="https://www.homes.co.jp/mansion/b-1453310000097/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#98 東大島ハイライズ</strong> (Koto · 東大島10分) — 4,480万 · 66m² 3LDK · 1982年7月 · 費¥16,870/mo(最安) · 南東 · 10F/11F · Vacant·Freehold·Professional management·リノベ済 ⚠️4,480万(soft+480万)·1982/07Building permitTBC — <a href="https://www.homes.co.jp/mansion/b-1481420000454/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#99 ルックハイツ両国</strong> (Sumida · 森下7分) — 4,180万 · 39.64m² 1LDK · 1982年6月 · 費¥31,140/mo · 南東 · 3F/7F · Vacant·Freehold·Professional management·Seismic compliance cert·リノベ2026/05 ⚠️価格+費用soft-over·3F·40m² — <a href="https://www.homes.co.jp/mansion/b-1552210004020/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#100 ラブリハイツ亀戸</strong> (Koto · 亀戸水神2分) — 3,480万 · 55.78m² 3DK · 1986年1月 · 費¥22,000/mo · 南 · 5F/14F · Professional management ⚠️一部借地(地代¥2,257/2045年)·Occupied(OC) — <a href="https://www.homes.co.jp/mansion/b-1402480026447/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#101 エクレール亀戸</strong> (Sumida · 小村井6分) — 4,080万 · 51.66m² 1LDK+S · 1984年10月 · 費¥25,923/mo · 南西 · 5F/9F · Freehold — <a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_78817240/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#102 ニューライフマンション木場</strong> (Koto · 木場/豊洲15分) — 4,380万 · 46m² 1LDK · 1982年8月 · 費¥18,560/mo · 東 · 4F/11F · Vacant·Freehold·Professional management ⚠️東向き(南なし)·15分歩ギリギリ·1982/08Building permitTBC·soft+380万 — <a href="https://www.homes.co.jp/mansion/b-1109950014324/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#103 サンデュエルお花茶屋</strong> (Katsushika · お花茶屋10分) — 3,188万 · 58.44m² 2LDK · 2004年 · 費¥23,540/mo · 南西 · 8F/12F · Occupied·Freehold — <a href="https://www.homes.co.jp/mansion/b-1566350000125/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#104 クリオ京成立石壱番館</strong> (Katsushika · 京成立石9分) — 4,180万 · 70.74m² 3LDK · 1998年 · 費¥29,430/mo · 南 · 3F/6F · Occupied·Freehold — <a href="https://www.homes.co.jp/mansion/b-1541940000307/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#105 ザ・三和レジデンス四ツ木</strong> (Katsushika · 京成四ツ木14分) — 4,280万 · 50m² 2LDK · 2021年 · 費¥17,000/mo · 南 · 3F/8F · Vacant·Freehold ⚠️walk14分(上限ギリ)·50m²小さめ — <a href="https://www.homes.co.jp/mansion/b-1041110069239/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#106 GSハイム第二金町</strong> (Katsushika · 金町9分) — 3,790万 · 55.62m² 2LDK+S · 1985年3月 · 費¥27,805/mo · 南 · 7F/7F(Top floor) · Vacant·Freehold·Professional management ⭐Top floor·南·Immediate occupancy·Low fees·常磐線直通 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21063522/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#107 エヴァーグリーン高砂</strong> (Katsushika · 京成高砂3分) — 3,680万 · 58.83m² 3LDK · 1994年2月 · 費¥25,460/mo · 南 · 2F/5F · Freehold·委託(巡回) ⚠️2FLow floor — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21004504/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#108 ソフトタウン新小岩</strong> (Katsushika · 新小岩3分) — 3,780万 · 40.56m² 2DK · 3F · 1984年2月 · 費¥17,550/mo · 南西 · Occupied·Freehold ⚠️40m²小さめ·2DK·Occupied — <a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BDA0E/" target="_blank">三井のリハウス</a></p>
+  <p class="new-scoreboard-entry"><strong>#109 鎌倉町パークファミリア</strong> (Katsushika · 新柴又3分) — 4,480万 · 62.68m² 3LDK · 1983年3月 · 費¥31,830/mo(7月〜) · 南西 · 6F/7F · Vacant·Freehold ⚠️soft+180万·管理費7月値上(29,320→31,830) — <a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/" target="_blank">三井のリハウス</a></p>
+  <p class="new-scoreboard-entry"><strong>#110 セザール第二立石</strong> (Katsushika · 青砥7分) — 3,480万 · 54.02m² 1LDK+2S · 1996年8月 · 費¥31,290/mo · 南西 · 2F/5F · Freehold ⚠️費soft+1,290·駐車場購入必須·2F — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20958812/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#111 ライオンズマンション四つ木第2</strong> (Katsushika · 四ツ木8分) — 2,580万 · 50.85m² 2LDK · 2F/5F · 1990年10月 · 費¥33,600/mo · 南 · Vacant·Freehold ⚠️費33,600(soft超)·2FLow floor — <a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/" target="_blank">三井のリハウス</a></p>
+  <p class="new-scoreboard-entry"><strong>#112 コスモ堀切菖蒲園駅前</strong> (Katsushika · 堀切菖蒲園2分) — 3,880万 · 57.90m² 2LDK+納戸 · 1995年5月 · 費¥23,000/mo · 南西 · 5F/12F · Vacant·Freehold — <a href="https://www.livable.co.jp/mansion/C48265E41/" target="_blank">Livable</a></p>
+  <p class="new-scoreboard-entry"><strong>#113 グリーンパーク第2南綾瀬</strong> (Katsushika · お花茶屋12分) — 2,699万 · 44.73m² 2DK · 6F/7F · 1985年9月 · 費¥21,640/mo · 南 · Vacant·Freehold ⚠️44m²コンパクト·2DK·12分·日勤管理 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20981507/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#114 ライオンズマンション柴又</strong> (Katsushika · 柴又8分) — 2,980万 · 54.92m² 2DK · 2F/4F · 1988年2月 · 費¥28,210/mo · 南 · Vacant·Freehold·委託(巡回)·2026/04改装済 ⚠️2F·2DK·委託巡回 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20953500/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#115 ネオコーポ金町</strong> (Katsushika · 金町15分) — 2,980万 · 53.76m² 2LDK · 4F/5F · 1984年6月 · 費¥27,900/mo · 西(角/34m²ルーフバルコニー) · Freehold ⚠️West-facing·walk15分上限ギリ·Corner unitルーフバル付 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21098814/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#116 ダイアパレス立石</strong> (Katsushika · 四ツ木15分) — 3,380万 · 62.94m² 3LDK · 11F/13F · 1988年2月 · 費¥19,500/mo · 南 · Occupied·Freehold ⚠️15分walk上限·Occupied — <a href="https://www.homes.co.jp/mansion/b-1392870001296/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#117 グリーンパーク立石</strong> (Katsushika · 立石11分) — 2,980万 · 43.44m² 2LDK · 3F/7F · 1987年4月 · 費¥27,800/mo · 南東 · Vacant·Freehold·2026/9リノベ予定 — <a href="https://www.nomu.com/mansion/id/RB970523/" target="_blank">ノムコム</a></p>
+  <p class="new-scoreboard-entry"><strong>#118 第２さくらコーポ</strong> (Taito · 浅草15分) — 3,200万 · 66.83m² 2LDK · 3F/4F · 1986年5月 · 費¥6,000/mo(積立¥0!) · 南東 · Vacant·Freehold ⚠️Repair reserveゼロ/S造38年/walk15分上限/部分委託 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_21097635/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#119 光シャンブル滝野川</strong> (Kita · 板橋5分 · JR埼京線) — 3,980万 · 43.02m² 1LDK · 4F/6F · 1982年9月 · 費¥14,470/mo · 南東 · Vacant·Professional management·2026/04フルリノベ済 ⚠️1982/09Pre-1982 seismicリスク/積立¥4,320Critically low/43m² — <a href="https://www.homes.co.jp/mansion/b-1308490000708/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#120 ライオンズマンション上板橋</strong> (Itabashi · 上板橋9分 · 東武東上線) — 3,780万 · 52.25m² 2LDK · 6F/10F · 1984年11月 · 費¥26,300/mo · 南 · Vacant·Freehold·Professional management ⭐南向き6F·Immediate occupancy·1984年 — <a href="https://www.homes.co.jp/mansion/b-1423180000394/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#121 Sevenstar Heights Nakano V</strong> (Nakano · 新井薬師前8分 · 西武新宿線) — 3,980万 · 36.37m² 1LDK · 4F/4F · 1990年8月 · 費¥29,290/mo · 南 · Vacant·Freehold·2026/6リノベ予定 ⭐Top floor·南·西武新宿線直通 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_nakano/nc_21123405/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#122 リーベスト浮間舟渡</strong> (Itabashi · 浮間舟渡3分) — 3,980万 · 50.06m² 2LDK · 5F/5F(Top floor) · 1989年8月 · 費¥21,840/mo · 南西 · Occupied·Freehold ⚠️Occupied·小規模23戸 — <a href="https://www.homes.co.jp/mansion/b-1358110011419/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#123 東糀谷ダイヤモンドマンション</strong> (Ota · 穴守稲荷6分 · 京急空港線→品川→東京~31分) — 3,080万 · 35m² 1LDK · 6F/9F · 1983年7月 · 費¥25,457/mo · 南 · Freehold · 2026/5フルリノベ済 ⚠️35m²(最小) · 大田区(優先外) — <a href="https://suumo.jp/ms/chuko/tokyo/sc_ota/nc_21044765/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#124 パークハイム上井草</strong> (Suginami · 上井草7分 · 西武新宿線→高田馬場→東京~44分) — 3,580万 · 51.84m² 3DK · 3F/3FTop floor · 1984年12月 · 費¥26,040/mo · 南 · Freehold · 即引渡 ⚠️3DK(Lなし)/杉並(優先外)/通勤ギリ44分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_suginami/nc_21006918/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#129 晴紀館</strong> (Ota · 雪が谷大塚4分 · 東急池上線→五反田→JR→東京~38分) — 3,288万 · 39.63m² 1LDK · 4F/4F TOP FLOOR · 1989年10月 · 費¥13,500/mo · 南西 · 所有権 · 全部委託(Wits Community) · 空家 ⚠️大田区(exceptional only)/39m²小/池上線ローカル — <a href="https://www.homes.co.jp/mansion/b-1357690019721/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#128 ライオンズマンション桜台</strong> (Nerima · 桜台3分 · 西武池袋線→池袋→東京~40分) — 2,660万 · 50.6m² 1LDK · 4F/4F TOP FLOOR · 1982年1月 · 費¥27,310/mo · 南 · 所有権 · 全部委託(Sunny Life) · 賃貸中(オーナーチェンジ) ⚠️練馬区/1982/01ギリギリ耐震/tenant-occupied/バルコニー小 — <a href="https://www.homes.co.jp/mansion/b-1392850001219/" target="_blank">HOME'S</a></p>
+  <p class="new-scoreboard-entry"><strong>#127 関町南パーク・ホームズ 7F</strong> (Nerima · 東伏見12分 · 西武新宿線→高田馬場→JR中央線→東京~44分) — 3,298万 · 49.24m² 2LDK · 7F/7F TOP FLOOR · 1986年12月 · 費¥21,800/mo · 南 · 所有権 · 委託巡回 · 2026/4フルリノベ · 即引渡 ⚠️練馬区/12分歩/通勤44分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_nerima/nc_20825302/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#126 カエサル西尾久</strong> (Arakawa · 尾久9分 · JR高崎線→上野→東京~26分) — 2,780万 · 41.32m² 1LDK · 2F/5F · 1984年6月 · 費¥25,170/mo · 南西 · 所有権 · 2026/6フルリノベ · 全部委託(東急コミュニティ) · 空家 ⚠️荒川区(deprioritized)/2F低層/尾久駅 — <a href="https://www.nomu.com/mansion/id/RD670772/" target="_blank">nomu.com</a></p>
+  <p class="new-scoreboard-entry"><strong>#125 関町南パーク・ホームズ</strong> (Nerima · 東伏見12分 · 西武新宿線→高田馬場→JR中央線→東京~44分) — 3,298万 · 45.59m² 2LDK · 6F/7F · 1986年12月 · 費¥21,800/mo · 南 · 所有権 · 2026/4フルリノベ · 即引渡 ⚠️練馬区(優先外)/12分歩/通勤44分 — <a href="https://suumo.jp/ms/chuko/tokyo/sc_nerima/nc_20951074/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#122 タウンハイツ亀有２号棟</strong> (Katsushika · 亀有15分 · JR常磐線) — 2,190万 · 43.2m² 1LDK · 4F/6F · 1988年3月 · 費¥15,350/mo · 南西 · Vacant·Freehold·2026/4Reno ⭐Ultra-low fees·SW·Immediate occupancy — <a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21157489/" target="_blank">SUUMO</a></p>
+  <p class="new-scoreboard-entry"><strong>#123 エスカイア等々力</strong> (Setagaya · 等々力13分 · 東急大井町線) — 3,380万 · 37m² 1LDK · 3F/3F · 1984年3月 · 費¥20,920/mo · 南 · Freehold·Low fees·2025/6Reno ⭐South·Affordable·Under-budget — <a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_78796349/" target="_blank">SUUMO</a></p>
+  <!-- SCOREBOARD_ENTRIES_END -->
+</div>
+
+<!-- ==================== AUCTION WATCH ==================== -->
+<div id="auction-watch" style="background:#1a1320; border:1px solid #5a2d50; border-radius:10px; padding:18px 24px; margin-bottom:40px;">
+  <h2 style="color:#d8a0e0; font-size:1.05rem; margin:0 0 6px;">⚖️ Auction (競売) watch — high-risk, time-sensitive <span style="color:#7a6478; font-weight:400; font-size:0.8rem;">(NOT counted in the candidate total)</span></h2>
+  <p style="color:#a78ba8; font-size:0.82rem; margin:0 0 14px;">Court-auction units at ~30-40% below market. But: <strong>min-bid ≠ final price</strong> (winning bids run higher), no interior viewing, possible occupant eviction, cash/fast financing, condition unknown. Real value for a cash buyer; poor fit for move-in-ready. Next batch: 入札 2026-07-02 to 07-09, 開札 (decision) 07-15.</p>
+  <p style="margin:6px 0; font-size:0.86rem; color:#e2d5e8; border-left:2px solid #b070c0; padding-left:10px;"><strong>★★ クレストフォルム東大島ブライトコート</strong> (Koto · 東砂2 · 東大島9分) — 60㎡ 3LDK · <strong>2015</strong> · 5F/15F · ESE · Freehold · 費~¥23,100 · <strong>MIN BID 3,040万 vs ~5,050万 market (~40% below)</strong> · 開札7/15 — <a href="https://981.jp/ftl/searchRes_detail.do?res.id=703869" target="_blank">981.jp</a></p>
+  <p style="margin:6px 0; font-size:0.86rem; color:#e2d5e8; border-left:2px solid #b070c0; padding-left:10px;"><strong>★★ マートルコート東中野</strong> (Nakano · 落合5分 · 東西線→大手町~15min) — 54㎡ 3DK · 1987 · <strong>7F/8F</strong> · Freehold · 費¥29,660 · <strong>MIN BID 3,048万 vs ~4,380-5,780万 (~35% below)</strong> · owner-occupier (cleaner handover) · 開札7/15 — <a href="https://981.jp/ftl/searchRes_detail.do?res.id=703866" target="_blank">981.jp</a></p>
+  <p style="margin:6px 0; font-size:0.82rem; color:#a78ba8; border-left:2px solid #5a2d50; padding-left:10px;">★ パラスト白山 (Bunkyo · 白山6分) — 54㎡ 2LDK · 1993 · 2F/12F · MIN BID 3,136万 — ⚠️ fees ¥36,100 over cap + occupied + 2F (premium ward at a discount, but not recommended)</p>
+</div>
+
+<!-- ==================== SUMIDA-KU ==================== -->
+<div class="ward" id="ward-sumida">
+  <div class="ward-title">Sumida-ku Sumida ward <span class="ward-count" id="count-sumida">4 viable</span></div>
+  <table id="table-sumida">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- SUMIDA_ROWS_START -->
+    <tr class="pass new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1372180000062/" target="_blank">グレースジュン</a></td>
+      <td class="price good-price">3,150万</td>
+      <td>37.33m²</td>
+      <td>3F/6F</td>
+      <td>1989</td>
+      <td>4min</td>
+      <td>とうきょうスカイツリー (東武)</td>
+      <td>¥21,230</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">Vacant</span><span class="flag green">Major reno Apr'25</span><span class="flag yellow">Small (37m²)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1453310000097/" target="_blank">ランドステージ墨田ブライトスクエア</a></td>
+      <td class="price">3,980万</td>
+      <td>54.13m²</td>
+      <td>2F/10F</td>
+      <td>2011</td>
+      <td>4min</td>
+      <td>鐘ヶ淵 (東武)</td>
+      <td class="fees-warn">¥29,000</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag yellow">Low floor (2F)</span><span class="flag yellow">Tenant in place</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_20937054/" target="_blank">ピュアシティすみだ堤通</a></td>
+      <td class="price">3,980万</td>
+      <td>53.16m²</td>
+      <td>8F/12F</td>
+      <td>1993</td>
+      <td>4min</td>
+      <td>鐘ヶ淵 (東武伊勢崎)</td>
+      <td>¥23,100</td>
+      <td>1LDK+S</td>
+      <td>東</td>
+      <td><span class="flag green">Skytree view from balcony</span><span class="flag green">High floor (8F)</span><span class="flag green">Vacant · Professional management</span><span class="flag yellow">East-facing</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1216390038547/" target="_blank">クレド・ハイツリー両国</a></td>
+      <td class="price">4,199万</td>
+      <td>40.2m²</td>
+      <td>6F/8F</td>
+      <td>1988</td>
+      <td>7min</td>
+      <td>両国 (都営大江戸)</td>
+      <td>¥27,605</td>
+      <td>1LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · vacant · freehold · 1988 · reno</span><span class="flag green">~30min to Tokyo · central</span><span class="flag yellow">Compact 1LDK (40m²)</span><span class="flag yellow">4,199万 (¥199万 over — soft)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1216390037921/" target="_blank">向島パークハイツ</a></td>
+      <td class="price">3,990万</td>
+      <td>44.61m²</td>
+      <td>5F/11F</td>
+      <td>1982/08</td>
+      <td>6min</td>
+      <td>とうきょうスカイツリー (東武)</td>
+      <td>¥13,630</td>
+      <td>1LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">Skytree駅6分 · SW · Vacant · freehold · 5F</span><span class="flag red">1982/08 11階建Steel-reinforced concrete — 建築確認~1979-80 Pre-1982 seismicリスク高 (Building permit必須)</span><span class="flag red">Repair reserve¥2,270/mo Critically low (44年築で深刻)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BEA1A/" target="_blank">ライオンズマンション言問</a></td>
+      <td class="price">4,080万</td>
+      <td>44.32m²</td>
+      <td>7F/10F</td>
+      <td>1982/10</td>
+      <td>9min</td>
+      <td>曳舟 (東武伊勢崎→押上→半蔵門線)</td>
+      <td>¥24,980</td>
+      <td>2DK</td>
+      <td>南西</td>
+      <td><span class="flag green">Sumida ward · 7F · SW · freehold · Professional management · Low fees</span><span class="flag yellow">2DK layout (Lなし) · Occupied (occupied) · 1982/10 confirm Building permit</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_73561686/" target="_blank">平井パーク・ホームズ</a></td>
+      <td class="price">3,470万</td>
+      <td>51.61m²</td>
+      <td>6F/9F</td>
+      <td>1984/09</td>
+      <td>3min</td>
+      <td>東あずま (東武亀戸線→亀戸→JR→東京~20分)</td>
+      <td>¥21,830</td>
+      <td>2LDK</td>
+      <td>南東 (角)</td>
+      <td><span class="flag green">⭐⭐ スカイツリー眺望 · SE角住戸 · 6F · 3分Near station · Low fees · Vacant · Freehold · Steel-reinforced concrete</span><span class="flag yellow">Sumida ward東墨田 (東武亀戸線) · 同建物3DKが3,198-3,298万 (nc_20995436/nc_20977217) — より安いオプション</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_21069415/" target="_blank">東白鬚第二マンション11号棟</a></td>
+      <td class="price">2,880万</td>
+      <td>53.4m²</td>
+      <td>13FTop floor/13F</td>
+      <td>1982/03</td>
+      <td>5min</td>
+      <td>鐘ヶ淵 (東武伊勢崎線→北千住→東京~25分)</td>
+      <td>¥20,354</td>
+      <td>2DK</td>
+      <td>南西</td>
+      <td><span class="flag green">Cheapest2,880万 · 13FTop floor · SW · Hakushio Riverエリア · Freehold · Steel-reinforced concrete</span><span class="flag red">1982/03 — 13F Steel-reinforced concrete = Pre-1982 seismic高リスク · Building permit日要確認 · 2DK(Lなし) · 一部委託</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_21081640/" target="_blank">パークサイド八広</a></td>
+      <td class="price">3,500万</td>
+      <td>61.06m²</td>
+      <td>4F/5F</td>
+      <td>1987/03</td>
+      <td>5min</td>
+      <td>八広 (東武亀戸線→亀戸→JR)</td>
+      <td>¥0 SUUMO (要確認)</td>
+      <td>3DK</td>
+      <td>南東 (角)</td>
+      <td><span class="flag green">61m² SE角 · 公園向き · Vacant · Freehold · 1987年</span><span class="flag red">Self-managed · SUUMO費用¥0 vs Century21同建物52,900/mo — 実費要確認 (33k超の可能性) · 修繕積立なし疑義</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1449550000025/" target="_blank">向島ダイヤモンドマンション</a></td>
+      <td class="price">3,300万</td>
+      <td>50.4m²</td>
+      <td>9F/10F</td>
+      <td>1991/08</td>
+      <td>9min</td>
+      <td>小村井 (東武亀戸線→亀戸→JR→東京~25分)</td>
+      <td>¥27,900</td>
+      <td>3DK</td>
+      <td>西</td>
+      <td><span class="flag green">9FHigh-rise · Vacant · Freehold · Professional management · Steel-reinforced concrete · Low fees</span><span class="flag yellow">West-facing(南なし) · Sumida ward小村井</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1453310000097/" target="_blank">ランドステージ墨田ブライトスクエア</a></td>
+      <td class="price">3,980万</td>
+      <td>54.13m²</td>
+      <td>2F/10F</td>
+      <td>2011/04</td>
+      <td>4min</td>
+      <td>鐘ヶ淵 (東武伊勢崎線→北千住→東京~25分)</td>
+      <td>¥29,000</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">2011年(新しい) · SW · Freehold · Professional management · 鐘ヶ淵4分</span><span class="flag yellow">Tenant-occupied(OC) · 2F · Immediate occupancy不可</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1552210004020/" target="_blank">ルックハイツ両国</a></td>
+      <td class="price">4,180万</td>
+      <td>39.64m²</td>
+      <td>3F/7F</td>
+      <td>1982/06</td>
+      <td>7min</td>
+      <td>森下 (都営新宿線+大江戸線→大手町~15分)</td>
+      <td>¥31,140</td>
+      <td>1LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">Seismic compliance cert(Post-1982 seismic standard確認済) · SE · Vacant · Freehold · Professional management · リノベ2026/05</span><span class="flag yellow">4,180万(soft+180万) · 費31,140(soft+1,140) · 3F · 40m²</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_78817240/" target="_blank">エクレール亀戸</a></td>
+      <td class="price">4,080万</td>
+      <td>51.66m²</td>
+      <td>5F/9F</td>
+      <td>1984/10</td>
+      <td>6min</td>
+      <td>小村井 (東武亀戸線→亀戸→JR→東京~25分)</td>
+      <td>¥25,923</td>
+      <td>1LDK+S</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · 5F · Freehold · 1984年 · 費用OK</span><span class="flag yellow">Sumida ward · 小村井6分 (東武亀戸線)</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-28">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_sumida/nc_20518263/" target="_blank">サンタウン立花１号棟</a></td>
+      <td class="price good-price">2,690万</td>
+      <td>33.04m²</td>
+      <td>5F/9F</td>
+      <td>1983/04</td>
+      <td>2min</td>
+      <td>東あずま (東武亀戸線)</td>
+      <td>¥19,900</td>
+      <td>1DK</td>
+      <td>東</td>
+      <td><span class="flag green">East · 5F/9F · Freehold · Ultra-low fees ¥19,900 · Reno May'26</span><span class="flag yellow">Sumida · East-facing (not ideal but viable) · 2min walk · Vacant</span></td>
+    </tr>
+    <!-- SUMIDA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-sumida">No Sumida-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== KATSUSHIKA-KU ==================== -->
+<div class="ward" id="ward-katsushika">
+  <div class="ward-title">Katsushika-ku 葛飾区 <span class="ward-count" id="count-katsushika">29 viable</span></div>
+  <table id="table-katsushika">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- KATSUSHIKA_ROWS_START -->
+    <tr class="pass new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1267650037665/" target="_blank">青砥東パーク・ホームズ</a></td>
+      <td class="price good-price">3,980万</td>
+      <td>62.8m²</td>
+      <td>13F/15F</td>
+      <td>1995</td>
+      <td>8min</td>
+      <td>青砥 (京成)</td>
+      <td>¥27,674</td>
+      <td>2SLDK</td>
+      <td>南東</td>
+      <td><span class="flag green">Vacant</span><span class="flag green">High floor (13F)</span><span class="flag green">SE facing</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1566350000125/" target="_blank">サンデュエルお花茶屋</a></td>
+      <td class="price good-price">3,188万</td>
+      <td>58.44m²</td>
+      <td>8F/12F</td>
+      <td>2004</td>
+      <td>10min</td>
+      <td>お花茶屋 (京成)</td>
+      <td>¥23,540</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag yellow">Tenant in place (invest.)</span><span class="flag yellow">No immediate entry</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20738365/" target="_blank">ガーデンプラザ柴又弐番館</a></td>
+      <td class="price good-price">2,980万</td>
+      <td>68.43m²</td>
+      <td>5F/11F</td>
+      <td>1984</td>
+      <td>9min</td>
+      <td>柴又 (京成金町線)</td>
+      <td>¥22,599</td>
+      <td>3LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">Vacant</span><span class="flag green">SE · High floor (5F)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20758971/" target="_blank">グリーンキャピタル第三金町</a></td>
+      <td class="price good-price">2,650万</td>
+      <td>43.68m²</td>
+      <td>2F/11F</td>
+      <td>1986</td>
+      <td>5min</td>
+      <td>金町 (JR常磐)</td>
+      <td>¥27,900</td>
+      <td>1LDK+S</td>
+      <td>西</td>
+      <td><span class="flag yellow">Low floor (2F)</span><span class="flag yellow">W facing</span><span class="flag green">2022 renovation</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-35007210000231/" target="_blank">ダイアパレス柴又</a></td>
+      <td class="price">3,980万</td>
+      <td>50.22m²</td>
+      <td>4F/8F</td>
+      <td>1994</td>
+      <td>10min</td>
+      <td>柴又 (京成金町線)</td>
+      <td>¥18,380</td>
+      <td>2LDK</td>
+      <td>西</td>
+      <td><span class="flag yellow">West-facing</span><span class="flag yellow">7月改装予定</span><span class="flag green">Vacant</span><span class="flag green">費最安級</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_74385576/" target="_blank">メッツ立石</a></td>
+      <td class="price good-price">2,800万</td>
+      <td>56.7m²</td>
+      <td>9F/13F</td>
+      <td>1995</td>
+      <td>11min</td>
+      <td>お花茶屋 (京成本線)</td>
+      <td>TBC</td>
+      <td>3DK</td>
+      <td>南西</td>
+      <td><span class="flag yellow">Fees unconfirmed — verify</span><span class="flag green">High floor (9F)</span><span class="flag green">SW · freehold · elevator</span><span class="flag green">Cheapest (2,800万)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21042254/" target="_blank">エンゼルハイム金町</a></td>
+      <td class="price good-price">3,280万</td>
+      <td>51.84m²</td>
+      <td>2F/4F</td>
+      <td>1985</td>
+      <td>10min</td>
+      <td>金町 (JR常磐/千代田)</td>
+      <td>¥25,710</td>
+      <td>2LDK</td>
+      <td>東</td>
+      <td><span class="flag yellow">East-facing (no south)</span><span class="flag yellow">Low floor (2F)</span><span class="flag yellow">No elevator in building</span><span class="flag green">Freehold · vacant · fees OK</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.ieshil.com/buildings/326492/" target="_blank">プレシス堀切菖蒲園</a></td>
+      <td class="price">3,880万</td>
+      <td>55.2m²</td>
+      <td>4F/12F</td>
+      <td>2016</td>
+      <td>6min</td>
+      <td>堀切菖蒲園 (京成本線)</td>
+      <td>¥23,310</td>
+      <td>3LDK</td>
+      <td>南</td>
+      <td><span class="flag green">2016 modern build</span><span class="flag green">South ✓ (all-south bldg)</span><span class="flag yellow">Confirm floor (likely 4F)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://mansion-market.com/mansions/detail/12793" target="_blank">エスペランサ堀切菖蒲園</a></td>
+      <td class="price good-price">3,200万</td>
+      <td>61.43m²</td>
+      <td>2F/6F</td>
+      <td>1996</td>
+      <td>13min</td>
+      <td>堀切菖蒲園 (京成本線)</td>
+      <td>¥19,719</td>
+      <td>2SLDK</td>
+      <td>南西</td>
+      <td><span class="flag green">61m² SW · cheapest (3,200万)</span><span class="flag yellow">Low floor (2F) · 13min walk</span><span class="flag yellow">Repair reserve thin (¥49/m²)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.daikyo-anabuki.co.jp/building/TO00073525" target="_blank">御殿山デュープレックス</a></td>
+      <td class="price">3,980万</td>
+      <td>62.21m²</td>
+      <td>10F/13F</td>
+      <td>1999</td>
+      <td>15min</td>
+      <td>青砥 (京成本線)</td>
+      <td>¥22,706</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">10F SW corner · high floor</span><span class="flag green">Fees ¥22,706 ✓</span><span class="flag yellow">15min walk (limit)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BEA0E/" target="_blank">四つ木パーク・ホームズ</a></td>
+      <td class="price good-price">3,550万</td>
+      <td>63.18m²</td>
+      <td>11F/14F</td>
+      <td>1994</td>
+      <td>13min</td>
+      <td>四ツ木 (京成押上)</td>
+      <td>¥22,980</td>
+      <td>3LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">11F SW · Skytree-view potential</span><span class="flag green">Vacant · freehold · Professional management</span><span class="flag yellow">13min walk</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1267650037514/" target="_blank">エンゼル柴又プロムテラス</a></td>
+      <td class="price">3,650万</td>
+      <td>66.7m²</td>
+      <td>4F/6F</td>
+      <td>2005</td>
+      <td>12min</td>
+      <td>柴又 (京成金町線)</td>
+      <td class="fees-warn">¥29,350</td>
+      <td>3LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">2005 modern (Post-1982 seismic standard · no asbestos)</span><span class="flag green">SE · vacant · freehold · Professional management</span><span class="flag green">66m² 3LDK</span><span class="flag yellow">Fees ¥29,350 (slim margin)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BGA34/" target="_blank">セザールお花茶屋</a></td>
+      <td class="price good-price">3,490万</td>
+      <td>50.4m²</td>
+      <td>2F/6F</td>
+      <td>1988</td>
+      <td>4min</td>
+      <td>お花茶屋 (京成本線)</td>
+      <td>¥21,550</td>
+      <td>2LDK</td>
+      <td>西</td>
+      <td><span class="flag green">Vacant · freehold · お花茶屋4分</span><span class="flag green">Reno due 2026/9</span><span class="flag yellow">West-facing · low floor (2F)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.nomu.com/mansion/id/F98C2013/" target="_blank">新小岩パーク・ホームズ</a></td>
+      <td class="price">3,890万</td>
+      <td>56.35m²</td>
+      <td>5F/9F</td>
+      <td>1995</td>
+      <td>15min</td>
+      <td>新小岩 (JR総武)</td>
+      <td class="fees-warn">¥30,516</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 5F · freehold · 1995</span><span class="flag yellow">Fees ¥30,516 (¥516 over — soft)</span><span class="flag yellow">15min walk · occupied</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BGA20/" target="_blank">コスモ柴又駅前</a></td>
+      <td class="price">4,090万</td>
+      <td>56m²</td>
+      <td>3F/8F</td>
+      <td>1994</td>
+      <td>2min</td>
+      <td>柴又 (京成金町線)</td>
+      <td class="fees-warn">¥30,400</td>
+      <td>2LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · 柴又2分 · vacant · Professional management</span><span class="flag yellow">4,090万 (90万 over — soft)</span><span class="flag yellow">Fees ¥30,400 (¥400 over — soft)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_76856914/" target="_blank">日神パレステージお花茶屋</a></td>
+      <td class="price">3,990万</td>
+      <td>55.88m²</td>
+      <td>2F/9F</td>
+      <td>2008</td>
+      <td>8min</td>
+      <td>お花茶屋 (京成本線)</td>
+      <td class="fees-warn">¥33,230</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">2008 modern · SW · freehold</span><span class="flag yellow">Low floor (2F)</span><span class="flag yellow">Fees ¥33,230 (¥3,230 over — soft)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20598766/" target="_blank">ライオンズマンション綾瀬</a></td>
+      <td class="price">3,580万</td>
+      <td>42.66m²</td>
+      <td>6F/10F</td>
+      <td>1983/07</td>
+      <td>2min</td>
+      <td>綾瀬 (JR/千代田線)</td>
+      <td class="fees-warn">¥31,866</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 6F · 綾瀬2分 (千代田線直通) · freehold · Professional management</span><span class="flag yellow">Fees ¥31,866 (soft over) · 1LDK compact 42m²</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21000108/" target="_blank">コスモお花茶屋参番館</a></td>
+      <td class="price">4,250万</td>
+      <td>53.35m²</td>
+      <td>11F/13F</td>
+      <td>1993/03</td>
+      <td>9min</td>
+      <td>お花茶屋 (京成本線)</td>
+      <td class="fees-warn">¥33,670</td>
+      <td>3LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">11F High-rise · SW · 53m² 3LDK · 1993 · freehold</span><span class="flag yellow">4,250万 (¥250万 over — soft) · 費¥33,670 (¥670 over — soft)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21042254/" target="_blank">エンゼルハイム金町</a></td>
+      <td class="price good-price">3,280万</td>
+      <td>51.84m²</td>
+      <td>2F/4F</td>
+      <td>1985/12</td>
+      <td>10min</td>
+      <td>金町 (JR常磐線)</td>
+      <td>¥25,710</td>
+      <td>2LDK</td>
+      <td>東</td>
+      <td><span class="flag green">3,280万 · freehold · 52m² 2LDK · Low fees</span><span class="flag yellow">東向き (南面なし) · 2F Low floor · 管理員なし</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20758971/" target="_blank">グリーンキャピタル第三金町</a></td>
+      <td class="price good-price">2,650万</td>
+      <td>43.68m²</td>
+      <td>2F/11F</td>
+      <td>1986/01</td>
+      <td>5min</td>
+      <td>金町 (JR常磐線)</td>
+      <td>¥27,900</td>
+      <td>1LDK+S</td>
+      <td>西</td>
+      <td><span class="flag green">Cheapest圏 2,650万 · freehold · 金町5分</span><span class="flag yellow">West-facing · 2F Low floor · 巡回管理</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FL7BGA21/" target="_blank">MACシバマタコート</a></td>
+      <td class="price">4,170万</td>
+      <td>54.18m²</td>
+      <td>6F/6F</td>
+      <td>1990/06</td>
+      <td>1min</td>
+      <td>柴又 (京成金町線)</td>
+      <td>¥28,100</td>
+      <td>2LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · Top floor · 柴又1分 · Vacant · freehold · 1990</span><span class="flag yellow">4,170万 (¥170万 over — soft) · 修繕¥10,400 (1990築で要確認)</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://menoreno.jp/bukkens/z_2d357fe8cfaa12ff1c1daa09" target="_blank">エンゼル柴又プロムテラス</a></td>
+      <td class="price">3,650万</td>
+      <td>66.7m²</td>
+      <td>4F/6F</td>
+      <td>2005/09</td>
+      <td>12min</td>
+      <td>柴又 (京成金町線→金町→JR)</td>
+      <td>¥29,350</td>
+      <td>3LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">最新築2005年 · SE · 66m² 3LDK · Vacant · Freehold · 費用OK</span><span class="flag yellow">葛飾区 (低優先) · 柴又12分歩</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://www.livable.co.jp/kounyu/mansion/bkdetail/C4825X437/" target="_blank">ヴェルアージュ亀有</a></td>
+      <td class="price">4,180万</td>
+      <td>61.01m²</td>
+      <td>4F/11F</td>
+      <td>1998/02</td>
+      <td>13min</td>
+      <td>亀有 (JR常磐線→上野→東京)</td>
+      <td>¥29,890</td>
+      <td>2LDK</td>
+      <td>南 (Corner unit)</td>
+      <td><span class="flag green">南向きCorner unit · 61m² · Vacant · Freehold · Professional management · リノベ2025年9月</span><span class="flag yellow">葛飾区 · 亀有13分歩 · 4,180万 (soft-over +180万)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.livable.co.jp/kounyu/mansion/bkdetail/C13265P19/" target="_blank">ライオンズマンション高砂第５</a></td>
+      <td class="price">3,380万</td>
+      <td>61.79m²</td>
+      <td>4F/6F</td>
+      <td>1999/03</td>
+      <td>6min</td>
+      <td>柴又 (京成金町線)</td>
+      <td>¥34,090</td>
+      <td>2LDK</td>
+      <td>西</td>
+      <td><span class="flag green">61m² · Vacant · Freehold · Professional management · 安価</span><span class="flag red">費用34,090/mo (soft cap +3,090) · West-facing (南なし) · 葛飾区</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21021692/" target="_blank">朝日プラザ堀切菖蒲園</a></td>
+      <td class="price">3,490万</td>
+      <td>54.72m²</td>
+      <td>3F/5F</td>
+      <td>1986/03</td>
+      <td>2min</td>
+      <td>堀切菖蒲園 (京成本線→押上→大手町~30分)</td>
+      <td>¥21,880</td>
+      <td>2LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · 2分Near station · Low fees · Vacant · Freehold · 1986年</span><span class="flag yellow">葛飾区 · 同建物は北West-facingが多い — nc_21021692 (3F SE) のみ追跡</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21111938/" target="_blank">セザールお花茶屋</a></td>
+      <td class="price">3,490万</td>
+      <td>50.4m²</td>
+      <td>2F/6F</td>
+      <td>1988/04</td>
+      <td>3min</td>
+      <td>お花茶屋 (京成本線→押上→大手町~30分)</td>
+      <td>¥21,550</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">南向き · 3分Near station · Low fees · Freehold · 大規模修繕済 · 132戸</span><span class="flag yellow">葛飾区 · 2F (Low floor) · 同建物のWest-facing多 — nc_21111938 (南向き) のみ · リノベ予定</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.daikyo-anabuki.co.jp/building/TO00055218/" target="_blank">エスペランサ堀切菖蒲園</a></td>
+      <td class="price">3,200万</td>
+      <td>61.43m²</td>
+      <td>2F/6F</td>
+      <td>1996/11</td>
+      <td>13min</td>
+      <td>堀切菖蒲園 (京成本線→押上)</td>
+      <td>¥19,700 est</td>
+      <td>2SLDK</td>
+      <td>南西</td>
+      <td><span class="flag green">61m² · 南西 · Freehold · 安価3,200万</span><span class="flag red">2F · 13分歩 · Repair reserve49円/㎡ severely underfunded (要確認)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.pitat.com/sale/address/4/13/122/" target="_blank">ライオンズガーデンお花茶屋</a></td>
+      <td class="price">3,980万</td>
+      <td>61.93m²</td>
+      <td>3F/8F</td>
+      <td>1998/02</td>
+      <td>10min</td>
+      <td>お花茶屋 (京成本線→押上)</td>
+      <td>¥19,400</td>
+      <td>3LDK</td>
+      <td>西</td>
+      <td><span class="flag green">62m² 3LDK · Freehold · Low fees · 1998年</span><span class="flag red">West-facingのみ (南なし) · 3F · 葛飾区</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20738365/" target="_blank">ガーデンプラザ柴又弐番館</a></td>
+      <td class="price">2,980万</td>
+      <td>68.43m²</td>
+      <td>5F/11F</td>
+      <td>1984/11</td>
+      <td>9min</td>
+      <td>柴又 (京成金町線→金町→JR→東京~35分)</td>
+      <td>¥22,899</td>
+      <td>3LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">⭐ 68m² 3LDK · SE · 5F · 空室 · Freehold · Professional management · 安価2,980万 · 花火大会眺望</span><span class="flag yellow">葛飾区 · 柴又9分歩 · ~35分/東京駅</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20482455/" target="_blank">スカイワード亀有</a></td>
+      <td class="price">2,950万</td>
+      <td>48.08m²</td>
+      <td>2F/7F</td>
+      <td>1982/03</td>
+      <td>4min</td>
+      <td>亀有 (JR常磐線→上野→東京~30分)</td>
+      <td>¥19,580</td>
+      <td>2DK</td>
+      <td>南西 (角)</td>
+      <td><span class="flag green">SW角 · 4分Near station · Low fees · Freehold · Steel-reinforced concrete</span><span class="flag red">Self-managed(管理員なし) · 2F · 2DK(Lなし) · 1982/03-Building permit要確認</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1566350000125/" target="_blank">サンデュエルお花茶屋</a></td>
+      <td class="price">3,188万</td>
+      <td>58.44m²</td>
+      <td>8F/12F</td>
+      <td>2004/--</td>
+      <td>10min</td>
+      <td>京成お花茶屋 (京成本線→日暮里→上野~25分)</td>
+      <td>¥23,540</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">8FHigh-rise · SW · Low fees · Freehold · 2004築</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1541940000307/" target="_blank">クリオ京成立石壱番館</a></td>
+      <td class="price">4,180万</td>
+      <td>70.74m²</td>
+      <td>3F/6F</td>
+      <td>1998/--</td>
+      <td>9min</td>
+      <td>京成立石 (京成押上線→押上→半蔵門線→大手町~25分)</td>
+      <td>¥29,430</td>
+      <td>3LDK</td>
+      <td>南</td>
+      <td><span class="flag green">70m² 3LDK · 南向き · Freehold · 1998築</span><span class="flag yellow">3F · 予算上限</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1041110069239/" target="_blank">ザ・三和レジデンス四ツ木</a></td>
+      <td class="price">4,280万</td>
+      <td>50m²</td>
+      <td>3F/8F</td>
+      <td>2021/--</td>
+      <td>14min</td>
+      <td>京成四ツ木 (京成押上線→押上→半蔵門線→大手町~25分)</td>
+      <td>¥17,000</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">2021新築 · 南 · VacantImmediate occupancy · 超Low fees¥17k · Freehold</span><span class="flag yellow">walk14分(上限ギリ) · 50m²小さめ</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21063522/" target="_blank">GSハイム第二金町</a></td>
+      <td class="price">3,790万</td>
+      <td>55.62m²</td>
+      <td>7F/7F ⭐Top floor</td>
+      <td>1985/03</td>
+      <td>9min</td>
+      <td>金町 (JR常磐線→上野→東京~30分)</td>
+      <td>¥27,805</td>
+      <td>2LDK+S</td>
+      <td>南</td>
+      <td><span class="flag green">Top floor · 南 · VacantImmediate occupancy · Professional management · Low fees · Freehold</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21004504/" target="_blank">エヴァーグリーン高砂</a></td>
+      <td class="price">3,680万</td>
+      <td>58.83m²</td>
+      <td>2F/5F</td>
+      <td>1994/02</td>
+      <td>3min</td>
+      <td>京成高砂 (京成本線/北総線/京成金町線/成田スカイアクセス→押上~15分)</td>
+      <td>¥25,460</td>
+      <td>3LDK</td>
+      <td>南</td>
+      <td><span class="flag green">南向き · 3LDK · 4路線アクセス · 超Near station3分 · Low fees · Freehold</span><span class="flag yellow">2FLow floor</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BDA0E/" target="_blank">ソフトタウン新小岩</a></td>
+      <td class="price">3,780万</td>
+      <td>40.56m²</td>
+      <td>3F</td>
+      <td>1984/02</td>
+      <td>3min</td>
+      <td>新小岩 (JR総武線快速→東京~15分)</td>
+      <td>¥17,550</td>
+      <td>2DK</td>
+      <td>南西</td>
+      <td><span class="flag green">超Near station3分 · SW · 最Low fees¥17.5k · Freehold</span><span class="flag yellow">40m²小さめ · 2DK · Occupied</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/" target="_blank">鎌倉町パークファミリア</a></td>
+      <td class="price">4,480万</td>
+      <td>62.68m²</td>
+      <td>6F/7F</td>
+      <td>1983/03</td>
+      <td>3min</td>
+      <td>新柴又 (北総線→押上~20分)</td>
+      <td>¥31,830</td>
+      <td>3LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">6F · SW · Vacant · 超Near station3分 · Freehold</span><span class="flag yellow">soft+180万(予算超) · 管理費7月値上(→31,830)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20958812/" target="_blank">セザール第二立石</a></td>
+      <td class="price">3,480万</td>
+      <td>54.02m²</td>
+      <td>2F/5F</td>
+      <td>1996/08</td>
+      <td>7min</td>
+      <td>青砥 (京成本線→押上~15分)</td>
+      <td>¥31,290</td>
+      <td>1LDK+2S</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · 1996築 · Freehold</span><span class="flag yellow">費soft+1,290 · 駐車場購入必須 · 2F</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.rehouse.co.jp/buy/mansion/bkdetail/" target="_blank">ライオンズマンション四つ木第2</a></td>
+      <td class="price">2,580万</td>
+      <td>50.85m²</td>
+      <td>2F/5F</td>
+      <td>1990/10</td>
+      <td>8min</td>
+      <td>四ツ木 (京成押上線→押上~10分)</td>
+      <td>¥33,600</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">Cheapest2,580万 · 南 · Vacant · Freehold</span><span class="flag yellow">費33,600(soft上限超) · 2FLow floor</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://www.livable.co.jp/mansion/C48265E41/" target="_blank">コスモ堀切菖蒲園駅前</a></td>
+      <td class="price">3,880万</td>
+      <td>57.90m²</td>
+      <td>5F/12F</td>
+      <td>1995/05</td>
+      <td>2min</td>
+      <td>京成堀切菖蒲園 (京成本線→押上→大手町~30分)</td>
+      <td>¥23,000</td>
+      <td>2LDK+納戸</td>
+      <td>南西</td>
+      <td><span class="flag green">5F · SW · 超Near station2分 · Low fees¥23k · Vacant · Freehold · 1995築</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20981507/" target="_blank">グリーンパーク第2南綾瀬</a></td>
+      <td class="price">2,699万</td>
+      <td>44.73m²</td>
+      <td>6F/7F</td>
+      <td>1985/09</td>
+      <td>12min</td>
+      <td>京成お花茶屋 (京成本線→押上→大手町~30分)</td>
+      <td>¥21,640</td>
+      <td>2DK</td>
+      <td>南</td>
+      <td><span class="flag green">6F near-top · S facing · Vacant · Freehold</span><span class="flag yellow">Small (44m²) · 2DK · 12min walk · Daytime mgmt only</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20953500/" target="_blank">ライオンズマンション柴又</a></td>
+      <td class="price">2,980万</td>
+      <td>54.92m²</td>
+      <td>2F/4F</td>
+      <td>1988/02</td>
+      <td>8min</td>
+      <td>京成柴又 (京成金町線→金町→JR常磐線)</td>
+      <td>¥28,210</td>
+      <td>2DK</td>
+      <td>南</td>
+      <td><span class="flag green">S facing · Vacant · Renovated Apr'26 · Freehold</span><span class="flag yellow">Low floor (2F) · 2DK · Patrol mgmt</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21098814/" target="_blank">ネオコーポ金町</a></td>
+      <td class="price">2,980万</td>
+      <td>53.76m²</td>
+      <td>4F/5F</td>
+      <td>1984/06</td>
+      <td>15min</td>
+      <td>京成金町 (京成金町線→金町→JR常磐線)</td>
+      <td>¥27,900</td>
+      <td>2LDK</td>
+      <td>西(角)</td>
+      <td><span class="flag green">4F · Corner unit · 34m² roof balcony · Freehold</span><span class="flag yellow">W facing · 15min walk (limit)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1392870001296/" target="_blank">ダイアパレス立石</a></td>
+      <td class="price good-price">3,380万</td>
+      <td>62.94m²</td>
+      <td>11F/13F</td>
+      <td>1988/02</td>
+      <td>15min</td>
+      <td>四ツ木 (京成押上線)</td>
+      <td>¥19,500</td>
+      <td>3LDK</td>
+      <td>南</td>
+      <td><span class="flag green">High floor 11F/13F · S facing · 3LDK 62m² · Freehold · Ultra-low fees ¥19,500</span><span class="flag yellow">15min walk (limit) · Occupied (occupied)</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://www.nomu.com/mansion/id/RB970523/" target="_blank">グリーンパーク立石</a></td>
+      <td class="price good-price">2,980万</td>
+      <td>43.44m²</td>
+      <td>3F/7F</td>
+      <td>1987/04</td>
+      <td>11min</td>
+      <td>京成立石 (京成押上線→押上→都営浅草)</td>
+      <td>¥27,800</td>
+      <td>2LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · Vacant · Freehold · ¥27,800 fees · 2026/9 full renovation</span><span class="flag yellow">43m² compact · 11min walk</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-27">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21157489/" target="_blank">タウンハイツ亀有２号棟</a></td>
+      <td class="price good-price">2,190万</td>
+      <td>43.2m²</td>
+      <td>4F/6F</td>
+      <td>1988/03</td>
+      <td>15min</td>
+      <td>亀有 (JR常磐線)</td>
+      <td>¥15,350</td>
+      <td>1LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · Vacant · Freehold · 1988 · Reno Apr'26 · Ultra-low fees ¥15,350</span><span class="flag yellow">15min walk (limit) · RC 6F patrol mgmt</span></td>
+    </tr>
+    <!-- KATSUSHIKA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-katsushika">No Katsushika-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== ITABASHI-KU ==================== -->
+<div class="ward" id="ward-itabashi">
+  <div class="ward-title">Itabashi-ku 板橋区 <span class="ward-count" id="count-itabashi">15 viable</span></div>
+  <table id="table-itabashi">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- ITABASHI_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20721040/" target="_blank">メゾン蓮根</a></td>
+      <td class="price good-price">2,480万</td>
+      <td>48.19m²</td>
+      <td>2F/5F</td>
+      <td>1982/05</td>
+      <td>10min</td>
+      <td>蓮根 (都営三田線)</td>
+      <td>¥21,204</td>
+      <td>2LDK</td>
+      <td>東</td>
+      <td><span class="flag yellow">Low floor (2F)</span><span class="flag yellow">E facing</span><span class="flag yellow">Commute ~42min (border)</span><span class="flag green">Reno planned Aug'26</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21081835/" target="_blank">マイキャッスル小豆沢公園</a></td>
+      <td class="price good-price">3,780万</td>
+      <td>59.85m²</td>
+      <td>2F/5F</td>
+      <td>1995</td>
+      <td>8min</td>
+      <td>志村坂上 (都営三田線)</td>
+      <td>¥26,640</td>
+      <td>3LDK</td>
+      <td>南西×南東</td>
+      <td><span class="flag yellow">Low floor2F</span><span class="flag yellow">小規模20戸</span><span class="flag green">Corner unitSW×SE</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.nomu.com/mansion/id/R5471123/" target="_blank">グランヴェルジェ蓮根</a></td>
+      <td class="price">3,750万</td>
+      <td>55.54m²</td>
+      <td>6F/6F</td>
+      <td>1990</td>
+      <td>13min</td>
+      <td>蓮根 (都営三田線)</td>
+      <td>¥21,910</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag red">Commute ~48min (over 45 limit)</span><span class="flag yellow">Low repair reserve</span><span class="flag green">Top-floor S corner</span><span class="flag green">Vacant · full reno</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21131647/" target="_blank">若木原公園サニーハイツ</a></td>
+      <td class="price good-price">2,980万</td>
+      <td>45.92m²</td>
+      <td>6F/6F</td>
+      <td>1983</td>
+      <td>8min</td>
+      <td>上板橋 (東武東上)</td>
+      <td>¥24,470</td>
+      <td>2DK</td>
+      <td>南西</td>
+      <td><span class="flag yellow">Small 2DK (46m²)</span><span class="flag yellow">Commute ~40-45min (border)</span><span class="flag green">Top floor · vacant</span><span class="flag green">Reno May'26</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_77124561/" target="_blank">ライオンズマンション上板橋</a></td>
+      <td class="price">3,780万</td>
+      <td>52.25m²</td>
+      <td>?/10F</td>
+      <td>1984</td>
+      <td>8min</td>
+      <td>上板橋 (東武東上)</td>
+      <td class="fees-warn">¥28,800</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · vacant · Professional management</span><span class="flag green">Commute ~40min</span><span class="flag yellow">Fees ¥28,800 (slim margin)</span><span class="flag yellow">Confirm floor</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20089231/" target="_blank">キャニオンビュー成増</a></td>
+      <td class="price">3,990万</td>
+      <td>51.84m²</td>
+      <td>3F/5F</td>
+      <td>1984</td>
+      <td>7min</td>
+      <td>成増 (東武東上)</td>
+      <td>¥18,510</td>
+      <td>2LDK+S</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · low fees · renovated</span><span class="flag green">Freehold</span><span class="flag yellow">Commute ~43-48min (borderline)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/library/tf_13/sc_13119/to_1000744511/" target="_blank">ゼファー大山ファムエール</a></td>
+      <td class="price">3,980万</td>
+      <td>51.54m²</td>
+      <td>?/11F</td>
+      <td>1998</td>
+      <td>8min</td>
+      <td>大山 (東武東上)</td>
+      <td>¥22,007</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">1998 modern · SW corner</span><span class="flag green">Fees ¥22,007 ✓ · commute ~40min</span><span class="flag green">Freehold</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21040571/" target="_blank">オリンポス板橋栄町</a></td>
+      <td class="price good-price">3,590万</td>
+      <td>50.94m²</td>
+      <td>4F/4F</td>
+      <td>1990</td>
+      <td>9min</td>
+      <td>中板橋 (東武東上)</td>
+      <td>¥24,910</td>
+      <td>2LDK</td>
+      <td>南/角</td>
+      <td><span class="flag green">South top-floor corner · 3-sided light</span><span class="flag green">Vacant · freehold · reno 2018 · elevator</span><span class="flag yellow">Confirm facing (cowcamo says S, earlier W)</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20627307/" target="_blank">朝日プラザ志村坂上</a></td>
+      <td class="price good-price">2,997万</td>
+      <td>42.66m²</td>
+      <td>6F/7F</td>
+      <td>1986</td>
+      <td>6min</td>
+      <td>志村坂上 (都営三田線)</td>
+      <td>¥24,080</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · high floor (6F)</span><span class="flag green">Freehold · reno Apr'26 · commute ~38min</span><span class="flag yellow">Compact 1LDK (43m²)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21010488/" target="_blank">ウエストハイツ高島平</a></td>
+      <td class="price">3,590万</td>
+      <td>58.35m²</td>
+      <td>3F/5F</td>
+      <td>1982</td>
+      <td>5min</td>
+      <td>西台 (都営三田線)</td>
+      <td>¥19,050</td>
+      <td>3LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 58m² 3LDK · low fees</span><span class="flag green">Freehold · reno Jun'26</span><span class="flag yellow">Commute ~43-46min (borderline)</span><span class="flag red">1982竣工 — confirm Building permit (Post-1982 seismic standard unverified, conflicting data)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20534890/" target="_blank">サンハイツ泉町</a></td>
+      <td class="price good-price">2,950万</td>
+      <td>49.68m²</td>
+      <td>3F/5F</td>
+      <td>1982</td>
+      <td>5min</td>
+      <td>本蓮沼 (都営三田線)</td>
+      <td>¥19,056</td>
+      <td>3DK</td>
+      <td>南</td>
+      <td><span class="flag green">South · vacant · commute ~35min</span><span class="flag green">Freehold · low fees</span><span class="flag yellow">Self-managed</span><span class="flag red">1982竣工 — confirm Building permit</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1191550007246/" target="_blank">ライオンズ西高島平溝下公園弐番館</a></td>
+      <td class="price">4,099万</td>
+      <td>60.76m²</td>
+      <td>2F/6F</td>
+      <td>1998</td>
+      <td>7min</td>
+      <td>西高島平 (都営三田)</td>
+      <td class="fees-warn">¥30,900</td>
+      <td>3LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">60m² 3LDK · SE · vacant · freehold · 1998 · reno</span><span class="flag yellow">2F · fees ¥30,900 (soft)</span><span class="flag yellow">Commute ~48-50min (三田線 terminus)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://cowcamo.jp/short_stories/xYtPDbzRP6k" target="_blank">日興パレス志村坂上</a></td>
+      <td class="price good-price">2,480万</td>
+      <td>46.18m²</td>
+      <td>4F/4F</td>
+      <td>1987</td>
+      <td>10min</td>
+      <td>志村坂上 (都営三田)</td>
+      <td>要確認</td>
+      <td>1LDK</td>
+      <td>要確認</td>
+      <td><span class="flag green">Cheapest (2,480万) · top floor · vacant · freehold · reno 2022</span><span class="flag red">Repair reserve ¥49/m² (severely underfunded)</span><span class="flag yellow">Facing 要確認 (could be N) · compact 1LDK</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/?sort=1" target="_blank">若木原公園サニーハイツ</a></td>
+      <td class="price good-price">2,980万</td>
+      <td>45.92m²</td>
+      <td>6F/6F</td>
+      <td>1983/06</td>
+      <td>8min</td>
+      <td>上板橋 (東武東上)</td>
+      <td>¥24,470</td>
+      <td>2DK</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · Top floor · Vacant · freehold · Professional management · Low fees</span><span class="flag yellow">2DK layout (Lなし) · 上板橋 (遠い)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/?sort=1" target="_blank">キャニオンビュー光が丘</a></td>
+      <td class="price">4,299万</td>
+      <td>53.46m²</td>
+      <td>4F/9F</td>
+      <td>1982/11</td>
+      <td>7min</td>
+      <td>地下鉄赤塚 (三田線)</td>
+      <td>¥26,085</td>
+      <td>1LDK+S</td>
+      <td>南</td>
+      <td><span class="flag green">South · 1982/11 (Post-1982 seismic standardOK) · freehold · Low fees</span><span class="flag yellow">4,299万 (soft-over) · 4F · 巡回管理</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/?sort=1" target="_blank">サンライズ大山マンション</a></td>
+      <td class="price">3,980万</td>
+      <td>51.67m²</td>
+      <td>8F/11F</td>
+      <td>大山 6min</td>
+      <td>6min</td>
+      <td>大山 (東武東上)</td>
+      <td class="fees-warn">¥32,000</td>
+      <td>2LDK</td>
+      <td>北西</td>
+      <td><span class="flag green">8F High-rise · freehold · Professional management</span><span class="flag red">北West-facing (南面なし) · 費¥32,000 (soft-over)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/?sort=1" target="_blank">ランデン池袋</a></td>
+      <td class="price">4,300万</td>
+      <td>47.67m²</td>
+      <td>2F/4F</td>
+      <td>1988</td>
+      <td>7min</td>
+      <td>大山 (東武東上)</td>
+      <td>¥25,500</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · renovated 2026/04 · freehold</span><span class="flag red">Repair reserve ¥4,700/mo (1988築でCritically low — 大規模修繕リスク大)</span><span class="flag yellow">4,300万 (at soft cap) · 2F Low floor</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1423180000394/" target="_blank">ライオンズマンション上板橋</a></td>
+      <td class="price">3,780万</td>
+      <td>52.25m²</td>
+      <td>6F/10F</td>
+      <td>1984</td>
+      <td>9min</td>
+      <td>上板橋 (東武東上線)</td>
+      <td>¥26,300</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">S · 6F · vacant · freehold · Professional management · 1984 post-seismic</span><span class="flag yellow">42min commute (上板橋→池袋12→東京30) · Tobu Tojo line</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1358110011419/" target="_blank">リーベスト浮間舟渡</a></td>
+      <td class="price good-price">3,980万</td>
+      <td>50.06m²</td>
+      <td>5F/5F</td>
+      <td>1989/08</td>
+      <td>3min</td>
+      <td>浮間舟渡 (JR埼京線→赤羽→東京~23min)</td>
+      <td>¥21,840</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">Top floor (5F/5F) · SW · 3min walk · ¥21,840 fees · Freehold</span><span class="flag yellow">Occupied (occupied) · 23戸 small building</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-29">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20721040/" target="_blank">メゾン蓮根</a></td>
+      <td class="price good-price">2,480万</td>
+      <td>48.19m²</td>
+      <td>2F/2F</td>
+      <td>1982/08</td>
+      <td>10min</td>
+      <td>蓮根 (都営三田線)</td>
+      <td>未確認</td>
+      <td>2LDK</td>
+      <td>東</td>
+      <td><span class="flag green">2F · 2LDK · Freehold · 1982年8月 · ¥24.8M excellent price</span><span class="flag yellow">East-facing · 10min walk · Fees unconfirmed</span></td>
+    </tr>
+    <!-- ITABASHI_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-itabashi">No Itabashi-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== NERIMA-KU ==================== -->
+<div class="ward" id="ward-nerima">
+  <div class="ward-title">Nerima-ku 練馬区 <span class="ward-count" id="count-nerima">5 viable</span></div>
+  <table id="table-nerima">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- NERIMA_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_nerima/nc_20825302/" target="_blank">関町南パーク・ホームズ (7F top)</a></td>
+      <td class="price good-price">3,298万</td>
+      <td>49.24m²</td>
+      <td>7F/7F</td>
+      <td>1986/12</td>
+      <td>12min</td>
+      <td>東伏見 (西武新宿線→高田馬場→JR中央線→東京~44分)</td>
+      <td>¥21,800</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · TOP FLOOR 7F/7F · full reno Apr'26 · freehold · low fees · 空家</span><span class="flag yellow">Nerima (lower priority) · 12min walk · commute ~44min · roving mgmt</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1392850001219/" target="_blank">ライオンズマンション桜台</a></td>
+      <td class="price good-price">2,660万</td>
+      <td>50.6m²</td>
+      <td>4F/4F</td>
+      <td>1982/01</td>
+      <td>3min</td>
+      <td>桜台 (西武池袋線→池袋→JR→東京~40分)</td>
+      <td>¥27,310</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · TOP FLOOR 4F/4F · freehold · full mgmt · very cheap 2,660万</span><span class="flag yellow">Nerima (lower priority) · 1982/01 (barely post-quake) · tenant-occupied · small balcony 3.52m²</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_nerima/nc_20951074/" target="_blank">関町南パーク・ホームズ</a></td>
+      <td class="price good-price">3,298万</td>
+      <td>45.59m²</td>
+      <td>6F/7F</td>
+      <td>1986/12</td>
+      <td>12min</td>
+      <td>東伏見 (西武新宿線→高田馬場→JR中央線→東京~44分)</td>
+      <td>¥21,800</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 6F/7F · full reno Apr'26 · freehold · low fees · 空家</span><span class="flag yellow">Nerima (lower priority) · 12min walk · commute ~44min (tight)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1572160000031/" target="_blank">クイーンズプライム練馬北町</a></td>
+      <td class="price">3,980万</td>
+      <td>36.34m²</td>
+      <td>3F/6F</td>
+      <td>2016</td>
+      <td>8min</td>
+      <td>東武練馬 (東武東上)</td>
+      <td>¥27,310</td>
+      <td>1SLDK</td>
+      <td>西</td>
+      <td><span class="flag yellow">Small (36m²)</span><span class="flag yellow">W facing</span><span class="flag yellow">Occupied</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_nerima/?sort=1" target="_blank">セザール練馬高野台</a></td>
+      <td class="price">4,180万</td>
+      <td>54.76m²</td>
+      <td>2F/6F</td>
+      <td>1998/08</td>
+      <td>7min</td>
+      <td>練馬高野台 (西武池袋)</td>
+      <td class="fees-warn">¥31,460</td>
+      <td>2LDK+S</td>
+      <td>南</td>
+      <td><span class="flag green">South · 1998 · 55m² 2LDK+S · freehold · Professional management</span><span class="flag yellow">4,180万 (soft-over) · 費¥31,460 (soft-over) · 2FLow floor</span><span class="flag green">値下げ 4,680万→4,180万 (2026-06-15)</span></td>
+    </tr>
+    <!-- NERIMA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-nerima" style="display:none">No Nerima-ku listings yet.</p>
+</div>
+
+<!-- ==================== SHINJUKU-KU ==================== -->
+<div class="ward" id="ward-shinjuku">
+  <div class="ward-title">Shinjuku-ku 新宿区 <span class="ward-count" id="count-shinjuku">0 viable</span></div>
+  <table id="table-shinjuku">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- SHINJUKU_ROWS_START -->
+    <!-- SHINJUKU_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-shinjuku">No Shinjuku-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== BUNKYO-KU ==================== -->
+<div class="ward" id="ward-bunkyo">
+  <div class="ward-title">Bunkyo-ku 文京区 <span class="ward-count" id="count-bunkyo">0 viable</span></div>
+  <table id="table-bunkyo">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- BUNKYO_ROWS_START -->
+    <!-- BUNKYO_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-bunkyo">No Bunkyo-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== TOSHIMA-KU ==================== -->
+<div class="ward" id="ward-toshima">
+  <div class="ward-title">Toshima-ku 豊島区 <span class="ward-count" id="count-toshima">0 viable</span></div>
+  <table id="table-toshima">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- TOSHIMA_ROWS_START -->
+    <!-- TOSHIMA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-toshima">No Toshima-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== SHIBUYA-KU ==================== -->
+<div class="ward" id="ward-shibuya">
+  <div class="ward-title">Shibuya-ku 渋谷区 <span class="ward-count" id="count-shibuya">0 viable</span></div>
+  <table id="table-shibuya">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- SHIBUYA_ROWS_START -->
+    <!-- SHIBUYA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-shibuya">No Shibuya-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== NAKANO-KU ==================== -->
+<div class="ward" id="ward-nakano">
+  <div class="ward-title">Nakano-ku 中野区 <span class="ward-count" id="count-nakano">1 viable</span></div>
+  <table id="table-nakano">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- NAKANO_ROWS_START -->
+    <tr class="pass new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_nakano/nc_21123405/" target="_blank">Sevenstar Heights Nakano V</a></td>
+      <td class="price">3,980万</td>
+      <td>36.37m²</td>
+      <td>4F/4F</td>
+      <td>1990</td>
+      <td>8min</td>
+      <td>新井薬師前 (西武新宿線)</td>
+      <td>¥29,290</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">S · top floor · vacant · freehold · reno Jun'26 · Shinjuku Line express</span><span class="flag yellow">Small (36m²) · 4-story bldg</span></td>
+    </tr>
+    <!-- NAKANO_ROWS_END -->
+  </table>
+</div>
+
+<!-- ==================== SUGINAMI-KU ==================== -->
+<div class="ward" id="ward-suginami">
+  <div class="ward-title">Suginami-ku 杉並区 <span class="ward-count" id="count-suginami">1 viable</span></div>
+  <table id="table-suginami">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- SUGINAMI_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_suginami/nc_21006918/" target="_blank">パークハイム上井草</a></td>
+      <td class="price good-price">3,580万</td>
+      <td>51.84m²</td>
+      <td>3F/3F</td>
+      <td>1984/12</td>
+      <td>7min</td>
+      <td>上井草 (西武新宿線→高田馬場→東京~44分)</td>
+      <td>¥26,040</td>
+      <td>3DK</td>
+      <td>南</td>
+      <td><span class="flag green">South · top floor · freehold · low fees · immediate move-in · pro mgmt</span><span class="flag yellow">3DK layout (no L) · Suginami (lower priority) · commute ~44min · 3-story bldg · unrenovated</span></td>
+    </tr>
+    <!-- SUGINAMI_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-suginami" style="display:none">No Suginami-ku listings yet.</p>
+</div>
+
+<!-- ==================== MEGURO-KU ==================== -->
+<div class="ward" id="ward-meguro">
+  <div class="ward-title">Meguro-ku 目黒区 <span class="ward-count" id="count-meguro">0 viable</span></div>
+  <table id="table-meguro">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- MEGURO_ROWS_START -->
+    <!-- MEGURO_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-meguro">No Meguro-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== SHINAGAWA-KU ==================== -->
+<div class="ward" id="ward-shinagawa">
+  <div class="ward-title">Shinagawa-ku 品川区 <span class="ward-count" id="count-shinagawa">0 viable</span></div>
+  <table id="table-shinagawa">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- SHINAGAWA_ROWS_START -->
+    <!-- SHINAGAWA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-shinagawa">No Shinagawa-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== MINATO-KU ==================== -->
+<div class="ward" id="ward-minato">
+  <div class="ward-title">Minato-ku 港区 <span class="ward-count" id="count-minato">0 viable</span></div>
+  <table id="table-minato">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- MINATO_ROWS_START -->
+    <!-- MINATO_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-minato">No Minato-ku listings yet — likely over budget.</p>
+</div>
+
+<!-- ==================== CHUO-KU ==================== -->
+<div class="ward" id="ward-chuo">
+  <div class="ward-title">Chuo-ku 中央区 ★ PRIMARY <span class="ward-count" id="count-chuo">0 viable</span></div>
+  <table id="table-chuo">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- CHUO_ROWS_START -->
+    <!-- CHUO_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-chuo">No Chuo-ku listings yet — likely over budget but checked regularly.</p>
+</div>
+
+<!-- ==================== KOTO-KU ==================== -->
+<div class="ward" id="ward-koto">
+  <div class="ward-title">Koto-ku 江東区 <span class="ward-count" id="count-koto">4 viable</span></div>
+  <table id="table-koto">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- KOTO_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_koto/nc_21076849/" target="_blank">東砂三丁目ハイツ4号棟</a></td>
+      <td class="price good-price">3,280万</td>
+      <td>82.27m²</td>
+      <td>4F/4F</td>
+      <td>1982/08</td>
+      <td>15min</td>
+      <td>東大島 (都営新宿)</td>
+      <td>¥17,500</td>
+      <td>3LDK</td>
+      <td>南</td>
+      <td><span class="flag yellow">1982/08竣工 — confirm Building permit (Post-1982 seismic standard boundary, best odds)</span><span class="flag yellow">15-min walk (limit)</span><span class="flag green">Freehold ✓</span><span class="flag green">82m² · low fees · pro mgmt</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.homes.co.jp/mansion/b-1552210002964/" target="_blank">サンハイツ千田</a></td>
+      <td class="price">3,980万</td>
+      <td>39.69m²</td>
+      <td>7F/11F</td>
+      <td>1984</td>
+      <td>7min</td>
+      <td>住吉 (半蔵門/新宿)</td>
+      <td>¥17,460</td>
+      <td>1LDK</td>
+      <td>西</td>
+      <td><span class="flag green">7F · freehold · 住吉7分</span><span class="flag red">Repair reserve ¥0 (no reserve)</span><span class="flag yellow">West · Self-managed · occupied · small</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.st-line.co.jp/buy/detail/14978" target="_blank">コスモウィル大島</a></td>
+      <td class="price">4,198万</td>
+      <td>65.24m²</td>
+      <td>6F/13F</td>
+      <td>1987</td>
+      <td>7min</td>
+      <td>大島 (都営新宿)</td>
+      <td>¥28,820</td>
+      <td>2LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · vacant · freehold · Professional management</span><span class="flag green">65m² · renovated · 大島7分 · ~33min</span><span class="flag yellow">4,198万 (¥198万 over — soft)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://www.st-line.co.jp/buy/detail/15350" target="_blank">バロンハイツ大島</a></td>
+      <td class="price">3,780万</td>
+      <td>52.6m²</td>
+      <td>8F/11F</td>
+      <td>1982/09</td>
+      <td>5min</td>
+      <td>大島 (都営新宿)</td>
+      <td>¥24,970</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 8F · 大島5分 · renovated · low fees</span><span class="flag green">Vacant · freehold · Professional management</span><span class="flag red">1982/9 11階建 — Post-1982 seismic standard uncertain, confirm Building permit</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_koto/nc_20402603/" target="_blank">メイフラワー西大島</a></td>
+      <td class="price">4,280万</td>
+      <td>64.3m²</td>
+      <td>6F/8F</td>
+      <td>1990/07</td>
+      <td>10min</td>
+      <td>西大島 (都営新宿)</td>
+      <td>¥30,400</td>
+      <td>3LDK</td>
+      <td>東</td>
+      <td><span class="flag green">6F · 1990 · 64m² 3LDK · freehold · Freehold</span><span class="flag yellow">東向き (南面なし) · 費¥30,400 (soft over)</span><span class="flag yellow">4,280万 (¥280万 over — soft)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_koto/nc_21087361/" target="_blank">東砂三丁目ハイツ6号棟</a></td>
+      <td class="price good-price">3,800万</td>
+      <td>80.47m²</td>
+      <td>2F/11F</td>
+      <td>1982/08</td>
+      <td>15min</td>
+      <td>東大島 (都営新宿)</td>
+      <td>¥20,000</td>
+      <td>3LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 80m² · Low fees · freehold</span><span class="flag red">2F Low floor (very low floor)</span><span class="flag red">1982/08竣工 — confirm Building permit</span><span class="flag yellow">15-min walk (at hard limit)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1481420000454/" target="_blank">東大島ハイライズ</a></td>
+      <td class="price">4,480万</td>
+      <td>66m²</td>
+      <td>10F/11F</td>
+      <td>1982/07</td>
+      <td>10min</td>
+      <td>東大島 (都営新宿線→大島→新宿線→大手町~20分)</td>
+      <td>¥16,870</td>
+      <td>3LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">10FHigh-rise · SE · 66m² · Vacant · Freehold · Professional management · リノベ済 · バルコニー21.96m²</span><span class="flag red">4,480万(soft-over +480万) · 1982/07-Building permit要確認 · 江東区 · 10分歩</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1402480026447/" target="_blank">ラブリハイツ亀戸</a></td>
+      <td class="price">3,480万</td>
+      <td>55.78m²</td>
+      <td>5F/14F</td>
+      <td>1986/01</td>
+      <td>2min</td>
+      <td>亀戸水神 (東武亀戸線→亀戸→JR→東京~20分)</td>
+      <td>¥22,000</td>
+      <td>3DK</td>
+      <td>南</td>
+      <td><span class="flag green">南向き · 5F · 14F建 · 亀戸水神2分 · Low fees · Professional management</span><span class="flag red">一部借地(171.3m²/地代¥2,257/mo/2045年まで) · Occupied(OC) · 江東区</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1109950014324/" target="_blank">ニューライフマンション木場</a></td>
+      <td class="price">4,380万</td>
+      <td>46m²</td>
+      <td>4F/11F</td>
+      <td>1982/08</td>
+      <td>15min</td>
+      <td>木場/豊洲 (東京メトロ東西線/有楽町線→大手町~20分)</td>
+      <td>¥18,560</td>
+      <td>1LDK</td>
+      <td>東</td>
+      <td><span class="flag green">Vacant · Freehold · Professional management · 最低費¥18,560 · 江東区</span><span class="flag red">東向きのみ(南なし) · 15分歩(ギリギリ) · 1982/08-Building permit要確認 · 4,380万(soft+380万)</span></td>
+    </tr>
+    <!-- KOTO_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-koto">No Koto-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== EDOGAWA-KU ==================== -->
+<div class="ward" id="ward-edogawa">
+  <div class="ward-title">Edogawa-ku 江戸川区 <span class="ward-count" id="count-edogawa">5 viable</span></div>
+  <table id="table-edogawa">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- EDOGAWA_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21023954/" target="_blank">メゾン・リバーサイド4号棟</a></td>
+      <td class="price">3,680万</td>
+      <td>78.04m²</td>
+      <td>3F/6F</td>
+      <td>1989</td>
+      <td>2min</td>
+      <td>東大島 (都営新宿)</td>
+      <td>¥19,665</td>
+      <td>3LDK</td>
+      <td>西</td>
+      <td><span class="flag green">78m² · 東大島2分 · low fees</span><span class="flag green">Park/Arakawa-adjacent</span><span class="flag yellow">West-facing (2-aspect corner)</span><span class="flag yellow">Commute ~32min (verify)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_20872448/" target="_blank">コスモ葛西シティフォルム</a></td>
+      <td class="price">3,880万</td>
+      <td>55m²</td>
+      <td>8F/9F</td>
+      <td>1995</td>
+      <td>15min</td>
+      <td>葛西 (東京メトロ東西)</td>
+      <td>¥25,873</td>
+      <td>2LDK</td>
+      <td>東</td>
+      <td><span class="flag green">High floor (8F) · renovated</span><span class="flag yellow">East-facing</span><span class="flag yellow">15min walk (limit)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21023952/" target="_blank">三生エンゼルハイム中葛西</a></td>
+      <td class="price">3,980万</td>
+      <td>60.48m²</td>
+      <td>6F/9F</td>
+      <td>1995</td>
+      <td>10min</td>
+      <td>葛西 (東京メトロ東西)</td>
+      <td class="fees-warn">¥28,730</td>
+      <td>2LDK+S</td>
+      <td>東</td>
+      <td><span class="flag green">6F · renovated 2018 · Haseko mgmt</span><span class="flag yellow">East-facing</span><span class="flag yellow">Fees near cap</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21105788/" target="_blank">ゼファー一之江</a></td>
+      <td class="price good-price">3,200万</td>
+      <td>52.37m²</td>
+      <td>5F/10F</td>
+      <td>1997</td>
+      <td>14min</td>
+      <td>一之江 (都営新宿)</td>
+      <td>¥23,360</td>
+      <td>2LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · 5F · vacant · freehold · low fees</span><span class="flag yellow">14min walk · commute ~40min</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://mansion-market.com/mansions/detail/12900" target="_blank">クレストコート篠崎</a></td>
+      <td class="price">3,980万</td>
+      <td>61.00m²</td>
+      <td>3F/4F</td>
+      <td>1996</td>
+      <td>14min</td>
+      <td>篠崎 (都営新宿)</td>
+      <td class="fees-warn">¥31,450</td>
+      <td>3LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · renovated · vacant · freehold · Post-1982 seismic standard</span><span class="flag green">Well-funded reserve</span><span class="flag yellow">Fees ¥31,450 (¥1,450 over — soft)</span><span class="flag yellow">14min · 篠崎 far node (~45-48min)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21127785/" target="_blank">清新北ハイツ5号棟</a></td>
+      <td class="price">4,380万</td>
+      <td>57.17m²</td>
+      <td>12F/23F</td>
+      <td>1983/03</td>
+      <td>10min</td>
+      <td>西葛西 (東西線)</td>
+      <td>¥21,780</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag green">12FHigh-rise · 南 · Vacant即引渡 · freehold · Professional management · Low fees</span><span class="flag yellow">4,380万 (soft-over ¥380万超) · 西葛西 (low priority ward)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_20904285/" target="_blank">モア・ステージ一之江</a></td>
+      <td class="price">4,380万</td>
+      <td>66.12m²</td>
+      <td>5F/8F</td>
+      <td>1993/08</td>
+      <td>10min</td>
+      <td>一之江 (都営新宿線)</td>
+      <td>¥21,760</td>
+      <td>3LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 66m² 3LDK · Low fees · Vacant · freehold · Professional management · 1993</span><span class="flag yellow">4,380万 (soft-over ¥380万超) · 5F · 一之江 (far ~45min)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_20944696/" target="_blank">大捷アメニティハイム</a></td>
+      <td class="price">4,180万</td>
+      <td>52.2m²</td>
+      <td>5F/10F</td>
+      <td>1994/10</td>
+      <td>5min</td>
+      <td>小岩 (JR総武線)</td>
+      <td>¥23,490</td>
+      <td>3DK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · 5F · 小岩5分 (JR快速~18分→東京) · freehold · Professional management · 1994</span><span class="flag yellow">3DK layout (Lなし) · 4,180万 (soft-over ¥180万超)</span></td>
+    </tr>
+    <!-- EDOGAWA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-edogawa">No Edogawa-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== KITA-KU ==================== -->
+<div class="ward" id="ward-kita">
+  <div class="ward-title">Kita-ku 北区 <span class="ward-count" id="count-kita">5 viable</span></div>
+  <table id="table-kita">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- KITA_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_21077146/" target="_blank">西巣鴨ローヤルコーポ</a></td>
+      <td class="price">3,890万</td>
+      <td>52.7m²</td>
+      <td>3F/3F</td>
+      <td>1983</td>
+      <td>7min</td>
+      <td>西巣鴨 (都営三田線)</td>
+      <td>¥20,000</td>
+      <td>2LDK</td>
+      <td>南</td>
+      <td><span class="flag yellow">3-story bldg</span><span class="flag green">Vacant</span><span class="flag green">Lowest fees</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_21070923/" target="_blank">キャピタルビュー滝野川</a></td>
+      <td class="price good-price">2,480万</td>
+      <td>33.85m²</td>
+      <td>3F/4F</td>
+      <td>1988</td>
+      <td>8min</td>
+      <td>西巣鴨 (都営三田線)</td>
+      <td>¥24,055</td>
+      <td>1LDK</td>
+      <td>南東</td>
+      <td><span class="flag yellow">Steel frame</span><span class="flag yellow">Small (34m²)</span><span class="flag yellow">Tiny bldg (8 units)</span><span class="flag green">Vacant (Reno Jun'26)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_20137923/" target="_blank">センチュリーハイツ赤羽西</a></td>
+      <td class="price good-price">3,399万</td>
+      <td>44.07m²</td>
+      <td>2F/6F</td>
+      <td>1990</td>
+      <td>10min</td>
+      <td>本蓮沼 (都営三田線)</td>
+      <td>¥23,400</td>
+      <td>2DK+S</td>
+      <td>南東</td>
+      <td><span class="flag yellow">Low floor (2F)</span><span class="flag yellow">Re-check (prior sweep)</span><span class="flag green">Vacant · reno 2026/03</span><span class="flag green">SE facing</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_21064109/" target="_blank">藤和稲付公園コープ</a></td>
+      <td class="price good-price">3,380万</td>
+      <td>52.31m²</td>
+      <td>2F/5F</td>
+      <td>1986</td>
+      <td>15min</td>
+      <td>赤羽 (JR京浜東北)</td>
+      <td class="fees-warn">¥28,860</td>
+      <td>2LDK</td>
+      <td>南東</td>
+      <td><span class="flag yellow">15-min walk (limit)</span><span class="flag yellow">Low floor (2F)</span><span class="flag yellow">Fees near cap</span><span class="flag green">SE · park-side</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_20984049/" target="_blank">ハイラーク新赤羽</a></td>
+      <td class="price good-price">3,280万</td>
+      <td>60.66m²</td>
+      <td>6F/10F</td>
+      <td>1985</td>
+      <td>9min</td>
+      <td>浮間舟渡 (JR埼京線)</td>
+      <td>¥16,940</td>
+      <td>3LDK</td>
+      <td>東</td>
+      <td><span class="flag green">60m² 3LDK · low fees</span><span class="flag green">High floor (6F)</span><span class="flag yellow">East · occupied</span><span class="flag yellow">Peripheral (浮間舟渡)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1308490000708/" target="_blank">光シャンブル滝野川</a></td>
+      <td class="price">3,980万</td>
+      <td>43.02m²</td>
+      <td>4F/6F</td>
+      <td>1982/09</td>
+      <td>5min</td>
+      <td>板橋 (JR埼京線)</td>
+      <td>¥14,470</td>
+      <td>1LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · 5min walk · freehold · Professional management · Full reno Apr'26 · vacant</span><span class="flag red">1982/09 completion — building permit likely 1980-81, old seismic risk</span><span class="flag yellow">Compact (43m²) · Thin repair fund (¥4,320/mo)</span></td>
+    </tr>
+    <!-- KITA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-kita">No Kita-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== ARAKAWA-KU ==================== -->
+<div class="ward" id="ward-arakawa">
+  <div class="ward-title">Arakawa-ku 荒川区 <span class="ward-count" id="count-arakawa">1 viable</span></div>
+  <table id="table-arakawa">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- ARAKAWA_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.nomu.com/mansion/id/RD670772/" target="_blank">カエサル西尾久</a></td>
+      <td class="price good-price">2,780万</td>
+      <td>41.32m²</td>
+      <td>2F/5F</td>
+      <td>1984/06</td>
+      <td>9min</td>
+      <td>尾久 (JR高崎線→上野→東京~26分)</td>
+      <td>¥25,170</td>
+      <td>1LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · freehold · full reno Jun'26 · pro mgmt (Tokyu Community) · low fees · 空家</span><span class="flag yellow">Arakawa (deprioritized) · 2F low floor · 尾久 not prominent station</span></td>
+    </tr>
+    <!-- ARAKAWA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-arakawa" style="display:none">No Arakawa-ku listings yet.</p>
+</div>
+
+<!-- ==================== TAITO-KU ==================== -->
+<div class="ward" id="ward-taito">
+  <div class="ward-title">Taito-ku 台東区 <span class="ward-count" id="count-taito">1 viable</span></div>
+  <table id="table-taito">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- TAITO_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_taito/nc_21097635/" target="_blank">第２さくらコーポ</a></td>
+      <td class="price good-price">3,200万</td>
+      <td>66.83m²</td>
+      <td>3F/4F</td>
+      <td>1986</td>
+      <td>15min</td>
+      <td>浅草 (銀座線/都営浅草線)</td>
+      <td>¥6,000</td>
+      <td>2LDK</td>
+      <td>南東</td>
+      <td><span class="flag green">SE · spacious 66m² · vacant · freehold · 1986</span><span class="flag red">Zero repair reserve (¥0/mo) — serious risk for 38yr S-frame</span><span class="flag yellow">15min walk (limit) · partial mgmt</span></td>
+    </tr>
+    <!-- TAITO_ROWS_END -->
+  </table>
+</div>
+
+<!-- ==================== SETAGAYA-KU ==================== -->
+<div class="ward" id="ward-setagaya">
+  <div class="ward-title">Setagaya-ku 世田谷区 <span class="ward-count" id="count-setagaya">7 viable</span></div>
+  <table id="table-setagaya">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- SETAGAYA_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_20163245/" target="_blank">スカイハイツ広沢</a></td>
+      <td class="price good-price">2,997万</td>
+      <td>35.76m²</td>
+      <td>4F/5F</td>
+      <td>1984</td>
+      <td>4min</td>
+      <td>桜新町 (田園都市)</td>
+      <td>¥10,000</td>
+      <td>2DK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 4F · vacant · renovated</span><span class="flag green">Fees ¥10,000 (rock-bottom)</span><span class="flag yellow">Compact 2DK (36m²)</span><span class="flag yellow">Commute ~47-50min (over 45)</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_78199201/" target="_blank">ソレイユ玉川台</a></td>
+      <td class="price good-price">3,290万</td>
+      <td>35m²</td>
+      <td>2F/3F</td>
+      <td>1989</td>
+      <td>7min</td>
+      <td>用賀 (田園都市)</td>
+      <td>¥15,050</td>
+      <td>1LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · freehold · low fees · 1989</span><span class="flag yellow">Low floor (2F) · compact 35m²</span><span class="flag yellow">Commute ~48-50min</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_21094369/" target="_blank">キャニオンコープ第３経堂</a></td>
+      <td class="price good-price">2,980万</td>
+      <td>39m²</td>
+      <td>3F/3F</td>
+      <td>1984</td>
+      <td>11min</td>
+      <td>経堂 (小田急)</td>
+      <td>¥24,960</td>
+      <td>2DK</td>
+      <td>東</td>
+      <td><span class="flag green">Top floor · vacant · freehold</span><span class="flag yellow">East · compact 39m²</span><span class="flag yellow">Commute ~52-55min</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_21069417/" target="_blank">スターハイツ芦花公園</a></td>
+      <td class="price">3,680万</td>
+      <td>37.52m²</td>
+      <td>2F/3F</td>
+      <td>1983</td>
+      <td>7min</td>
+      <td>芦花公園 (京王)</td>
+      <td>¥23,440</td>
+      <td>1LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · renovated · freehold · 1983</span><span class="flag yellow">Low floor (2F) · compact</span><span class="flag yellow">Commute ~52-55min</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_20583927/" target="_blank">セザール第２上北沢</a></td>
+      <td class="price">3,899万</td>
+      <td>54.59m²</td>
+      <td>2F/4F</td>
+      <td>1991</td>
+      <td>14min</td>
+      <td>上北沢 (京王)</td>
+      <td class="fees-warn">¥33,880</td>
+      <td>2LDK</td>
+      <td>西</td>
+      <td><span class="flag green">55m² 2LDK · vacant · freehold · 1991</span><span class="flag yellow">West · 14min walk</span><span class="flag yellow">Fees ¥33,880 (over soft) · commute ~52-55min</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-23">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_20161975/" target="_blank">セブンスターマンション南烏山</a></td>
+      <td class="price">3,990万</td>
+      <td>47.28m²</td>
+      <td>4F/7F</td>
+      <td>1983</td>
+      <td>12min</td>
+      <td>千歳烏山 (京王)</td>
+      <td class="fees-warn">¥31,740</td>
+      <td>1LDK+S</td>
+      <td>南</td>
+      <td><span class="flag green">South · freehold · elevator · 1983</span><span class="flag yellow">Fees ¥31,740 (¥1,740 over — soft)</span><span class="flag yellow">Commute ~50min</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_78796349/" target="_blank">エスカイア等々力</a></td>
+      <td class="price good-price">3,380万</td>
+      <td>37.04m²</td>
+      <td>3F/3F</td>
+      <td>1984/03</td>
+      <td>13min</td>
+      <td>等々力 (大井町線)</td>
+      <td>¥20,920</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · Top floor · freehold · Low fees · on-budget</span><span class="flag yellow">37m² 小 · 13分 · 巡回管理 · 等々力 (~43min 東京)</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-06-28">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_78796349/" target="_blank">エスカイア等々力</a></td>
+      <td class="price good-price">3,380万</td>
+      <td>37.04m²</td>
+      <td>3F/3F</td>
+      <td>1984/03</td>
+      <td>13min</td>
+      <td>等々力 (東急大井町線)</td>
+      <td>¥20,920</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · Freehold · 1984 post-1982 · Low fees ¥20,920 · Reno Jun'25</span><span class="flag yellow">13min walk (limit) · RC low-layer residential · Consultation status</span></td>
+    </tr>
+    <!-- SETAGAYA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-setagaya">No Setagaya-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== OTA-KU ==================== -->
+<div class="ward" id="ward-ota">
+  <div class="ward-title">Ota-ku 大田区 <span class="ward-count" id="count-ota">3 viable</span></div>
+  <table id="table-ota">
+    <tr><th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th><th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th></tr>
+    <!-- OTA_ROWS_START -->
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://www.homes.co.jp/mansion/b-1357690019721/" target="_blank">晴紀館</a></td>
+      <td class="price good-price">3,288万</td>
+      <td>39.63m²</td>
+      <td>4F/4F</td>
+      <td>1989/10</td>
+      <td>4min</td>
+      <td>雪が谷大塚 (東急池上線→五反田→JR→東京~38分)</td>
+      <td>¥13,500</td>
+      <td>1LDK</td>
+      <td>南西</td>
+      <td><span class="flag green">SW · TOP FLOOR 4F/4F · freehold · full mgmt · ultra-low fees ¥13,500/mo · 空家</span><span class="flag yellow">Ota (exceptional only) · 39m² small · 池上線 local only</span></td>
+    </tr>
+    <tr class="warn new-listing" data-added="2026-06-24">
+      <td><a href="https://suumo.jp/ms/chuko/tokyo/sc_ota/nc_21044765/" target="_blank">東糀谷ダイヤモンドマンション</a></td>
+      <td class="price good-price">3,080万</td>
+      <td>35m²</td>
+      <td>6F/9F</td>
+      <td>1983/07</td>
+      <td>6min</td>
+      <td>穴守稲荷 (京急空港線→品川→東京~31分)</td>
+      <td>¥25,457</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South · 6F/9F · full reno May'26 · freehold · low fees · 6min walk</span><span class="flag yellow">Small 35m² (bare min) · Ota-ku near airport area · not preferred zone</span></td>
+    </tr>
+    <tr class="pass new-listing" data-added="2026-07-01">
+      <td><a href="https://www.century21.jp/mansion/tokyo/13111/detail/036801-2473" target="_blank">セザール久が原</a></td>
+      <td class="price good-price">2,190万</td>
+      <td>37.22m²</td>
+      <td>4F/4F</td>
+      <td>1983/06</td>
+      <td>2min</td>
+      <td>久が原 (東急池上線)</td>
+      <td>¥27,360</td>
+      <td>1LDK</td>
+      <td>南</td>
+      <td><span class="flag green">South-facing · Freehold · Vacant</span><span class="flag green">Post-1982 seismic · 2min walk · 4F/4F top floor</span></td>
+    </tr>
+    <!-- OTA_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-ota" style="display:none">No Ota-ku listings yet — search in progress.</p>
+</div>
+
+<!-- ==================== ADACHI-KU ==================== -->
+<div class="ward" id="ward-adachi">
+  <div class="ward-title">Adachi-ku 足立区 <span class="ward-count" id="count-adachi">0 viable</span> <span style="color:#64748b;font-size:0.75rem;font-weight:400;">— exceptional/well-connected only</span></div>
+  <table id="table-adachi">
+    <tr>
+      <th>Name</th><th>Price</th><th>Size</th><th>Floor</th><th>Year</th>
+      <th>Walk</th><th>Station</th><th>Fees/mo</th><th>Layout</th><th>Direction</th><th>Flags</th>
+    </tr>
+    <!-- ADACHI_ROWS_START -->
+    <!-- ADACHI_ROWS_END -->
+  </table>
+  <p class="empty-note" id="empty-adachi">No Adachi-ku listings yet.</p>
+</div>
+
+<script>
+function parsePrice(text) {
+  const m = (text || '').replace(/,/g, '').match(/(\d+)万/);
+  return m ? parseInt(m[1]) : 999999;
+}
+function parseFees(text) {
+  return parseInt((text || '').replace(/[^\d]/g, '')) || 999999;
+}
+
+function sortTableByCol(th, idx, parseFn) {
+  const table = th.closest('table');
+  const rows = [...table.querySelectorAll('tr')].filter(r => !r.querySelector('th'));
+  const goAsc = !th.classList.contains('sort-asc');
+  rows.sort((a, b) => {
+    const av = parseFn(a.cells[idx]?.textContent);
+    const bv = parseFn(b.cells[idx]?.textContent);
+    return goAsc ? av - bv : bv - av;
+  });
+  rows.forEach(r => table.appendChild(r));
+  table.querySelectorAll('th.sort-asc, th.sort-desc').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+  th.classList.add(goAsc ? 'sort-asc' : 'sort-desc');
+}
+
+function buildGlobalTable(key) {
+  const parseFn = key === 'fees' ? parseFees : parsePrice;
+  const srcIdx  = key === 'fees' ? 7 : 1;
+  const allRows = [];
+  document.querySelectorAll('.ward').forEach(ward => {
+    const titleEl = ward.querySelector('.ward-title');
+    const wardName = titleEl ? titleEl.childNodes[0].textContent.trim() : '';
+    const include = ward.querySelectorAll('tr.pass, tr.warn');
+    include.forEach(row => {
+      allRows.push({ row, wardName, sortVal: parseFn(row.cells[srcIdx]?.textContent), dateAdded: row.dataset.added || '' });
+    });
+  });
+  if (key === 'date') {
+    allRows.sort((a, b) => b.dateAdded.localeCompare(a.dateAdded));
+  } else {
+    allRows.sort((a, b) => a.sortVal - b.sortVal);
+  }
+
+  const table = document.getElementById('global-table');
+  [...table.querySelectorAll('tr:not(:first-child)')].forEach(r => r.remove());
+  allRows.forEach(({ row, wardName }) => {
+    const clone = row.cloneNode(true);
+    const wardTd = document.createElement('td');
+    wardTd.textContent = wardName;
+    wardTd.style.cssText = 'color:#93c5fd; white-space:nowrap; font-weight:500; font-size:0.78rem;';
+    clone.insertBefore(wardTd, clone.firstChild);
+    table.appendChild(clone);
+  });
+  ['gh-price','gh-fees'].forEach(id => {
+    const h = document.getElementById(id);
+    if (h) h.classList.remove('sort-asc','sort-desc');
+  });
+  if (key === 'price') document.getElementById('gh-price')?.classList.add('sort-asc');
+  if (key === 'fees')  document.getElementById('gh-fees')?.classList.add('sort-asc');
+  const labels = { price: 'sorted by price ↑', fees: 'sorted by monthly fees ↑', date: 'sorted by date found ↓ (newest first)' };
+  document.getElementById('global-sort-label').textContent = labels[key] || '';
+}
+
+function showView(view) {
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('btn-' + (view === 'new' ? 'date' : view));
+  if (btn) btn.classList.add('active');
+  const wardSections = document.querySelectorAll('.ward');
+  const globalView   = document.getElementById('global-view');
+  if (view === 'wards') {
+    wardSections.forEach(w => w.style.display = '');
+    globalView.style.display = 'none';
+  } else {
+    wardSections.forEach(w => w.style.display = 'none');
+    buildGlobalTable(view);
+    globalView.style.display = 'block';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Sortable headers
+  document.querySelectorAll('th').forEach(th => {
+    if (th.id && th.id.startsWith('gh-')) return;
+    const text = th.textContent.trim();
+    if (text === 'Price' || text === 'Fees/mo') {
+      th.classList.add('sortable');
+      th.title = "Click to sort this ward's table";
+      const idx = [...th.parentElement.children].indexOf(th);
+      const parseFn = text === 'Price' ? parsePrice : parseFees;
+      th.addEventListener('click', () => sortTableByCol(th, idx, parseFn));
+    }
+  });
+
+  // Hide empty-note when table has data rows
+  document.querySelectorAll('.ward').forEach(ward => {
+    const rows = ward.querySelectorAll('tr:not(:first-child)');
+    const emptyNote = ward.querySelector('.empty-note');
+    if (emptyNote) emptyNote.style.display = rows.length > 0 ? 'none' : '';
+  });
+
+  // Highlight today's new listings
+  const today = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('tr[data-added]').forEach(row => {
+    if (row.dataset.added !== today) return;
+    row.classList.add('new-listing');
+    const flagsCell = row.querySelector('td:last-child');
+    if (flagsCell) {
+      const badge = document.createElement('span');
+      badge.className = 'badge-new';
+      badge.textContent = 'NEW';
+      flagsCell.insertBefore(badge, flagsCell.firstChild);
+    }
+  });
+
+  // Highlight today's scoreboard entries
+  document.querySelectorAll('p[data-added]').forEach(p => {
+    if (p.dataset.added !== today) return;
+    p.classList.add('new-scoreboard-entry');
+    const badge = document.createElement('span');
+    badge.className = 'badge-new';
+    badge.textContent = 'NEW';
+    p.insertBefore(badge, p.firstChild);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+td with year: 0 matches
+th with year: 0 matches
+label with year: 0 matches
+div with year: 2 matches
+  First: 完成時期（築年月）
+
+span with year: 0 matches
+dt/dd pair: 4 matches
+  First: <dt class="definitionlist-title">情報提供日:</dt><dd class="definitionlist-contents">26/6/29</dd>
+

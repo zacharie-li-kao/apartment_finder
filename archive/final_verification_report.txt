@@ -1,0 +1,33 @@
+VERIFICATION RESULTS — 20 Random Listings from 116 Database
+==================================================================================================================================
+#    Name                         Ward         DB Price DB Fees  Price Status    Fees Status     Overall Status      
+==================================================================================================================================
+28   御殿山デュープレックス                  Katsushika   3,980万   ¥22,706  -               -               ⚠ Unknown portal    
+22   プレシス堀切菖蒲園                    Katsushika   3,880万   ¥23,310  -               -               ⚠ Unknown portal    
+125  関町南パーク・ホームズ                  Nerima       3,298万   ¥21,800  -               -               ⚠ Fetch error       
+77   大捷アメニティハイム                   Edogawa      4,180万   ¥23,490  ⚠ found vs 4180 ⚠ Not found     ⚠ Active/Changed    
+107  エヴァーグリーン高砂                   Katsushika   3,680万   ¥25,460  ⚠ found vs 3680 ⚠ Not found     ⚠ Active/Changed    
+46   エンゼル柴又プロムテラス                 Katsushika   3,650万   ¥29,350  -               -               ⚠ WAF-blocked       
+4    ランドステージ墨田ブライトスクエア            Sumida       3,980万   ¥29,000  -               -               ⚠ WAF-blocked       
+98   東大島ハイライズ                     Koto         4,480万   ¥16,870  -               -               ⚠ WAF-blocked       
+117  グリーンパーク立石                    Katsushika   2,980万   ¥27,800  -               -               ⚠ Unknown portal    
+70   グリーンキャピタル第三金町                Katsushika   2,650万   ¥27,900  ⚠ found vs 2650 ⚠ Not found     ⚠ Active/Changed    
+45   サンハイツ泉町                      Itabashi     2,950万   ¥19,056  ⚠ found vs 2950 ⚠ Not found     ⚠ Active/Changed    
+69   エンゼルハイム金町                    Katsushika   3,280万   ¥25,710  ⚠ found vs 3280 ⚠ Not found     ⚠ Active/Changed    
+14   センチュリーハイツ赤羽西                 Kita         3,399万   ¥23,400  ⚠ found vs 3399 ⚠ Not found     ⚠ Active/Changed    
+111  ライオンズマンション四つ木第2              Katsushika   2,580万   ¥33,600  -               -               ⚠ Unknown portal    
+39   オリンポス板橋栄町                    Itabashi     3,590万   ¥24,910  -               -               ⚠ Fetch error       
+65   メイフラワー西大島                    Koto         4,280万   ¥30,400  -               -               ⚠ Fetch error       
+82   MACシバマタコート                   Katsushika   4,170万   ¥28,100  -               -               ⚠ Unknown portal    
+118  第２さくらコーポ                     Taito        3,200万   ¥6,000   -               -               ⚠ Fetch error       
+36   キャニオンビュー成増                   Itabashi     3,990万   ¥18,510  -               -               ⚠ Fetch error       
+87   朝日プラザ堀切菖蒲園                   Katsushika   3,490万   ¥21,880  ⚠ found vs 3490 ⚠ Not found     ⚠ Active/Changed    
+==================================================================================================================================
+
+SUMMARY:
+  ✓ Active (all data confirmed): 0
+  ⚠ Active but price/fees changed: 7
+  ✗ Delisted: 0
+  ⚠ Unable to verify (HOME'S WAF-blocked, network error, etc): 13
+
+Total: 7 still listed, 0 delisted, 13 unverifiable

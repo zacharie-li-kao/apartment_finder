@@ -1,0 +1,263 @@
+REHOUSE KOTO-KU SCRAPING RESULTS
+Generated: 2026-06-30 12:31:38
+Total listings: 246
+Passed filters: 215
+Failed filters: 31
+======================================================================================================================================================
+
+PASSED LISTINGS:
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Format: PASS|Building|Price万|Size|Floor|Year|Walk|Station|Fees|Room|Direction|URL
+------------------------------------------------------------------------------------------------------------------------------------------------------
+PASS|パークタワー東雲|15490|86.48|16/9|2014|7|徒歩７分|0|3LDK|北東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA17/
+PASS|プラウドタワー木場公園|15200|73.35|16/9|2017|7|前店（約480ｍ）" title="プラウドタワー木場公園 くすりの福太郎木場駅前店（約480ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21800/13/1527925/384114838_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2SLDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BFA0F/
+PASS|パセオ・TOKYOイースト|10980|75.82|16/9|1997|5|：徒歩約５分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA47/
+PASS|バームステージ大島|8480|79.63|16/9|2004|7|徒歩7分、「東大島」駅徒歩8分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA45/
+PASS|ライオンズステーションプラザ大島|7280|69.46|16/9|1990|1|徒歩1分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA48/
+PASS|ガレリアグランデ|17490|89.69|16/9|2006|9|徒歩9分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBGA38/
+PASS|メイツ深川住吉|14680|71.82|16/9|2020|7|徒歩7分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBFA08/
+PASS|ドミール三友|6299|51.79|16/9|1991|5|南店（約200ｍ）" title="ドミール三友 ファミリーマート亀戸駅南店（約200ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/1528958/384043445_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA47/
+PASS|猿江恩賜公園レジデンス|12480|69.32|16/9|2023|11|徒歩11分|0|3LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BFA12/
+PASS|ルネ南砂町リバーフィール|9400|76.02|16/9|2020|13|（約1000ｍ）" title="ルネ南砂町リバーフィール 東京メトロ東西線「南砂町」駅（約1000ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1451646/383623820_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA14/
+PASS|アーバンドック パークシティ豊洲 タワーA|26500|114.12|16/9|2008|6|(東京メトロ有楽町線)（約470ｍ）" title="アーバンドック パークシティ豊洲 タワーA 豊洲駅(東京メトロ有楽町線)（約470ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1529222/383619915_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|4LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA15/
+PASS|パークタワー東雲|13490|70.06|16/9|2014|7|徒歩7分|0|2LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA12/
+PASS|ルネグランマリーナ潮見|7680|67.35|16/9|1999|3|前店（約230ｍ）" title="ルネグランマリーナ潮見 ミニストップ潮見駅前店（約230ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21800/13/1341236/383520561_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BFA07/
+PASS|コスモ西大島グランステージ東棟|7498|67.79|16/9|1996|9|徒歩9分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA45/
+PASS|シティタワーズ東京ベイ ウエストタワー|10800|55.32|16/9|2019|4|徒歩4分|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBTA0D/
+PASS|ドラゴンマンション木場公園壱番館|8290|58.75|16/9|1999|9|３路線利用可　━━━━・・・|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA1A/
+PASS|プラウドタワー東雲キャナルコート|10680|64.02|16/9|2012|12|徒歩１２分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA03/
+PASS|サンクタス森下|9580|56.51|16/9|2007|1|４路線利用可能　|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA16/
+PASS|サンクタス大島|7980|70.29|16/9|1999|1|前店（約150ｍ）" title="サンクタス大島 くすりの福太郎大島駅前店（約150ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/1345598/382180879_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2SLDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA31/
+PASS|マークス亀戸|8980|66|16/9|1997|3|徒歩3分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBEA05/
+PASS|THE TOYOSU TOWER|14300|67.26|16/9|2008|6|(東京メトロ有楽町線)（約420ｍ）" title="THE TOYOSU TOWER 豊洲駅(東京メトロ有楽町線)（約420ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1327263/381667766_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA17/
+PASS|エムステージ・ウエスティア|7180|63.69|16/9|2002|8|徒歩８分|0|2LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BDA09/
+PASS|ナイスアーバン大島|8280|70.79|16/9|2001|7|徒歩7分|0|4LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA20/
+PASS|パークホームズ豊洲ザレジデンス|12500|56.47|16/9|2016|5|徒歩５分|0|2LDK|北東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA18/
+PASS|スカイズタワー&ガーデン|14200|65.35|16/9|2014|5|徒歩５分|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA19/
+PASS|マークス亀戸|9680|66|16/9|1997|3|北口店（約90ｍ）" title="マークス亀戸 ローソン亀戸駅北口店（約90ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21797/13/1282459/380718020_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2SLDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA27/
+PASS|北砂四丁目住宅|3380|55.04|16/9|2026|14|徒歩約14分|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA2C/
+PASS|三井東陽ハイツ|4280|61.22|16/9|2026|4|前店（約390ｍ）" title="三井東陽ハイツ デイリーヤマザキ東陽町駅前店（約390ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21797/13/1302638/380983787_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BDA02/
+PASS|住吉パークホームズ|9280|61.05|16/9|1994|6|徒歩6分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA19/
+PASS|リビオ清澄白河|13999|64.01|16/9|2015|6|徒歩6分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA08/
+PASS|シティテラス住吉|11480|67.34|16/9|2023|14|徒歩14分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA09/
+PASS|ランドステージ東大島エグゼタワー|6699|66.24|16/9|2001|11|徒歩11分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA08/
+PASS|セザール第二西大島|5480|71.34|16/9|2002|13|徒歩1３分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BAA0B/
+PASS|清澄ハイツ|5099|51.3|16/9|2026|10|、ほぼ平坦な道のりでアクセス便利 　|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBAGA45/
+PASS|オリゾンマーレ|13980|65.28|16/9|2004|4|徒歩４分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBGA37/
+PASS|オリゾンマーレ|9180|55.76|16/9|2004|4|徒歩４分|0|1LDK|北西|https://www.rehouse.co.jp/buy/mansion/bkdetail/F1FBFA0B/
+PASS|プラウドタワー東雲キャナルコート|12480|75.06|16/9|2012|12|徒歩１２分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBTA0F/
+PASS|スカイズタワー&ガーデン|12280|60.67|16/9|2014|5|徒歩5分|0|2LDK|北東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBTA0E/
+PASS|シティタワーズ東京ベイ ウエストタワー|8980|43.37|16/9|2019|4|徒歩4分|0|1LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBTA10/
+PASS|アルカサル亀戸|10799|75.82|16/9|1996|5|ビル）（約450ｍ）" title="アルカサル亀戸 アトレ亀戸（駅ビル）（約450ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/1457146/383448802_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|4LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBFA06/
+PASS|ロイヤルプラザ森下|8998|55.16|16/9|1993|1|３路線利用可能|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBFA05/
+PASS|ルネリバーズタワー東大島|7280|75.68|16/9|2010|16|徒歩16分|0|3LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BFA06/
+PASS|朝日プラザ亀戸|7599|66.36|16/9|1982|8|3路線利用可～|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA5D/
+PASS|シティタワーズ豊洲ザ・シンボル|12990|65.34|16/9|2009|6|徒歩６分|0|2LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBGA33/
+PASS|ブランズタワー豊洲|19980|68.53|16/9|2021|5|(東京メトロ有楽町線)（約380ｍ）" title="ブランズタワー豊洲 豊洲駅(東京メトロ有楽町線)（約380ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1451830/383330190_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBGA34/
+PASS|東京スイートレジデンス|11880|87.06|16/9|2008|13|徒歩１３分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA1D/
+PASS|パークホームズ東陽町|5880|33.33|16/9|2024|6|徒歩約６分|0|1LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BFA09/
+PASS|東大島ハイライズ|4480|64.4|16/9|1982|11|徒歩11分|0|2SLDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA33/
+PASS|デュオシティ木場公園|11480|70.62|16/9|2002|5|徒歩5分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA3A/
+PASS|ヴェレーナシティ東京イーストガーデンズ|8680|72.03|16/9|2018|12|の最寄出口2aは工事のため利用できません。|0|3LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FN6BFA0D/
+PASS|パークタワー東雲|13200|67.18|16/9|2014|7|徒歩７分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA0F/
+PASS|パークタワー東雲|12480|60.15|16/9|2014|7|徒歩７分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBGA30/
+PASS|シティタワーズ豊洲ザ・シンボル|13000|67.03|16/9|2009|6|徒歩６分|0|2LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBGA31/
+PASS|ザ・湾岸タワーレックスガーデン|9499|55.05|16/9|2012|4|徒歩４分|0|1SLDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2GBGA18/
+PASS|藤和シティコープ錦糸町|9480|72.69|16/9|1992|9|徒歩９分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA57/
+PASS|イーストパークス大島 サザンスクエア|6590|68.58|16/9|1997|2|前店（約190ｍ）" title="イーストパークス大島 サザンスクエア まいばすけっと 大島駅前店（約190ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21797/13/1448473/383224138_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BFA0C/
+PASS|シティタワー有明|18200|83.53|16/9|2009|9|９分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA08/
+PASS|洋伸東大島マンション|6599|70.4|16/9|1982|3|前店（約270ｍ）" title="洋伸東大島マンション まいばすけっと東大島駅前店（約270ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/1444328/383151928_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA3E/
+PASS|ザ・パークワンズ門前仲町|7800|37.33|16/9|2020|2|（約140ｍ）" title="ザ・パークワンズ門前仲町 東京メトロ東西線・都営大江戸線「門前仲町」駅（約140ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1359899/383178169_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|1LDK|北西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA0B/
+PASS|L・シティ清澄白河|15980|74.15|16/9|2001|5|３路線利用可能|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA1C/
+PASS|ブランズタワー豊洲|17000|58.02|16/9|2021|5|徒歩５分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA05/
+PASS|ニュートンプレイス ノースコート|13980|103.57|16/9|2003|13|(東京メトロ 有楽町線)（約1250ｍ）" title="ニュートンプレイス ノースコート 豊洲駅(東京メトロ 有楽町線)（約1250ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1361533/382484769_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|4LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA0A/
+PASS|新大橋永谷マンション|6980|43.2|16/9|2026|4|徒歩４分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBFA02/
+PASS|スカイズタワー&ガーデン|19480|81.71|16/9|2014|5|２路線利用可）|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FWRBFA08/
+PASS|シティタワーズ東京ベイ イーストタワー|16990|70.25|16/9|2019|8|徒歩６分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA07/
+PASS|ドラゴンマンション森下1番館|7099|53.78|16/9|1997|7|徒歩5分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA18/
+PASS|メイツ深川住吉|14480|69|16/9|2020|7|」徒歩7分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA19/
+PASS|新大橋永谷マンション|4390|43.2|16/9|2026|4|4路線利用可能|0|1LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA1B/
+PASS|ハイツ木場|4280|40.61|16/9|2026|4|徒歩4分の立地|0|1LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BFA02/
+PASS|パセオ・TOKYOイースト|7699|58.81|16/9|1997|5|：徒歩約５分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA40/
+PASS|ザ・ガーデンタワーズ サンセットタワー|11590|89.8|16/9|1997|7|徒歩7分|0|3SLDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA53/
+PASS|ルネ門前仲町|10290|77.12|16/9|1986|7|３路線利用可能|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA17/
+PASS|アデニウムコート木場|10900|70.32|16/9|2013|7|：徒歩約７分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BFA03/
+PASS|ファミリータウン東陽 D棟|5980|70.87|16/9|1982|5|徒歩約５分|0|3LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BTA04/
+PASS|東京スイート・レジデンス|9680|82.15|16/9|2008|13|徒歩13分|0|3LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BEA0A/
+PASS|猿江恩賜公園レジデンス|13480|69.26|16/9|2023|11|徒歩11分|0|3LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BEA13/
+PASS|グランアルト豊洲|13250|76.04|16/9|2001|5|徒歩6分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBEA15/
+PASS|東砂三丁目ハイツ 4号棟|3480|82.27|16/9|1982|15|徒歩約１５分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BEA0B/
+PASS|ブランズタワー豊洲|12900|43.41|16/9|2021|5|徒歩５分|0|1LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2FBEA0D/
+PASS|ソルフィエスタ猿江恩賜公園|7850|59.92|16/9|2005|10|３路線利用可能|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BEA18/
+PASS|グランエスタ|10480|81.59|16/9|2005|2|徒歩２分|0|3LDK|北西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BEA0F/
+PASS|イーストパークス大島 セントラルスクエア|8299|64.96|16/9|1997|3|徒歩３分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA37/
+PASS|THE TOYOSU TOWER|15980|73.02|16/9|2008|6|徒歩６分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBEA12/
+PASS|W Comfort Towers EAST|8980|58.7|16/9|2004|7|徒歩7分|0|1LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBEA0C/
+PASS|パークホームズ豊洲ザレジデンス|12680|56.47|16/9|2016|5|(ゆりかもめ臨海線)（約270ｍ）" title="パークホームズ豊洲ザレジデンス 豊洲駅(ゆりかもめ臨海線)（約270ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1299723/382257340_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|北東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBEA0E/
+PASS|東京フロントコート|17400|109.95|16/9|2005|5|徒歩５分|0|4LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBEA13/
+PASS|W Comfort Towers WEST|12580|86.69|16/9|2005|8|(東京メトロ 有楽町線)（約630ｍ）" title="W Comfort Towers WEST 辰巳駅(東京メトロ 有楽町線)（約630ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1358872/382332649_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBGA2C/
+PASS|ブランズタワー豊洲|17480|58.02|16/9|2021|5|(東京メトロ有楽町線)（約380ｍ）" title="ブランズタワー豊洲 豊洲駅(東京メトロ有楽町線)（約380ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1203877/382311523_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBEA11/
+PASS|ライオンズマンション新大橋|6598|50.46|16/9|1997|6|徒歩6分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA15/
+PASS|ジースクエア|11499|75.16|16/9|2000|13|徒歩１３分|0|3LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BEA09/
+PASS|プレミスト有明ガーデンズ|13500|65.09|16/9|2020|2|徒歩2分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2FBEA04/
+PASS|グレイスコート木場|7980|69|16/9|1991|2|前店（約210ｍ）" title="グレイスコート木場 まいばすけっと木場駅前店（約210ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21800/13/1141420/382024544_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BEA06/
+PASS|トーカンマンション大島 C棟|6999|85.71|16/9|1983|9|徒歩9分|0|2SLDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA33/
+PASS|ガレリアグランデ|14400|82.46|16/9|2006|9|徒歩4分|0|1SLDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBEA05/
+PASS|シティタワーズ豊洲ザ・シンボル|17980|81.39|16/9|2009|6|徒歩6分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FK7BEA09/
+PASS|ジョイフル門前仲町第1|5499|55.84|16/9|2026|7|徒歩７分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA14/
+PASS|コスモ住吉扇橋|10980|64.71|16/9|1998|6|2路線利用可能|0|3LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA13/
+PASS|ファミリータウン東陽 H棟|6490|81.13|16/9|1982|5|前店（約430ｍ）" title="ファミリータウン東陽 H棟 マツモトキヨシ東陽町駅前店（約430ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21800/13/1203390/382044866_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|4LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BEA05/
+PASS|ダイアパレス大島|3390|57.51|16/9|2026|9|徒歩9分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA2E/
+PASS|BEACON Tower Residence|12380|83.45|16/9|2009|11|徒歩7分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBEA06/
+PASS|サンシャインハイツ|7280|113.72|16/9|1985|15|徒歩１５分|0|4SLDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBDA08/
+PASS|プラウド住吉|10980|70.35|16/9|2020|9|２路線利用可能|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBEA04/
+PASS|セザール南砂町|3780|58.1|16/9|1997|17|徒歩１７分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BEA02/
+PASS|パークハウス清澄白河タワー|16980|83.75|16/9|2010|6|徒歩5分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBEA03/
+PASS|ブリリア有明スカイタワー|11680|62.52|16/9|2010|6|徒歩4分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA15/
+PASS|シティタワーズ豊洲ザ・シンボル|16950|80.2|16/9|2009|6|徒歩６分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA16/
+PASS|アーバンドック パークシティ豊洲 タワーB|29500|96.77|16/9|2007|6|(東京メトロ有楽町線)（約480ｍ）" title="アーバンドック パークシティ豊洲 タワーB 豊洲駅(東京メトロ有楽町線)（約480ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1326347/381627541_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA18/
+PASS|南砂住宅 8号棟|3880|61.85|16/9|2010|8|徒歩8分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BDA0D/
+PASS|ザ・ガーデンタワーズ サンライズタワー|11000|88.15|16/9|1997|9|2路線利用可能|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BDA1B/
+PASS|藤和シティホームズ清澄庭園|19990|89.55|16/9|1998|1|３路線利用可能　|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBDA0B/
+PASS|メイツ深川住吉|13480|71.3|16/9|2020|7|徒歩7分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBDA0E/
+PASS|ルイシャトレ門前仲町|11980|64.8|16/9|2000|8|徒歩８分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA11/
+PASS|ハイネス亀戸|3480|49.61|16/9|2026|15|徒歩15分|0|1SLDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA21/
+PASS|パークタワー東雲|11180|60.93|16/9|2014|7|徒歩7分|0|2LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FWPBDA08/
+PASS|グランエスタ|11480|75.25|16/9|2005|2|徒歩２分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BDA0B/
+PASS|プレミスト有明ガーデンズ|14180|70.41|16/9|2020|2|徒歩2分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA11/
+PASS|ダイアパレス東砂町|3890|55.03|16/9|2026|15|徒歩約15分|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA32/
+PASS|コートシティ木場|6280|54.01|16/9|1984|4|徒歩4分|0|2LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA34/
+PASS|ザ・ガーデンタワーズ サンライズタワー|13500|97.56|16/9|1997|9|2路線利用可～|0|3LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BDA12/
+PASS|コスモ木場キャナルブリーズ|8480|70.45|16/9|2003|12|徒歩12分|0|3LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BDA04/
+PASS|ニューライズシティ東京ベイハイライズ|9880|71.25|16/9|2006|5|前店（約460ｍ）" title="ニューライズシティ東京ベイハイライズ ミニストップ南砂町駅前店（約460ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21800/13/1301597/381219606_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BDA07/
+PASS|ノーブル亀戸|6290|54.32|16/9|1997|10|徒歩10分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA3D/
+PASS|THE TOYOSU TOWER|16950|84.94|16/9|2008|6|徒歩６分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA08/
+PASS|パークタワー東雲|15680|86.48|16/9|2014|7|徒歩７分|0|3LDK|北東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA0A/
+PASS|パークハウス清澄白河ステーションサイド|11480|59.94|16/9|2005|2|３路線利用可能　━━━━━━━━・・・・・|0|1LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBDA05/
+PASS|プレミスト有明ガーデンズ|10800|57.76|16/9|2020|2|徒歩2分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA05/
+PASS|シティタワー有明|16990|84.63|16/9|2009|9|８分|0|2LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2GBGA0D/
+PASS|ノーブル猿江恩賜公園 East|9480|79.29|16/9|2003|9|徒歩9分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BDA07/
+PASS|東陽町スカイハイツ|6298|72.09|16/9|2026|11|徒歩11分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA30/
+PASS|シティタワー有明|10990|60.62|16/9|2009|9|８分|0|2LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2GBGA0C/
+PASS|イーストコモンズ清澄白河フロントタワー|18980|99.72|16/9|2005|5|３路線利用可能　━━━・・・ |0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBDA03/
+PASS|メイツ深川住吉|12800|68.32|16/9|2020|7|徒歩7分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBDA04/
+PASS|アーバンドック パークシティ豊洲 タワーA|15680|77.99|16/9|2008|6|徒歩6分|0|2LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA17/
+PASS|イーストパークス大島 サザンスクエア|7150|68.58|16/9|1997|2|前店（約190ｍ）" title="イーストパークス大島 サザンスクエア まいばすけっと 大島駅前店（約190ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21797/13/1266966/380805412_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2SLDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BCA0D/
+PASS|パークハウス清澄白河タワー|16690|80.82|16/9|2010|6|徒歩5分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA0E/
+PASS|南砂四丁目住宅|3890|57.11|16/9|2026|9|徒歩9分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA29/
+PASS|ザ・ガーデンタワーズ サンライズタワー|12990|88.15|16/9|1997|9|2路線利用可～|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BCA1C/
+PASS|レクセルプラザ東陽町|9680|86.36|16/9|2006|10|徒歩１０分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BCA05/
+PASS|MJR深川住吉|12800|71.07|16/9|2024|15|徒歩15分|0|3LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BCA11/
+PASS|コスモ大島グランコート|5698|63.18|16/9|1994|14|徒歩１４分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA22/
+PASS|プラウド東陽町ガーデンズ|13480|87.16|16/9|2011|15|徒歩１５分|0|4LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA24/
+PASS|ザ・ウインベル仙台堀公園サニーウイング|7190|85.1|16/9|1998|13|徒歩１３分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA25/
+PASS|オリゾンマーレ|9990|63.22|16/9|2004|4|徒歩４分|0|1SLDK|北東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA15/
+PASS|パークホームズ豊洲ザレジデンス|14980|70.95|16/9|2016|5|徒歩５分|0|3LDK|北西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA14/
+PASS|クリオ大島サザンプレイス|9480|72.9|16/9|2016|8|徒歩８分の立地|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BCA0F/
+PASS|プラウド東陽町ガーデンズ|11980|75.22|16/9|2011|15|徒歩１５分|0|3LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA23/
+PASS|リドレス門前仲町|9980|87.12|16/9|1988|6|徒歩６分|0|1LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBCA03/
+PASS|ジースクエア|8980|74.7|16/9|2000|13|徒歩１３分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BCA0E/
+PASS|オリゾンマーレ|10780|60|16/9|2004|4|徒歩４分|0|1SLDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA13/
+PASS|レーベンハイム森下レシェンテ|8380|57.19|16/9|2004|6|３路線利用可能）━━━━━━━━━━━━━━━・・・・・|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBCA01/
+PASS|リビオレゾン清澄庭園|7490|39.99|16/9|2012|1|(都営地下鉄 大江戸線・東京メトロ 半蔵門線)（約60ｍ）" title="リビオレゾン清澄庭園 清澄白河駅(都営地下鉄 大江戸線・東京メトロ 半蔵門線)（約60ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21837/13/1252491/380443632_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|1LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBCA02/
+PASS|マンション東陽|5980|68.79|16/9|1982|6|徒歩6分|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BCA08/
+PASS|ベイズタワー&ガーデン|14980|72.6|16/9|2016|6|徒歩6分|0|3LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA0F/
+PASS|パークホームズ豊洲ザレジデンス|11780|56.47|16/9|2016|5|(ゆりかもめ臨海線)（約270ｍ）" title="パークホームズ豊洲ザレジデンス 豊洲駅(ゆりかもめ臨海線)（約270ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/589458/380198583_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|北東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA10/
+PASS|東大島ファミールハイツ 1号館|5280|59.33|16/9|1986|3|前店（約80ｍ）" title="東大島ファミールハイツ 1号館 まいばすけっと東大島駅前店（約80ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/1226455/380257154_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2SLDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBCA01/
+PASS|ブランズタワー豊洲|38000|103.06|16/9|2021|5|徒歩５分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FKXBGA18/
+PASS|ノーブル猿江恩賜公園 West|11390|91.09|16/9|2003|9|4路線利用可|0|4LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ8BDA03/
+PASS|洋伸東大島マンション|6280|70.4|16/9|1982|3|前店（約270ｍ）" title="洋伸東大島マンション まいばすけっと東大島駅前店（約270ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/1237890/380171300_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2SLDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA13/
+PASS|ブリリアマーレ有明タワー&ガーデン|8230|45.88|16/9|2008|5|徒歩５分|0|1LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBCA07/
+PASS|サンヴェール門前仲町|9480|62.43|16/9|1995|7|利用可能|0|2SLDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA1B/
+PASS|イトーピア東陽町マンション|5580|56.56|16/9|2021|5|徒歩5分の立地|0|1LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA11/
+PASS|クレヴィア辰巳|9480|74.93|16/9|2013|9|徒歩９分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBBA0F/
+PASS|メイツ深川住吉|13480|70.29|16/9|2020|7|徒歩7分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBBA11/
+PASS|パークホームズ豊洲ザレジデンス|16780|73.81|16/9|2016|5|徒歩５分|0|2LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBBA0C/
+PASS|パークハウス清澄白河タワー|16880|74.16|16/9|2010|6|徒歩5分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBBA0C/
+PASS|グランエスタ|9480|61.23|16/9|2005|2|徒歩２分|0|2LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA0E/
+PASS|THE MIDLAND AVENUE|16660|87.94|16/9|2012|7|」徒歩7分・「西大島駅」徒歩7分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBBA05/
+PASS|コンポーゼ亀戸|8299|56.8|16/9|2000|7|東口店（約300ｍ）" title="コンポーゼ亀戸 まいばすけっと亀戸駅東口店（約300ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/1234726/379777511_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA0D/
+PASS|プレシス木場公園シーズンプレイス|10980|68.35|16/9|2014|15|利用可能な立地|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA08/
+PASS|東陽町セントラルタワー|6580|51.28|16/9|2004|2|前店（約60ｍ）" title="東陽町セントラルタワー セブンイレブン江東東陽町駅前店（約60ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21800/13/1192470/379560910_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|1LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA0B/
+PASS|秀和第4東陽町レジデンス|3180|40|16/9|2025|8|徒歩約８分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA0D/
+PASS|ツインタワー住利住吉館|6790|46.33|16/9|1994|4|北店（約450ｍ）" title="ツインタワー住利住吉館 まいばすけっと 住吉駅北店（約450ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21797/13/1235227/379662413_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|1SLDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BBA16/
+PASS|BEACON Tower Residence|9980|62.57|16/9|2009|11|徒歩１１分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBBA0A/
+PASS|シャルム南砂町|3899|67.16|16/9|2026|21|徒歩21分|0|2SLDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA0C/
+PASS|シティタワーズ豊洲ザ・シンボル|14900|72.17|16/9|2009|6|徒歩6分|0|2LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FKQBBA03/
+PASS|イーストコモンズ清澄白河パークフラッツ|11800|58.02|16/9|2005|10|３路線利用可 　|0|1SLDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBBA04/
+PASS|ルネリバーズタワー東大島|5980|60.04|16/9|2010|16|徒歩16分|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA07/
+PASS|ニューライフマンション木場|4580|61.6|16/9|1982|12|徒歩12分|0|3LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA05/
+PASS|アーバンドック パークシティ豊洲 タワーA|18900|80.38|16/9|2008|6|(東京メトロ有楽町線)（約480ｍ）" title="アーバンドック パークシティ豊洲 タワーA 豊洲駅(東京メトロ有楽町線)（約480ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21774/13/1226067/379332446_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FQ7BTA01/
+PASS|ニューライフマンション木場|3980|46|16/9|1982|12|徒歩12分|0|3LDK|北東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BBA03/
+PASS|ブランズ東雲|10480|66.52|16/9|2012|9|から徒歩９分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBBA01/
+PASS|ジョイフル門前仲町第1|4899|47.41|16/9|2026|7|徒歩７分|0|1SLDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA01/
+PASS|メイツ深川住吉|10680|63.01|16/9|2020|7|徒歩6分|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBGA04/
+PASS|パークホームズ東陽町|5680|33.12|16/9|2024|6|徒歩約6分|0|1LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BAA08/
+PASS|スカイズタワー&ガーデン|18500|89.46|16/9|2014|5|徒歩6分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2FBAA05/
+PASS|プライヴブルー東京|15080|85.11|16/9|2005|6|徒歩６分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBAA0D/
+PASS|ライオンズヴィアーレ木場公園|6980|43.26|16/9|2004|7|徒歩７分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBAA03/
+PASS|シャリエ亀戸リーディングイースト|8980|71.88|16/9|2016|14|徒歩１０分|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBAA02/
+PASS|スカイズタワー&ガーデン|13900|59.89|16/9|2014|5|(東京メトロ有楽町線)（約1010ｍ）" title="スカイズタワー&amp;ガーデン 豊洲駅(東京メトロ有楽町線)（約1010ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1197686/378689121_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|北西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBAA04/
+PASS|アーバンドック パークシティ豊洲 タワーB|18900|80.23|16/9|2007|6|(東京メトロ有楽町線)（約480ｍ）" title="アーバンドック パークシティ豊洲 タワーB 豊洲駅(東京メトロ有楽町線)（約480ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1195032/378588927_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBAA03/
+PASS|ブリリアマーレ有明タワー&ガーデン|14800|80.48|16/9|2008|5|徒歩５分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBAA01/
+PASS|クレヴィア森下駅前|4990|31.2|16/9|2009|1|前の物件情報（FLBATA09）｜三井のリハウス|0|1LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBATA09/
+PASS|アーバンドック パークシティ豊洲 タワーA|21800|88.2|16/9|2008|6|徒歩6分 |0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPAWA0F/
+PASS|ソラネットシティ|8680|96.51|16/9|2005|11|徒歩１１分|0|4LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNAUA0A/
+PASS|アーバンドック パークシティ豊洲 タワーA|13980|70.55|16/9|2008|6|(東京メトロ有楽町線)（約470ｍ）" title="アーバンドック パークシティ豊洲 タワーA 豊洲駅(東京メトロ有楽町線)（約470ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1143421/377618503_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPAWA01/
+PASS|シティタワーズ東京ベイ ウエストタワー|13480|61.36|16/9|2019|3|付近までの居住者専用シャトルバスあり（有償）|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2FAUA13/
+PASS|スカイズタワー&ガーデン|13150|54.02|16/9|2014|5|(東京メトロ有楽町線)（約1010ｍ）" title="スカイズタワー&amp;ガーデン 豊洲駅(東京メトロ有楽町線)（約1010ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21824/13/1144142/377367449_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBHAUA09/
+PASS|シティタワーズ豊洲ザ・シンボル|13980|70.42|16/9|2009|6|(東京メトロ有楽町線)（約470ｍ）" title="シティタワーズ豊洲ザ・シンボル 豊洲駅(東京メトロ有楽町線)（約470ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/952931/377269501_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPAUA15/
+PASS|東砂三丁目ハイツ 6号棟|3800|80.47|16/9|1982|15|徒歩１５分|11|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNAUA04/
+PASS|シャリエ亀戸リーディングイースト|11680|70.8|16/9|2016|14|徒歩10分|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNAUA02/
+PASS|W Comfort Towers WEST|15700|111.54|16/9|2005|8|(東京メトロ 有楽町線)（約630ｍ）" title="W Comfort Towers WEST 辰巳駅(東京メトロ 有楽町線)（約630ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1132662/376979003_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|3LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPAUA0A/
+PASS|Brillia Mare有明TOWER&GARDEN|17480|92.76|16/9|2008|5|徒歩5分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPAUA07/
+PASS|ジオ南砂町|7780|58.68|16/9|2022|13|徒歩16分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5ASA10/
+PASS|キャナルファーストタワー|11400|75.41|16/9|2008|9|徒歩９分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2FASA06/
+PASS|ブランズタワー豊洲|15800|61.15|16/9|2021|5|(東京メトロ有楽町線)（約380ｍ）" title="ブランズタワー豊洲 豊洲駅(東京メトロ有楽町線)（約380ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1058112/376341560_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPASA07/
+PASS|ブランズタワー豊洲|23500|73.49|16/9|2021|5|徒歩6分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPASA08/
+PASS|パークホームズ東陽町|8680|51.51|16/9|2024|6|徒歩約6分|0|2LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5ASA04/
+PASS|ブリリアタワー有明ミッドクロス|15480|82.86|16/9|2021|9|(ゆりかもめ) 約680m（徒歩9分）|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPARA1C/
+PASS|ニューライズシティ東京ベイハイライズ|9480|71.47|16/9|2006|5|前店（約460ｍ）" title="ニューライズシティ東京ベイハイライズ ミニストップ南砂町駅前店（約460ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21800/13/1054672/375550208_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|0|2LDK|東|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5ARA08/
+PASS|ブリリアタワー有明ミッドクロス|9380|47.2|16/9|2021|9|徒歩4分|0|1LDK|南東|https://www.rehouse.co.jp/buy/mansion/bkdetail/F1FARA02/
+PASS|ライオンズステーションプラザ大島|8580|100.91|16/9|1990|1|徒歩１分の立地|0|4LDK||https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNAGA2D/
+PASS|ザ・湾岸タワーレックスガーデン|7880|55.05|16/9|2012|4|徒歩7分|0|1SLDK|西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPAQA11/
+PASS|スカイズタワー&ガーデン|20680|84.94|16/9|2014|5|徒歩5分|0|3LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPAQA03/
+PASS|シティタワーズ東京ベイ セントラルタワー|24000|79.88|16/9|2019|10|付近までの居住者専用シャトルバスあり（有償）|0|3LDK|南|https://www.rehouse.co.jp/buy/mansion/bkdetail/F2FATA61/
+PASS|ブランズタワー豊洲|29800|85.57|16/9|2021|5|徒歩6分|0|2LDK|南西|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPACA05/
+
+
+FAILED LISTINGS (31 total):
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Format: FAIL|Building|Reason|Price万|Size|Year|Station|URL
+------------------------------------------------------------------------------------------------------------------------------------------------------
+FAIL|ゾンネンハイム北砂|Built before 1982 (1981)|5680|66.46|1981|徒歩12分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BFA0D/
+FAIL|ライオンズマンション亀戸|Built before 1982 (1980)|4680|45.76|1980|徒歩5分で通勤通学に便利|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BGA65/
+FAIL|西大島ビューハイツ|Built before 1982 (1980)|7198|102|1980|徒歩4分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA41/
+FAIL|トーア第2亀戸マンション|Built before 1982 (1981)|4780|55.44|1981|徒歩15分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA2F/
+FAIL|クレッセント東京ヴュータワー|<30m² (22.5m²)|3280|22.5|2005|利用可能）━━━━━━・・・・・|https://www.rehouse.co.jp/buy/mansion/bkdetail/FLBBEA02/
+FAIL|シティハウス錦糸町|North-only facing|12990|70.89|2006|２路線利用可～|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BFA15/
+FAIL|アーバンドック パークシティ豊洲 タワーA|North-only facing|15480|76.93|2008|(東京メトロ有楽町線)（約470ｍ）" title="アーバンドック パークシティ豊洲 タワーA 豊洲駅(東京メトロ有楽町線)（約470ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/791019/383375288_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA13/
+FAIL|豊洲ハイライズ|Built before 1982 (1980)|7990|65.56|1980|徒歩9分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBGA32/
+FAIL|クレール亀戸|Built before 1982 (1980)|3080|52.52|1980|徒歩10分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBFA04/
+FAIL|ベイズタワー&ガーデン|North-only facing|10980|55.58|2016|徒歩6分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBFA0D/
+FAIL|サンプラハ第二木場|Built before 1982 (1980)|2780|53.04|1980|利用可能|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA3E/
+FAIL|エクセル大島|Built before 1982 (1980)|4280|48.56|1980|徒歩４分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA3D/
+FAIL|藤和シティコープ錦糸町|<30m² (27.12m²)|2180|27.12|1992|３沿線利用可能　━━━━━━━━━━━━━━━・・・・・|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BEA09/
+FAIL|ウインザーハイム南砂|Built before 1982 (1981)|4680|60.42|1981|徒歩16分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BEA07/
+FAIL|秀和亀戸2丁目レジデンス|Built before 1982 (1981)|6980|88.29|1981|徒歩6分|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71BEA0A/
+FAIL|ハイネス東大島|Built before 1982 (1981)|4290|46.5|1981|徒歩4分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBGA2D/
+FAIL|日商岩井木場マンション|Built before 1982 (1981)|6280|64.09|1981|３路線利用可能|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BDA10/
+FAIL|アーバンドック パークシティ豊洲 コートC|North-only facing|10500|58.43|2008|(東京メトロ有楽町線)（約370ｍ）" title="アーバンドック パークシティ豊洲 コートC 豊洲駅(東京メトロ有楽町線)（約370ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21826/13/1272964/381365752_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBDA12/
+FAIL|南砂町グリーンハイツ 2号棟|Built before 1982 (1981)|4488|63.84|1981|前店（約520ｍ）" title="南砂町グリーンハイツ 2号棟 ミニストップ南砂町駅前店（約520ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21993/13/1140655/381519183_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|https://www.rehouse.co.jp/buy/mansion/bkdetail/FZSBDA0B/
+FAIL|亀戸リリエンハイム|Built before 1982 (1981)|2980|72.65|1981|ビル）（約710ｍ）" title="亀戸リリエンハイム アトレ亀戸（駅ビル）（約710ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/1310193/381153496_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRNBDA05/
+FAIL|ライオンズマンション南砂|Built before 1982 (1981)|3580|54.46|1981|徒歩12分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA27/
+FAIL|レクセルプラザ東陽町|North-only facing|10290|78.46|2006|徒歩１０分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5BGA26/
+FAIL|Brillia有明SkyTower(ブリリア有明スカイタワー)|North-only facing|11580|61.17|2010|(ゆりかもめ臨海線) 約440m（徒歩6分）|https://www.rehouse.co.jp/buy/mansion/bkdetail/FBPBAA06/
+FAIL|Brillia大島GreenAvenue|Leasehold|5980|52.77|2024|徒歩１０分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5AWA10/
+FAIL|Brillia大島|Leasehold|7480|71.58|2020|徒歩１０分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5AUA0E/
+FAIL|ライオンズマンション南砂|Built before 1982 (1981)|3650|54.46|1981|徒歩１２分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FM5AGA87/
+FAIL|秀和亀戸2丁目レジデンス|Built before 1982 (1981)|3980|54.54|1981|まで徒歩6分|https://www.rehouse.co.jp/buy/mansion/bkdetail/F71APA0C/
+FAIL|ガリシア清澄白河|<30m² (25.2m²)|2980|25.2|2013|徒歩８分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FN6ADA0D/
+FAIL|トーア亀戸マンション|Built before 1982 (1981)|3100|49.09|1981|ビル）（約150ｍ）" title="トーア亀戸マンション アトレ亀戸（駅ビル）（約150ｍ）" data-src="https://img2-direct.miraie-net.com/orgt/20015_21856/13/722202/368839179_pcViewLargerHeight.jpg" width="100%" height="100%" fetchpriority="auto" data-v-86859250>|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRN7WA04/
+FAIL|日神パレステージ亀戸第2|<30m² (17.4m²)|1380|17.4|1989|徒歩8分|https://www.rehouse.co.jp/buy/mansion/bkdetail/F717WA05/
+FAIL|セントヒルズ大島|<30m² (19.72m²)|950|19.72|1988|徒歩１５分|https://www.rehouse.co.jp/buy/mansion/bkdetail/FRN7EA02/

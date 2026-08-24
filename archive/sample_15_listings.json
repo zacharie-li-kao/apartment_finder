@@ -1,0 +1,167 @@
+[
+  {
+    "rank": "24",
+    "name": "メゾン・リバーサイド4号棟",
+    "ward": "Edogawa",
+    "station_walk": "東大島2分",
+    "price": "3,680万",
+    "size_layout": "78m² 3LDK",
+    "year_floor": "1989年",
+    "fees": "19,665",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_edogawa/nc_21023954/"
+  },
+  {
+    "rank": "9",
+    "name": "メゾン蓮根",
+    "ward": "Itabashi",
+    "station_walk": "蓮根10分",
+    "price": "2,480万",
+    "size_layout": "48m² 2LDK",
+    "year_floor": "1982年",
+    "fees": "21,204",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_20721040/"
+  },
+  {
+    "rank": "85",
+    "name": "ヴェルアージュ亀有",
+    "ward": "Katsushika",
+    "station_walk": "亀有13分",
+    "price": "4,180万",
+    "size_layout": "61m² 2LDK",
+    "year_floor": "1998年2月",
+    "fees": "29,890",
+    "url": "https://www.livable.co.jp/kounyu/mansion/bkdetail/C4825X437/"
+  },
+  {
+    "rank": "10",
+    "name": "キャピタルビュー滝野川",
+    "ward": "Kita",
+    "station_walk": "西巣鴨8分",
+    "price": "2,480万",
+    "size_layout": "33.85m² 1LDK",
+    "year_floor": "1988年",
+    "fees": "24,055",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_21070923/"
+  },
+  {
+    "rank": "40",
+    "name": "サンハイツ千田",
+    "ward": "Koto",
+    "station_walk": "住吉7分",
+    "price": "3,980万",
+    "size_layout": "40m² 1LDK",
+    "year_floor": "1984年",
+    "fees": "17,460",
+    "url": "https://www.homes.co.jp/mansion/b-1552210002964/"
+  },
+  {
+    "rank": "8",
+    "name": "クイーンズプライム練馬北町",
+    "ward": "Nerima",
+    "station_walk": "東武練馬8分",
+    "price": "3,880万",
+    "size_layout": "36m² 1SLDK",
+    "year_floor": "2016年",
+    "fees": "27,310",
+    "url": "https://www.homes.co.jp/mansion/b-1572160000031/"
+  },
+  {
+    "rank": "59",
+    "name": "セザール第２上北沢",
+    "ward": "Setagaya",
+    "station_walk": "上北沢14分",
+    "price": "3,999万",
+    "size_layout": "55m² 2LDK",
+    "year_floor": "1991年",
+    "fees": "33,880",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_setagaya/nc_20583927/"
+  },
+  {
+    "rank": "4",
+    "name": "ランドステージ墨田ブライトスクエア",
+    "ward": "Sumida",
+    "station_walk": "鐘ヶ淵4分",
+    "price": "3,980万",
+    "size_layout": "54m² 2LDK",
+    "year_floor": "2011年",
+    "fees": "29,000",
+    "url": "https://www.homes.co.jp/mansion/b-1453310000097/"
+  },
+  {
+    "rank": "107",
+    "name": "エヴァーグリーン高砂",
+    "ward": "Katsushika",
+    "station_walk": "京成高砂3分",
+    "price": "3,980万",
+    "size_layout": "58.83m² 3LDK",
+    "year_floor": "1994年2月",
+    "fees": "25,460",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_21004504/"
+  },
+  {
+    "rank": "17",
+    "name": "藤和稲付公園コープ",
+    "ward": "Kita",
+    "station_walk": "赤羽15分",
+    "price": "3,380万",
+    "size_layout": "52m² 2LDK",
+    "year_floor": "1986年",
+    "fees": "28,860",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_kita/nc_21064109/"
+  },
+  {
+    "rank": "90",
+    "name": "ライオンズガーデンお花茶屋",
+    "ward": "Katsushika",
+    "station_walk": "お花茶屋10分",
+    "price": "3,980万",
+    "size_layout": "61.93m² 3LDK",
+    "year_floor": "1998年2月",
+    "fees": "19,400",
+    "url": "https://www.pitat.com/sale/address/4/13/122/"
+  },
+  {
+    "rank": "6",
+    "name": "グリーンキャピタル第三金町",
+    "ward": "Katsushika",
+    "station_walk": "金町5分",
+    "price": "2,650万",
+    "size_layout": "44m² 1LDK+S",
+    "year_floor": "1986年",
+    "fees": "27,900",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20758971/"
+  },
+  {
+    "rank": "5",
+    "name": "サンデュエルお花茶屋",
+    "ward": "Katsushika",
+    "station_walk": "お花茶屋10分",
+    "price": "3,188万",
+    "size_layout": "58m² 2LDK",
+    "year_floor": "2004年",
+    "fees": "23,540",
+    "url": "https://www.homes.co.jp/mansion/b-1566350000125/"
+  },
+  {
+    "rank": "110",
+    "name": "セザール第二立石",
+    "ward": "Katsushika",
+    "station_walk": "青砥7分",
+    "price": "3,480万",
+    "size_layout": "54.02m² 1LDK+2S",
+    "year_floor": "1996年8月",
+    "fees": "31,290",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_katsushika/nc_20958812/"
+  },
+  {
+    "rank": "43",
+    "name": "ウエストハイツ高島平",
+    "ward": "Itabashi",
+    "station_walk": "西台5分",
+    "price": "3,590万",
+    "size_layout": "58m² 3LDK",
+    "year_floor": "1982年",
+    "fees": "19,050",
+    "url": "https://suumo.jp/ms/chuko/tokyo/sc_itabashi/nc_21010488/"
+  }
+]

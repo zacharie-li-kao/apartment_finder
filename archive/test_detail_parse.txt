@@ -1,0 +1,4 @@
+floor: 2階/RC5階建
+layout: 2LDK
+size: 48.19m2（14.57坪）（壁芯）
+year: 1982年5月

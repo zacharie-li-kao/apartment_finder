@@ -1,6 +1,5 @@
-# Keep old local files out of the repo
-listings.html
-shortlist.html
-findings.md
-*.jsonl
-*.tmp
+__pycache__/
+*.pyc
+s.html
+d.html
+*.log

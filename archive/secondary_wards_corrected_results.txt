@@ -1,0 +1,88 @@
+[DEBUG] Sample of loaded listings: ['リーベスト浮間舟渡', 'メゾン蓮根', 'ニューライフマンション木場 — 93 candidates; reject ツインシティ東砂', 'ガーデンプラザ柴又弐番館 + #3 グリーンキャピタル第三金町', '晴紀館']
+[INFO] Loaded 22 existing listings for deduplication
+
+========================================================================================================================
+SECONDARY WARDS EXHAUSTIVE SCAN - CORRECTED
+========================================================================================================================
+Start: 2026-07-09 13:39:15.493222
+Criteria: ¥1.5M-¥40M | 30m²+ | 1LDK+ | 1982+ | ≤15min walk | 2F+ | ≤¥30k fees | FREEHOLD ONLY
+Existing DB: 22 listings
+Portals: SUUMO (curl) + Rehouse (full pagination)
+Wards: Nakano, Arakawa, Edogawa, Ota, Nerima, Chuo, Minato
+
+
+Arakawa:
+  [SUUMO] Arakawa...Exception in thread Thread-3 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\threading.py", line 1041, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Program Files\Python313\Lib\threading.py", line 992, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\subprocess.py", line 1612, in _readerthread
+    buffer.append(fh.read())
+                  ~~~~~~~^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x90 in position 338: character maps to <undefined>
+ 0 qualified
+  [Rehouse] Arakawa... 0 qualified
+
+Chuo:
+  [SUUMO] Chuo...Exception in thread Thread-5 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\threading.py", line 1041, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Program Files\Python313\Lib\threading.py", line 992, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\subprocess.py", line 1612, in _readerthread
+    buffer.append(fh.read())
+                  ~~~~~~~^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x90 in position 338: character maps to <undefined>
+ 0 qualified
+  [Rehouse] Chuo... 0 qualified
+
+Edogawa:
+  [SUUMO] Edogawa...Exception in thread Thread-7 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\threading.py", line 1041, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Program Files\Python313\Lib\threading.py", line 992, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\subprocess.py", line 1612, in _readerthread
+    buffer.append(fh.read())
+                  ~~~~~~~^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x90 in position 338: character maps to <undefined>
+ 0 qualified
+  [Rehouse] Edogawa... 2 qualified
+
+Minato:
+  [SUUMO] Minato...Exception in thread Thread-9 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\threading.py", line 1041, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Program Files\Python313\Lib\threading.py", line 992, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\subprocess.py", line 1612, in _readerthread
+    buffer.append(fh.read())
+                  ~~~~~~~^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x90 in position 338: character maps to <undefined>
+ 0 qualified
+  [Rehouse] Minato...

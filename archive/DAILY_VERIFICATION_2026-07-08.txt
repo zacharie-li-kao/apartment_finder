@@ -1,0 +1,89 @@
+DAILY COMPREHENSIVE VERIFICATION — 2026-07-08
+==============================================================================
+
+TASK 1: EXISTING DATABASE VERIFICATION (30 sample)
+==============================================================================
+
+Status: [Agent running - verification in progress]
+
+TARGET: 30 random listings from existing 116 database
+CRITERIA: Check if still active on portals
+PORTAL ROUTING:
+  - SUUMO: curl via /ms/chuko/ path
+  - Rehouse/Nomu: direct curl
+  - HOME'S: mark as unverifiable (AWS WAF-blocked)
+  - Network errors = "unverifiable" (not delisted)
+
+RESULTS TO COME...
+
+
+TASK 2: NEW DISCOVERY SWEEP (past 24 hours)
+==============================================================================
+
+Status: [Agent running - portal search in progress]
+
+PRIORITY WARDS (exhaustive search):
+  - Sumida-ku (墨田)
+  - Koto-ku (江東)
+  - Itabashi-ku (板橋)
+  - Katsushika-ku (葛飾)
+
+SECONDARY WARDS (check for exceptional):
+  - Chuo-ku (中央)
+  - Minato-ku (港)
+  - Setagaya-ku (世田谷)
+
+HARD FILTERS (applied strictly):
+  ✓ Price ≤40M yen
+  ✓ Size ≥30m²
+  ✓ Layout ≥1LDK
+  ✓ Year ≥1982
+  ✓ Walk ≤15min
+  ✓ Floor ≥2F
+  ✓ Fees ≤30k/mo
+  ✓ Freehold only
+  ✓ No north-facing only
+
+PORTAL SEARCH PLAN:
+  1. SUUMO (newest-first sort)
+  2. Rehouse (ward URLs)
+  3. Nomu (ward pages)
+  4. HOME'S (if accessible)
+
+RESULTS TO COME...
+
+
+EXISTING DATABASE SNAPSHOT
+==============================================================================
+
+Known listings in database (116 total): [Ready for deduplication]
+
+Recently added (past 30 days):
+  #126 セザール久が原 (Ota)
+  #125 メゾン蓮根 (Itabashi)
+  #124 サンタウン立花１号棟 (Sumida)
+  #123 エスカイア等々力 (Setagaya)
+  #122 タウンハイツ亀有２号棟 (Katsushika)
+
+[Full dedup list will be used for discovery sweep]
+
+
+SUMMARY (TO BE COMPLETED)
+==============================================================================
+
+EXISTING VERIFICATION:
+  ✓ Active listings: [TBD]
+  ✗ Delisted: [TBD]
+  ⚠ Unverifiable: [TBD]
+
+NEW DISCOVERIES:
+  ✓ Qualifying new listings: [TBD]
+  ✗ Eliminated by filters: [TBD]
+  ⚠ Duplicates (already in DB): [TBD]
+
+RECOMMENDATIONS:
+  [To follow...]
+
+==============================================================================
+Report Date: 2026-07-08
+Generated: [timestamp]
