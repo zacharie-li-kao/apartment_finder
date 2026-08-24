@@ -45,6 +45,11 @@ ids, so a ward whose pages failed to fetch is skipped entirely, and a listing is
 only marked sold after it has been missing from **two consecutive** clean scans.
 A single absence proves nothing.
 
+SUUMO answers bursts with `HTTP 503`. The scraper backs off exponentially, logs
+the reason for every page it could not fetch, carries on with the rest of the
+ward, and re-fetches any detail page that failed on an earlier cycle — so a
+throttled run costs coverage for one hour, never permanently.
+
 If a scraper fails outright, the `watch.log` line for that cycle starts with
 `!! FAILED:` — the report is never allowed to shrink silently.
 

@@ -54,16 +54,23 @@ LIST_URL = ("https://suumo.jp/jj/bukken/ichiran/JJ010FJ001/?ar=030&bs=011&ta=13"
             "&pc=50&page={page}")
 
 
-def get(url, tries=3):
+LAST_ERROR = ""
+
+
+def get(url, tries=4):
+    """SUUMO throttles bursts by dropping connections.  Back off generously and
+    remember why the last attempt failed, so a truncated scan is never silent."""
+    global LAST_ERROR
     for i in range(tries):
         try:
-            r = S.get(url, timeout=30)
+            r = S.get(url, timeout=45)
             if r.status_code == 200:
                 r.encoding = "utf-8"
                 return r.text
-        except Exception:
-            pass
-        time.sleep(1.5 * (i + 1))
+            LAST_ERROR = f"HTTP {r.status_code}"
+        except Exception as e:
+            LAST_ERROR = type(e).__name__
+        time.sleep(min(30, 3 * (2 ** i)) + random.uniform(0, 2))
     return ""
 
 
@@ -157,7 +164,8 @@ DIRS = {"南": "S", "南東": "SE", "南西": "SW", "東": "E", "西": "W",
 
 
 def fetch_detail(rec):
-    h = get(rec["url"])
+    time.sleep(random.uniform(0.2, 0.6))
+    h = get(rec["url"], tries=4)
     if not h:
         rec["detail_ok"] = False
         return rec
@@ -322,8 +330,10 @@ def scan_ward(sc, max_pages=25):
                               et=9999999, page=page)
         h = get(url)
         if not h:
+            # one bad page must not cost us the rest of the ward
             complete = False
-            break
+            print(f"    {name} page {page}: {LAST_ERROR}", flush=True)
+            continue
         rows = parse_list(h, name)
         if not rows:
             break
@@ -370,12 +380,17 @@ def main():
                 complete_wards.add(sc)
 
     live = {r["id"] for r in listings}
-    fresh = [r for r in listings if r["id"] not in db]
-    print(f"\n{len(listings)} in scope, {len(fresh)} new -> fetching details",
-          flush=True)
+    # Details for listings we have never seen, plus a retry for any whose detail
+    # page failed on an earlier cycle — SUUMO answers bursts with 503, and a
+    # silently missing 向き / 所在階 / fees would quietly sink a good flat.
+    fresh = [r for r in listings
+             if r["id"] not in db or not db[r["id"]].get("detail_ok")]
+    new_n = sum(1 for r in fresh if r["id"] not in db)
+    print(f"\n{len(listings)} in scope, {new_n} new + {len(fresh) - new_n} "
+          f"retries -> fetching details", flush=True)
 
     if fresh:
-        with ThreadPoolExecutor(max_workers=6) as ex:
+        with ThreadPoolExecutor(max_workers=4) as ex:
             for i, r in enumerate(ex.map(fetch_detail, fresh), 1):
                 if i % 25 == 0:
                     print(f"  detail {i}/{len(fresh)}", flush=True)
