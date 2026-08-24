@@ -115,7 +115,7 @@ def parse_price(s):
 
 
 def parse_area(s):
-    m = re.search(r"(\d+(?:\.\d+)?)\s*m", s)
+    m = re.search(r"(\d+(?:\.\d+)?)\s*(?:m|㎡|㎠)", s)
     return float(m.group(1)) if m else None
 
 
