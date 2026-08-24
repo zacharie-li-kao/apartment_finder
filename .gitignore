@@ -3,3 +3,4 @@ __pycache__/
 s.html
 d.html
 *.log
+.cycle.lock

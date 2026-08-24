@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """One watch cycle: scan every source, rebuild index.html, report what changed."""
-import json, os, subprocess, sys
+import json, os, subprocess, sys, time
 from datetime import datetime, timezone, timedelta
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -18,7 +18,40 @@ def snapshot():
             for k, v in json.load(open(p, encoding="utf-8")).items()}
 
 
+LOCK = os.path.join(HERE, ".cycle.lock")
+
+
+def acquire():
+    """Two schedulers now drive this (the Windows task and an in-session loop).
+    Without a lock they can interleave writes to db.json and lose listings."""
+    try:
+        fd = os.open(LOCK, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        age = time.time() - os.path.getmtime(LOCK)
+        if age < 3600:                       # a cycle is ~19 min; 1h means stale
+            print(f"another cycle has been running for {age/60:.0f} min — "
+                  f"skipping this one")
+            return False
+        os.unlink(LOCK)
+        return acquire()
+    os.write(fd, str(os.getpid()).encode())
+    os.close(fd)
+    return True
+
+
 def main():
+    if not acquire():
+        return
+    try:
+        run()
+    finally:
+        try:
+            os.unlink(LOCK)
+        except OSError:
+            pass
+
+
+def run():
     before = snapshot()
     failed = []
     for script in ("scan.py", "scan_gems.py"):

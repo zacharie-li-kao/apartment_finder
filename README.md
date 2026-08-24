@@ -53,6 +53,11 @@ throttled run costs coverage for one hour, never permanently.
 If a scraper fails outright, the `watch.log` line for that cycle starts with
 `!! FAILED:` — the report is never allowed to shrink silently.
 
+`run.py` takes a lock (`.cycle.lock`) for the duration of a cycle, so a second
+trigger — the scheduled task, an in-session loop, or you running it by hand —
+skips rather than interleaving writes to `db.json`. A lock older than an hour is
+treated as stale and cleared.
+
 ## Starring and discarding
 
 Click **☆ Star** or **Discard** on any card. It saves immediately in the browser
