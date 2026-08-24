@@ -265,7 +265,9 @@ def athome(sc, max_pages=8):
     return out
 
 
-SOURCES = [("nomu", nomu), ("rehouse", rehouse), ("athome", athome)]
+# at-home renders its result list client-side (Angular); plain HTTP returns only
+# the filter widgets.  Left in place but disabled until driven by a real browser.
+SOURCES = [("nomu", nomu), ("rehouse", rehouse)]
 
 
 def main():

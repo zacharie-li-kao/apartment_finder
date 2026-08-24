@@ -91,6 +91,7 @@ def load():
             "fees": r.get("fees", 0), "tenure": r.get("tenure", ""),
             "units": r.get("units", ""), "handover": r.get("handover", ""),
             "structure": r.get("structure", ""),
+            "source": r.get("source", "SUUMO"),
             "station": (en_station(r.get("transport") or r.get("station_raw", ""))
                         + (f" — {r['walk']} min walk" if r.get("walk") else "")),
             "stationJp": r.get("station_raw", ""),
@@ -114,6 +115,7 @@ def load():
         best["name"] = re.sub(r"^[■★☆◆●【】\s]+|[■★☆◆●【】\s]+$", "", best["name"]) or best["name"]
         best["agents"] = len(g)
         best["alt"] = [x["url"] for x in g[1:]]
+        best["sources"] = sorted({x["source"] for x in g})
         best["first"] = min(x["first"] for x in g if x["first"]) if any(x["first"] for x in g) else best["first"]
         merged.append(best)
     merged.sort(key=lambda x: -x["score"])
@@ -172,6 +174,8 @@ h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em;font-weight:650}
 .title a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line)}
 .title a:hover{border-color:var(--accent);color:var(--accent)}
 .where{font-size:13px;color:var(--mut);margin-bottom:9px}
+.src{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-left:6px;white-space:nowrap}
 .facts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
 .f{background:var(--chip);border-radius:6px;padding:3px 9px;font-size:12.5px;white-space:nowrap}
 .f b{font-weight:600}
@@ -182,7 +186,10 @@ h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em;font-weight:650}
 .fl.p{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,transparent)}
 .fl.w{color:var(--warnc);border-color:color-mix(in srgb,var(--warnc) 40%,transparent)}
 .fl.k{color:var(--badc);border-color:color-mix(in srgb,var(--badc) 45%,transparent)}
-.blurb{font-size:12.5px;color:var(--mut);margin-top:7px;font-style:italic}
+.blurb{font-size:12.5px;color:var(--mut);margin-top:7px;font-style:italic;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  cursor:pointer}
+.blurb.open{-webkit-line-clamp:unset}
 .acts{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
 .acts button{font:inherit;font-size:12px;padding:5px 11px;border-radius:999px;
   border:1px solid var(--line);background:transparent;color:var(--mut);cursor:pointer}
@@ -220,6 +227,7 @@ footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);
   <button data-v="star">★ Starred</button>
   <button data-v="disc">Discarded</button>
   <select id="ward"><option value="">All wards</option></select>
+  <select id="src"><option value="">All sources</option></select>
   <select id="sort">
     <option value="score">Sort: score</option>
     <option value="price">Sort: price ↑</option>
@@ -252,7 +260,7 @@ try { flags = {...SEED, ...JSON.parse(localStorage.getItem(KEY) || '{}')}; } cat
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(flags)); } catch(e){} };
 const st = id => flags[id] || 0;   // 0 none, 1 star, 2 discard
 
-let view = 'all', ward = '', sort = 'score', q = '';
+let view = 'all', ward = '', sort = 'score', q = '', src = '';
 
 const wsel = document.getElementById('ward');
 [...new Set(DATA.map(d => d.ward))].sort().forEach(w => {
@@ -273,7 +281,7 @@ function card(d, i) {
   if (d.fees)   facts.push(`<span class="f">Fees <b>¥${d.fees.toLocaleString()}</b>/mo</span>`);
   if (d.units)  facts.push(`<span class="f">${esc(d.units)} units</span>`);
   if (d.handover) facts.push(`<span class="f">Handover: ${esc(d.handover)}</span>`);
-  if (d.agents > 1) facts.push(`<span class="f">${d.agents} agents listing this</span>`);
+  if (d.agents > 1) facts.push(`<span class="f">${d.agents} listings of this unit</span>`);
 
   const fl = [...d.plus.map(x=>`<span class="fl p">✓ ${esc(x)}</span>`),
               ...d.warn.map(x=>`<span class="fl w">! ${esc(x)}</span>`),
@@ -283,10 +291,11 @@ function card(d, i) {
     <div class="rank"><b>${d.score}</b><span>score</span></div>
     <div>
       <div class="title"><a href="${d.url}" target="_blank" rel="noopener">${esc(d.name)}</a></div>
-      <div class="where">${esc(d.ward)} ${d.wardJp} · ${esc(d.station)} · ${esc(d.address)}</div>
+      <div class="where">${esc(d.ward)} ${d.wardJp} · ${esc(d.station)} · ${esc(d.address)}
+        <span class="src">${esc((d.sources || [d.source]).join(' + '))}</span></div>
       <div class="facts">${facts.join('')}</div>
       <div class="flags">${fl}</div>
-      ${d.blurb ? `<div class="blurb">“${esc(d.blurb)}”</div>` : ''}
+      ${d.blurb ? `<div class="blurb" title="Click to expand">“${esc(d.blurb)}”</div>` : ''}
     </div>
     <div>
       <div class="price">${yen(d.price)}</div>
@@ -310,6 +319,7 @@ function render() {
     return d.verdict !== 'reject' || s === 1;
   });
   if (ward) rows = rows.filter(d => d.ward === ward);
+  if (src) rows = rows.filter(d => (d.sources || [d.source]).includes(src));
   if (q) {
     const t = q.toLowerCase();
     rows = rows.filter(d => (d.name+d.station+d.stationJp+d.address+d.ward+d.blurb)
@@ -338,6 +348,8 @@ function render() {
 }
 
 document.getElementById('list').addEventListener('click', e => {
+  const bl = e.target.closest('.blurb');
+  if (bl) { bl.classList.toggle('open'); return; }
   const btn = e.target.closest('button'); if (!btn) return;
   const id = e.target.closest('.card').dataset.id;
   const want = btn.classList.contains('star') ? 1 : 2;
@@ -349,6 +361,11 @@ document.querySelectorAll('.bar button[data-v]').forEach(b => b.onclick = () => 
   document.querySelectorAll('.bar button[data-v]').forEach(x=>x.classList.remove('on'));
   b.classList.add('on'); view = b.dataset.v; render();
 });
+const ssel = document.getElementById('src');
+[...new Set(DATA.flatMap(d => d.sources || [d.source]))].sort().forEach(v => {
+  const o = document.createElement('option'); o.value = o.textContent = v; ssel.append(o);
+});
+ssel.onchange = e => { src = e.target.value; render(); };
 wsel.onchange = e => { ward = e.target.value; render(); };
 document.getElementById('sort').onchange = e => { sort = e.target.value; render(); };
 document.getElementById('q').oninput = e => { q = e.target.value; render(); };
