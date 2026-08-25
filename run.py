@@ -70,16 +70,27 @@ def main():
 
 def run():
     before = snapshot()
-    failed = []
-    for script in ("scan.py", "scan_gems.py"):
+    failed, incomplete = [], []
+    for script in ("scan.py", "scan_gems.py", "build.py"):
         p = os.path.join(HERE, script)
         if not os.path.exists(p):
             continue
-        if subprocess.run([PY, "-u", p], cwd=HERE, env=ENV).returncode:
+        r = subprocess.run([PY, "-u", p], cwd=HERE, env=ENV,
+                           capture_output=True, text=True,
+                           encoding="utf-8", errors="replace")
+        out = (r.stdout or "") + (r.stderr or "")
+        print(out, end="")
+        # Always persist the scan transcript ourselves.  It used to be written
+        # only by watch.bat's redirect, so a cycle started any other way lost
+        # its throttling warnings.
+        with open(os.path.join(HERE, "watch_run.log"), "a",
+                  encoding="utf-8") as f:
+            f.write(out)
+        for ln in out.splitlines():
+            if "INCOMPLETE" in ln:
+                incomplete.append(ln.split()[0])
+        if r.returncode:
             failed.append(script)
-    if subprocess.run([PY, "-u", os.path.join(HERE, "build.py")],
-                      cwd=HERE, env=ENV).returncode:
-        failed.append("build.py")
 
     db = json.load(open(os.path.join(HERE, "db.json"), encoding="utf-8"))
     new, moved, gone = [], [], []
