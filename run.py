@@ -19,6 +19,19 @@ def snapshot():
 
 
 LOCK = os.path.join(HERE, ".cycle.lock")
+MAX_CYCLE_MIN = 45      # a healthy cycle is ~19 min
+
+
+def _holder_alive():
+    """A cycle killed mid-run (Ctrl-C, reboot, laptop lid) leaves its lock
+    behind.  Waiting an hour to clear it would skip a scan for no reason."""
+    try:
+        pid = int(open(LOCK, encoding="utf-8").read().strip())
+    except (ValueError, OSError):
+        return False
+    out = subprocess.run(["tasklist", "/FI", f"PID eq {pid}", "/NH"],
+                         capture_output=True, text=True).stdout
+    return str(pid) in out
 
 
 def acquire():
@@ -27,13 +40,17 @@ def acquire():
     try:
         fd = os.open(LOCK, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
     except FileExistsError:
-        age = time.time() - os.path.getmtime(LOCK)
-        if age < 3600:                       # a cycle is ~19 min; 1h means stale
-            print(f"another cycle has been running for {age/60:.0f} min — "
-                  f"skipping this one")
-            return False
-        os.unlink(LOCK)
-        return acquire()
+        age = (time.time() - os.path.getmtime(LOCK)) / 60
+        # Stale if the holder is gone, or simply too old to be real: a cycle
+        # runs ~19 min, and pid checks cannot be trusted (pids get reused, and
+        # tasklist has reported dead pids as live).  The age ceiling is the
+        # backstop that guarantees the loop always recovers on its own.
+        if age > MAX_CYCLE_MIN or not _holder_alive():
+            print(f"clearing stale lock ({age:.0f} min old)")
+            os.unlink(LOCK)
+            return acquire()
+        print(f"another cycle has been running for {age:.0f} min — skipping")
+        return False
     os.write(fd, str(os.getpid()).encode())
     os.close(fd)
     return True
