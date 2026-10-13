@@ -27,6 +27,8 @@ def card(r):
     <div><b>Land</b> {r.get('land_m2') or '—'} m² · <b>Building</b> {r.get('building_m2') or '—'} m²</div>
     <div><b>Layout</b> {esc(r.get('layout',''))} · <b>Built</b> {esc(r.get('built_year') or '—')}</div>
     <div><b>Walk</b> {esc(walk_s)}</div>
+    <div><b>Best station in reach</b> {esc(r.get('best_station','—'))}</div>
+    <div><b>Garden</b> {esc(r.get('garden','—'))}</div>
     <div><b>Zoning</b> {esc(r.get('zoning','—'))} {esc(r.get('calm',''))}</div>
     <div><b>Rights</b> {esc(r.get('rights','—'))} · <b>Coverage</b> {esc(r.get('coverage','—'))}</div>
     <div><b>Road</b> {esc(r.get('road','—'))}</div>

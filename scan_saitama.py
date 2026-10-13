@@ -43,10 +43,17 @@ NEAR_TOKYO = {"Kawaguchi", "Warabi", "Toda", "Wako", "Asaka"}
 NEAR_TOKYO_WALK_CAP = 20
 MIN_YEAR = 1982
 
-# station lines/stations that matter to the user (bonus, not a filter)
-GOOD_STATIONS = {"大宮": 3, "浦和": 3, "西川口": 2, "川口": 2, "蕨": 2, "戸田": 2,
-                 "南浦和": 2, "与野": 2, "北浦和": 2, "東浦和": 1, "上尾": 1,
-                 "川越": 2, "和光市": 2, "志木": 2, "新座": 1, "朝霞": 1}
+# Station quality is the biggest score term: a house near a major hub beats a
+# cheaper house far from one. Tier points are added once, for the best station
+# reachable within the walk cap (not only the nearest).
+STATION_TIER = {}
+for names, pts in [
+    (["大宮", "浦和", "川口", "川越"], 25),           # major hubs
+    (["西川口", "蕨", "戸田", "南浦和", "与野", "北浦和", "上尾", "和光市"], 12),  # solid
+    (["東浦和", "志木", "新座", "朝霞", "北戸田", "中浦和", "武蔵浦和"], 6),       # local
+]:
+    for n in names:
+        STATION_TIER[n] = pts
 
 
 def collect_ids(slug):
@@ -107,18 +114,22 @@ def parse_detail(url, slug, nc):
     return rec
 
 
-def walk_info(transport):
-    """Nearest walk-only station (ignores bus-then-walk routes)."""
-    best = None
+def walk_entries(transport):
+    """Every walk-only station (ignores bus-then-walk routes)."""
+    out = []
     for entry in transport.split("[ 乗り換え案内 ]"):
         if "バス" in entry:
             continue
         m = re.search(r"([^\s「]*)「([^」]+)」\s*歩(\d+)分", entry)
         if m:
-            line, station, mins = m.group(1), m.group(2), int(m.group(3))
-            if best is None or mins < best[2]:
-                best = (line, station, mins)
-    return best
+            out.append((m.group(1), m.group(2), int(m.group(3))))
+    return out
+
+
+def walk_info(transport):
+    """Nearest walk-only station."""
+    entries = walk_entries(transport)
+    return min(entries, key=lambda e: e[2]) if entries else None
 
 
 def evaluate(r):
@@ -166,10 +177,19 @@ def evaluate(r):
     if r.get("building_m2") and r["building_m2"] >= 80:
         score += 2
     if p:
-        score += max(0, (PRICE_CAP - p) / 500)
+        # Under 25M the saving matters more; from 25M to 40M it only gently counts.
+        score += 3 + (2500 - p) / 1000 if p < 2500 else 3 * (PRICE_CAP - p) / 1500
     if walk:
         score += max(0, (WALK_CAP - walk[2]) / 3)
-        score += GOOD_STATIONS.get(walk[1], 0)
+    # best station reachable within the city's walk cap, not only the nearest
+    reach = [e for e in walk_entries(r.get("transport", "")) if e[2] <= cap]
+    best_station = max(reach, key=lambda e: STATION_TIER.get(e[1], 0), default=None)
+    if best_station:
+        score += STATION_TIER.get(best_station[1], 0)
+        r["best_station"] = f"{best_station[1]} 歩{best_station[2]}分"
+    # garden: any yard/garden wording in the remarks or features
+    if re.search(r"庭|ガーデン|garden|テラス", r.get("remarks", "") + " " + r.get("blurb", "")):
+        score += 8; r["garden"] = "garden mentioned"
     score += CITIES[r["slug"]][1]
     if "荒川" in r.get("remarks", ""):
         score += 2; r["river"] = "荒川 mentioned"
