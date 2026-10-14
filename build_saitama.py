@@ -67,7 +67,7 @@ h1{font-size:1.4rem;margin:.2rem 0}
 </style></head>
 <body>
 <h1>Saitama detached houses — parallel search</h1>
-<p class="intro">Separate from the Tokyo apartment report. Budget ≤ 40M yen. Scope: Saitama-Urawa, Saitama-Omiya, Saitama-Minami, Saitama-Minuma, Kawaguchi, Warabi, Toda, Ageo. Walk-only station ≤ 15 min. Built 1982 or later. Ownership (所有権) only.</p>
+<p class="intro">Separate from the Tokyo apartment report. Budget ≤ 30M yen. Scope: Saitama-Urawa, Saitama-Omiya, Saitama-Minami, Saitama-Minuma, Kawaguchi, Warabi, Toda, Ageo. Walk-only station ≤ 15 min. Built 1989 or later. Ownership (所有権) only.</p>
 <div class="note">Estimates, not verified facts: calm/road judgements come from zoning (用途地域) and road width only. Ground-floor school use depends on 兼用住宅 rules (non-residential part ≤ 50m² and under half the floor area) and local confirmation. Private-road (私道) listings are shown as concerns, not rejected.</div>
 <div class="bar" id="filters">
   <button class="on" data-f="active">Active</button>

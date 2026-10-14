@@ -28,6 +28,15 @@ CITIES = {
     "sc_warabi":           ("Warabi", 2),
     "sc_toda":             ("Toda", 2),
     "sc_ageo":             ("Ageo", 1),
+    # Along the Shonan-Shinjuku line around Omiya/Urawa (added on request)
+    "sc_saitamashikita":   ("Saitama-Kita", 2),
+    "sc_saitamashinishi":  ("Saitama-Nishi", 2),
+    "sc_saitamashisakura": ("Saitama-Sakura", 1),
+    "sc_saitamashimidori": ("Saitama-Midori", 1),
+    "sc_saitamashiiwatsuki": ("Saitama-Iwatsuki", 1),
+    "sc_okegawa":          ("Okegawa", 1),
+    "sc_kitamoto":         ("Kitamoto", 1),
+    "sc_konosu":           ("Konosu", 1),
     # Tokyo-edge cities with fast links (added on request)
     "sc_kawagoe":          ("Kawagoe", 2),
     "sc_wako":             ("Wako", 2),
@@ -36,12 +45,12 @@ CITIES = {
     "sc_asaka":            ("Asaka", 1),
 }
 
-PRICE_CAP = 4000        # 万円
+PRICE_CAP = 3000        # 万円 (30M yen)
 WALK_CAP = 15           # minutes to nearest station
 # Very close to central Tokyo: a 20-minute walk to the station is acceptable
 NEAR_TOKYO = {"Kawaguchi", "Warabi", "Toda", "Wako", "Asaka"}
 NEAR_TOKYO_WALK_CAP = 20
-MIN_YEAR = 1982
+MIN_YEAR = 1989
 
 # Station quality is the biggest score term: a house near a major hub beats a
 # cheaper house far from one. Tier points are added once, for the best station
@@ -187,6 +196,9 @@ def evaluate(r):
     if best_station:
         score += STATION_TIER.get(best_station[1], 0)
         r["best_station"] = f"{best_station[1]} 歩{best_station[2]}分"
+    # Shonan-Shinjuku line: the user's preferred direct line, extra bonus
+    if any("湘南新宿" in e[0] for e in reach):
+        score += 10; r["best_station"] = r.get("best_station", "") + " · 湘南新宿ライン"
     # garden: any yard/garden wording in the remarks or features
     if re.search(r"庭|ガーデン|garden|テラス", r.get("remarks", "") + " " + r.get("blurb", "")):
         score += 8; r["garden"] = "garden mentioned"
