@@ -29,6 +29,7 @@ def card(r):
     <div><b>Walk</b> {esc(walk_s)}</div>
     <div><b>Best station in reach</b> {esc(r.get('best_station','—'))}</div>
     <div><b>Garden</b> {esc(r.get('garden','—'))}</div>
+    <div><b>Also listed</b> {r.get('also_listed', 0)} other id(s)</div>
     <div><b>Zoning</b> {esc(r.get('zoning','—'))} {esc(r.get('calm',''))}</div>
     <div><b>Rights</b> {esc(r.get('rights','—'))} · <b>Coverage</b> {esc(r.get('coverage','—'))}</div>
     <div><b>Road</b> {esc(r.get('road','—'))}</div>
@@ -111,7 +112,18 @@ def main():
     db = json.load(open(DB, encoding="utf-8"))
     for r in db.values():  # always re-score so stale verdicts can't survive a rule change
         r["verdict"], r["reasons"], r["score"] = scan_saitama.evaluate(r)
-    rows = sorted(db.values(), key=lambda r: (r.get("verdict") == "reject", -r.get("score", 0)))
+    # Same house re-listed under several ids (same address, price, areas, year):
+    # show the best-scoring listing once, and note the other ids on it.
+    groups = {}
+    for r in db.values():
+        key = (r.get("address"), r.get("price_man"), r.get("land_m2"), r.get("building_m2"), r.get("built_year"))
+        groups.setdefault(key, []).append(r)
+    rows = []
+    for members in groups.values():
+        best = max(members, key=lambda r: r.get("score", 0))
+        best["also_listed"] = len(members) - 1
+        rows.append(best)
+    rows.sort(key=lambda r: (r.get("verdict") == "reject", -r.get("score", 0)))
     html_out = PAGE.replace("__CARDS__", "\n".join(card(r) for r in rows))
     open(OUT, "w", encoding="utf-8").write(html_out)
     print(f"wrote {OUT} with {len(rows)} houses")
