@@ -18,8 +18,10 @@ def card(r):
     p = r.get("price_man")
     price_s = f"{p:,.0f}万円" if p else "—"
     reasons = "; ".join(r.get("reasons", [])) or "no concerns"
+    price_sort = p or 999999
+    walk_sort = walk[2] if walk else 999
     return f"""
-<article class="card {esc(r['verdict'])}" data-id="{esc(r['id'])}" data-verdict="{esc(r['verdict'])}" data-score="{r.get('score', 0)}">
+<article class="card {esc(r['verdict'])}" data-id="{esc(r['id'])}" data-verdict="{esc(r['verdict'])}" data-score="{r.get('score', 0)}" data-price="{price_sort}" data-walk="{walk_sort}">
   <header><span class="badge {esc(r['verdict'])}">{esc(r['verdict'])}</span>
     <a href="{esc(r['url'])}" target="_blank" rel="noopener">{esc(r['city'])} · {esc(r.get('address',''))}</a></header>
   <div class="grid">
@@ -77,6 +79,12 @@ h1{font-size:1.4rem;margin:.2rem 0}
   <button data-f="discard">Discarded</button>
   <button data-f="all">All</button>
 </div>
+<div class="bar" id="sorts">
+  <button data-s="score">Best score</button>
+  <button data-s="price-asc">Price: low → high</button>
+  <button data-s="price-desc">Price: high → low</button>
+  <button data-s="walk">Walk: nearest first</button>
+</div>
 <main id="list">__CARDS__</main>
 <script>
 const KEY = "saitama_flags_v1"; // separate from the apartment report's storage
@@ -95,6 +103,19 @@ function render(){
   document.querySelectorAll("#filters button").forEach(b=>b.classList.toggle("on", b.dataset.f===filter));
 }
 document.getElementById("filters").addEventListener("click", e=>{ if(e.target.dataset.f){ filter=e.target.dataset.f; render(); } });
+// sort by reordering the cards in place; cards with no price/walk time sort last
+const SORTS = {
+  "score": (a,b)=>b.dataset.score-a.dataset.score,
+  "price-asc": (a,b)=>a.dataset.price-b.dataset.price,
+  "price-desc": (a,b)=>(+b.dataset.price>=999999)-(+a.dataset.price>=999999) || b.dataset.price-a.dataset.price,
+  "walk": (a,b)=>a.dataset.walk-b.dataset.walk
+};
+document.getElementById("sorts").addEventListener("click", e=>{
+  const s=e.target.dataset.s; if(!s) return;
+  const list=document.getElementById("list");
+  [...list.children].sort(SORTS[s]).forEach(c=>list.appendChild(c));
+  document.querySelectorAll("#sorts button").forEach(b=>b.classList.toggle("on", b.dataset.s===s));
+});
 document.getElementById("list").addEventListener("click", e=>{
   const b=e.target.closest("button[data-act]"); if(!b) return;
   const id=b.closest(".card").dataset.id; const f=flags[id]||{};
@@ -116,6 +137,8 @@ def main():
     # show the best-scoring listing once, and note the other ids on it.
     groups = {}
     for r in db.values():
+        if r.get("gone"):  # listing no longer on SUUMO (set by recheck)
+            continue
         key = (r.get("address"), r.get("price_man"), r.get("land_m2"), r.get("building_m2"), r.get("built_year"))
         groups.setdefault(key, []).append(r)
     rows = []
