@@ -16,7 +16,12 @@ import scan  # noqa: E402  (importing is side-effect free: main() is guarded)
 
 DB = os.path.join(HERE, "saitama_db.json")
 JST = timezone(timedelta(hours=9))
-BASE = "https://suumo.jp/chukoikkodate/saitama/{sc}/"
+BASE = "https://suumo.jp/chukoikkodate/{pref}/{sc}/"
+TOKYO_SLUGS = {"sc_setagaya", "sc_nerima", "sc_katsushika", "sc_edogawa", "sc_itabashi", "sc_kita"}
+
+
+def pref(slug):
+    return "tokyo" if slug in TOKYO_SLUGS else "saitama"
 
 # slug -> (name, station-quality bonus, note)
 CITIES = {
@@ -43,12 +48,20 @@ CITIES = {
     "sc_shiki":            ("Shiki", 2),
     "sc_niiza":            ("Niiza", 1),
     "sc_asaka":            ("Asaka", 1),
+    # Tokyo wards near the border (added on request; SUUMO path is /tokyo/)
+    "sc_setagaya":         ("Setagaya", 2),
+    "sc_nerima":           ("Nerima", 1),
+    "sc_katsushika":       ("Katsushika", 2),
+    "sc_edogawa":          ("Edogawa", 1),
+    "sc_itabashi":         ("Itabashi", 2),
+    "sc_kita":             ("Kita", 2),
 }
 
 PRICE_CAP = 3000        # 万円 (30M yen)
 WALK_CAP = 15           # minutes to nearest station
 # Very close to central Tokyo: a 20-minute walk to the station is acceptable
-NEAR_TOKYO = {"Kawaguchi", "Warabi", "Toda", "Wako", "Asaka"}
+NEAR_TOKYO = {"Kawaguchi", "Warabi", "Toda", "Wako", "Asaka",
+              "Setagaya", "Nerima", "Katsushika", "Edogawa", "Itabashi", "Kita"}
 NEAR_TOKYO_WALK_CAP = 20
 MIN_YEAR = 1989
 
@@ -69,12 +82,12 @@ def collect_ids(slug):
     """Walk every page of one city list until a page adds no new listing."""
     seen, out = set(), []
     for page in range(1, 60):
-        url = BASE.format(sc=slug) + (f"?page={page}" if page > 1 else "")
+        url = BASE.format(pref=pref(slug), sc=slug) + (f"?page={page}" if page > 1 else "")
         page_html = scan.get(url)
         if not page_html:
             print(f"  {slug} p{page}: fetch failed ({scan.LAST_ERROR}); stopping city")
             break
-        found = re.findall(r"/chukoikkodate/saitama/%s/(nc_\d+)/" % re.escape(slug), page_html)
+        found = re.findall(r"/chukoikkodate/%s/%s/(nc_\d+)/" % (pref(slug), re.escape(slug)), page_html)
         new = [i for i in dict.fromkeys(found) if i not in seen]
         if not new:
             break
@@ -209,8 +222,43 @@ def evaluate(r):
     return verdict, rej + warn, round(score, 1)
 
 
+def recheck(db):
+    """Re-fetch every saved house: record price changes and listings that went
+    away. A failed fetch (503 etc.) is 'unknown', never 'delisted'."""
+    changes = []
+    for n, (key, r) in enumerate(db.items(), 1):
+        if n % 100 == 0:  # progress and periodic save: a throttled run must not lose its work
+            print(f"  recheck {n}/{len(db)}, changes so far {len(changes)}", flush=True)
+            json.dump(db, open(DB, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        if not r.get("fetched"):
+            continue
+        raw = scan.get(r["url"], tries=2)
+        if not raw:
+            continue  # unknown: could be throttling
+        t = unicodedata.normalize("NFKC", scan.txt(raw))
+        if "売却済" in t or "掲載終了" in t or "販売終了" in t or "価格" not in t:
+            if not r.get("gone"):
+                r["gone"] = True
+                changes.append({"id": key, "type": "delisted", "url": r["url"]})
+            continue
+        fresh = parse_detail(r["url"], r["slug"], key)
+        if fresh and fresh.get("price_man") != r.get("price_man"):
+            changes.append({"id": key, "type": "price", "url": r["url"],
+                            "from": r.get("price_man"), "to": fresh.get("price_man")})
+            r["price_man"] = fresh.get("price_man")
+        time.sleep(random.uniform(0.6, 1.2))
+    return changes
+
+
 def main():
     db = json.load(open(DB, encoding="utf-8")) if os.path.exists(DB) else {}
+    if "--recheck" in sys.argv:  # re-fetch saved houses: price changes and delistings
+        changes = recheck(db)
+        json.dump(db, open(DB, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        json.dump(changes, open(os.path.join(HERE, "saitama_changes.json"), "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1)
+        print("recheck done:", len(changes), "changes")
+        return
     if "--rescore" in sys.argv:  # re-apply the rules to saved records, no network
         for r in db.values():
             r["verdict"], r["reasons"], r["score"] = evaluate(r)
@@ -224,7 +272,7 @@ def main():
             key = nc
             if key in db and db[key].get("fetched"):
                 continue  # already fetched; price changes are caught by re-scan below
-            rec = parse_detail(f"https://suumo.jp/chukoikkodate/saitama/{slug}/{nc}/", slug, nc)
+            rec = parse_detail(f"https://suumo.jp/chukoikkodate/{pref(slug)}/{slug}/{nc}/", slug, nc)
             if rec is None:
                 print(f"  {nc}: detail failed ({scan.LAST_ERROR})")
                 continue
