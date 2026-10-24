@@ -21,7 +21,7 @@ def card(r):
     price_sort = p or 999999
     walk_sort = walk[2] if walk else 999
     return f"""
-<article class="card {esc(r['verdict'])}" data-id="{esc(r['id'])}" data-verdict="{esc(r['verdict'])}" data-score="{r.get('score', 0)}" data-price="{price_sort}" data-walk="{walk_sort}">
+<article class="card {esc(r['verdict'])}" data-id="{esc(r['id'])}" data-verdict="{esc(r["verdict"])}" data-city="{esc(r["city"])}" data-score="{r.get('score', 0)}" data-price="{price_sort}" data-walk="{walk_sort}">
   <header><span class="badge {esc(r['verdict'])}">{esc(r['verdict'])}</span>
     <a href="{esc(r['url'])}" target="_blank" rel="noopener">{esc(r['city'])} · {esc(r.get('address',''))}</a></header>
   <div class="grid">
@@ -79,6 +79,9 @@ h1{font-size:1.4rem;margin:.2rem 0}
   <button data-f="discard">Discarded</button>
   <button data-f="all">All</button>
 </div>
+<div class="bar">
+  <select id="city"><option value="">All cities</option></select>
+</div>
 <div class="bar" id="sorts">
   <button data-s="score">Best score</button>
   <button data-s="price-asc">Price: low → high</button>
@@ -90,7 +93,12 @@ h1{font-size:1.4rem;margin:.2rem 0}
 const KEY = "saitama_flags_v1"; // separate from the apartment report's storage
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
 function save(f){try{localStorage.setItem(KEY, JSON.stringify(f))}catch(e){}}
-let flags = load(), filter = "active";
+let flags = load(), filter = "active", cityF = "";
+// city dropdown: one entry per city present in the report
+[...new Set([...document.querySelectorAll(".card")].map(c=>c.dataset.city))].sort().forEach(n=>{
+  document.getElementById("city").insertAdjacentHTML("beforeend", `<option value="${n}">${n}</option>`);
+});
+document.getElementById("city").addEventListener("change", e=>{ cityF = e.target.value; render(); });
 function render(){
   document.querySelectorAll(".card").forEach(c=>{
     const id=c.dataset.id, f=flags[id]||{};
@@ -98,6 +106,7 @@ function render(){
     c.querySelector('[data-act="star"]').textContent = f.star ? "★ Starred" : "☆ Star";
     c.querySelector('[data-act="discard"]').textContent = f.discard ? "Undo discard" : "Discard";
     let show = filter==="all" || (filter==="discard" ? !!f.discard : !f.discard && (filter==="active" ? c.dataset.verdict!=="reject" : c.dataset.verdict===filter));
+    show = show && (!cityF || c.dataset.city===cityF);
     c.style.display = show ? "" : "none";
   });
   document.querySelectorAll("#filters button").forEach(b=>b.classList.toggle("on", b.dataset.f===filter));

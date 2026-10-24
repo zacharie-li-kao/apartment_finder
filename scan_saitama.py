@@ -166,7 +166,7 @@ def evaluate(r):
     if y is None:
         warn.append("build year unknown")
     elif y < MIN_YEAR:
-        rej.append(f"built {y} (pre-1982)")
+        rej.append(f"built {y} (before {MIN_YEAR})")
     # We need to own the land AND the house. Unstated rights count as a reject.
     rights = r.get("rights", "")
     if "所有権" not in rights:
