@@ -145,8 +145,9 @@ def main():
     # Same house re-listed under several ids (same address, price, areas, year):
     # show the best-scoring listing once, and note the other ids on it.
     groups = {}
+    removed = set(open(os.path.join(HERE, "removed_ids.txt"), encoding="utf-8").read().split()) if os.path.exists(os.path.join(HERE, "removed_ids.txt")) else set()
     for r in db.values():
-        if r.get("gone"):  # listing no longer on SUUMO (set by recheck)
+        if r.get("gone") or r["id"] in removed:  # gone: set by recheck; removed: confirmed 404 by hand
             continue
         key = (r.get("address"), r.get("price_man"), r.get("land_m2"), r.get("building_m2"), r.get("built_year"))
         groups.setdefault(key, []).append(r)

@@ -232,10 +232,19 @@ def recheck(db):
             json.dump(db, open(DB, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         if not r.get("fetched"):
             continue
-        raw = scan.get(r["url"], tries=2)
-        if not raw:
-            continue  # unknown: could be throttling
-        t = unicodedata.normalize("NFKC", scan.txt(raw))
+        try:  # one request, no retry: a 404 must not be mistaken for throttling
+            resp = scan.S.get(r["url"], timeout=45)
+        except Exception:
+            continue  # unknown: network trouble
+        if resp.status_code == 404:
+            if not r.get("gone"):
+                r["gone"] = True
+                changes.append({"id": key, "type": "delisted", "url": r["url"]})
+            continue
+        if resp.status_code != 200:
+            continue  # unknown: could be a 503 from throttling
+        resp.encoding = "utf-8"
+        t = unicodedata.normalize("NFKC", scan.txt(resp.text))
         if "売却済" in t or "掲載終了" in t or "販売終了" in t or "価格" not in t:
             if not r.get("gone"):
                 r["gone"] = True
