@@ -76,11 +76,14 @@ h1{font-size:1.4rem;margin:.2rem 0}
   <button class="on" data-f="active">Active</button>
   <button data-f="match">Match</button>
   <button data-f="concern">Concern</button>
+  <button data-f="star">★ Starred</button>
   <button data-f="discard">Discarded</button>
   <button data-f="all">All</button>
 </div>
 <div class="bar">
   <select id="city"><option value="">All cities</option></select>
+  <input id="pmin" type="number" min="0" step="1" placeholder="Min ¥M" style="width:84px">
+  <input id="pmax" type="number" min="0" step="1" placeholder="Max ¥M" style="width:84px">
 </div>
 <div class="bar" id="sorts">
   <button data-s="score">Best score</button>
@@ -93,23 +96,34 @@ h1{font-size:1.4rem;margin:.2rem 0}
 const KEY = "saitama_flags_v1"; // separate from the apartment report's storage
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
 function save(f){try{localStorage.setItem(KEY, JSON.stringify(f))}catch(e){}}
-let flags = load(), filter = "active", cityF = "";
+let flags = load(), filter = "active", cityF = "", pmin = "", pmax = "";
+// filter choices persist in this browser, like stars and discards
+const PKEY = "saitama_prefs_v1";
+try { ({filter = filter, cityF = cityF, pmin = pmin, pmax = pmax} = JSON.parse(localStorage.getItem(PKEY) || "{}")); } catch(e) {}
 // city dropdown: one entry per city present in the report
 [...new Set([...document.querySelectorAll(".card")].map(c=>c.dataset.city))].sort().forEach(n=>{
   document.getElementById("city").insertAdjacentHTML("beforeend", `<option value="${n}">${n}</option>`);
 });
+document.getElementById("city").value = cityF;
+document.getElementById("pmin").value = pmin; document.getElementById("pmax").value = pmax;
 document.getElementById("city").addEventListener("change", e=>{ cityF = e.target.value; render(); });
+document.getElementById("pmin").addEventListener("input", e=>{ pmin = e.target.value; render(); });
+document.getElementById("pmax").addEventListener("input", e=>{ pmax = e.target.value; render(); });
 function render(){
   document.querySelectorAll(".card").forEach(c=>{
     const id=c.dataset.id, f=flags[id]||{};
     c.classList.toggle("discard", !!f.discard);
     c.querySelector('[data-act="star"]').textContent = f.star ? "★ Starred" : "☆ Star";
     c.querySelector('[data-act="discard"]').textContent = f.discard ? "Undo discard" : "Discard";
-    let show = filter==="all" || (filter==="discard" ? !!f.discard : !f.discard && (filter==="active" ? c.dataset.verdict!=="reject" : c.dataset.verdict===filter));
+    let show = filter==="all" || (filter==="discard" ? !!f.discard : !f.discard && (filter==="star" ? !!f.star : filter==="active" ? c.dataset.verdict!=="reject" : c.dataset.verdict===filter));
     show = show && (!cityF || c.dataset.city===cityF);
+    const p = +c.dataset.price; // 万円; 999999 means no price
+    if (pmin !== "") show = show && p < 999999 && p >= pmin * 100;
+    if (pmax !== "") show = show && p < 999999 && p <= pmax * 100;
     c.style.display = show ? "" : "none";
   });
   document.querySelectorAll("#filters button").forEach(b=>b.classList.toggle("on", b.dataset.f===filter));
+  try { localStorage.setItem(PKEY, JSON.stringify({filter, cityF, pmin, pmax})); } catch(e) {}
 }
 document.getElementById("filters").addEventListener("click", e=>{ if(e.target.dataset.f){ filter=e.target.dataset.f; render(); } });
 // sort by reordering the cards in place; cards with no price/walk time sort last
