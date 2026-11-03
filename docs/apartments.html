@@ -86,7 +86,7 @@ footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);
 <div class="wrap">
 <header>
   <h1>Tokyo Apartment Watch</h1>
-  <div class="sub">Buy · budget ¥40,000,000 · Sumida &amp; Koto first · updated 2026-11-03 12:14 JST</div>
+  <div class="sub">Buy · budget ¥40,000,000 · Sumida &amp; Koto first · updated 2026-11-03 15:14 JST</div>
   <div class="stats">
     <div class="stat"><b id="s-tot">0</b><span>Live listings</span></div>
     <div class="stat"><b id="s-match">0</b><span>Clean matches</span></div>
@@ -104,6 +104,8 @@ footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);
   <button data-v="disc">Discarded</button>
   <select id="ward"><option value="">All wards</option></select>
   <select id="src"><option value="">All sources</option></select>
+  <input id="pmin" type="number" min="0" step="1" placeholder="Min ¥M" style="width:84px">
+  <input id="pmax" type="number" min="0" step="1" placeholder="Max ¥M" style="width:84px">
   <select id="sort">
     <option value="score">Sort: score</option>
     <option value="price">Sort: price ↑</option>
@@ -136,7 +138,11 @@ try { flags = {...SEED, ...JSON.parse(localStorage.getItem(KEY) || '{}')}; } cat
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(flags)); } catch(e){} };
 const st = id => flags[id] || 0;   // 0 none, 1 star, 2 discard
 
-let view = 'all', ward = '', sort = 'score', q = '', src = '';
+let view = 'all', ward = '', sort = 'score', q = '', src = '', pmin = '', pmax = '';
+// filter choices persist in this browser, like stars and discards
+const PKEY = 'apt-prefs-v1';
+try { ({view = view, ward = ward, sort = sort, src = src, pmin = pmin, pmax = pmax} = JSON.parse(localStorage.getItem(PKEY) || '{}')); } catch(e) {}
+const savePrefs = () => { try { localStorage.setItem(PKEY, JSON.stringify({view, ward, sort, src, pmin, pmax})); } catch(e){} };
 
 const wsel = document.getElementById('ward');
 [...new Set(DATA.map(d => d.ward))].sort().forEach(w => {
@@ -194,7 +200,10 @@ function render() {
     if (view === 'watch') return d.verdict === 'watch';
     return d.verdict !== 'reject' || s === 1;
   });
+  savePrefs();
   if (ward) rows = rows.filter(d => d.ward === ward);
+  if (pmin !== '') rows = rows.filter(d => d.price != null && d.price >= pmin * 100);
+  if (pmax !== '') rows = rows.filter(d => d.price != null && d.price <= pmax * 100);
   if (src) rows = rows.filter(d => (d.sources || [d.source]).includes(src));
   if (q) {
     const t = q.toLowerCase();
@@ -243,6 +252,10 @@ const ssel = document.getElementById('src');
 });
 ssel.onchange = e => { src = e.target.value; render(); };
 wsel.onchange = e => { ward = e.target.value; render(); };
+for (const [id, k] of [['pmin', 'pmin'], ['pmax', 'pmax']]) {
+  const el = document.getElementById(id);
+  el.oninput = e => { if (k === 'pmin') pmin = e.target.value; else pmax = e.target.value; render(); };
+}
 document.getElementById('sort').onchange = e => { sort = e.target.value; render(); };
 document.getElementById('q').oninput = e => { q = e.target.value; render(); };
 const rb = document.getElementById('reset');
@@ -263,6 +276,10 @@ cb.onclick = async () => {
   }
   setTimeout(() => cb.textContent = 'Copy flags', 2000);
 };
+// restore saved filter state into the controls
+wsel.value = ward; ssel.value = src; document.getElementById('sort').value = sort;
+document.getElementById('pmin').value = pmin; document.getElementById('pmax').value = pmax;
+document.querySelectorAll('.bar button[data-v]').forEach(x => x.classList.toggle('on', x.dataset.v === view));
 render();
 </script>
 </body>
