@@ -4,7 +4,7 @@
 
 SUUMO carries the bulk of the market, but agency-direct sites often list a unit
 days before it reaches the portals, and some never syndicate at all.  This module
-adds Nomura (nomu.com), Mitsui Rehouse, at-home and LIFULL HOME'S.  Records are
+adds Nomura (nomu.com), Mitsui Rehouse, Yahoo!不動産, Tokyu Livable, at-home and LIFULL HOME'S.  Records are
 merged into the same db.json and scored by scan.evaluate().
 """
 import json, os, re, time, random, html
@@ -221,6 +221,122 @@ def rehouse_detail(r):
     return r
 
 
+# ------------------------------------------------------------ Yahoo!不動産 -----
+def yahoo(sc, max_pages=12):
+    """List cards carry floor / facing / area / layout / name / price, so the
+    detail page is fetched only for units that pass those cheap filters."""
+    ward = WARDS[sc][0]
+    out, seen = [], set()
+    for page in range(1, max_pages + 1):
+        h = get(f"https://realestate.yahoo.co.jp/used/mansion/search/03/13/{sc}/"
+                + (f"?page={page}" if page > 1 else ""))
+        if not h:
+            break
+        got = 0
+        for card in re.split(r'(?=<div class="ListCassette2 )', h)[1:]:
+            # one card per unit; agency offers inside it share the same unit
+            m = re.search(r'detail_corp/b(\d+)/"\s+target="_blank"\s+'
+                          r'data-cl-params="_cl_link:room', card)
+            if not m or ("yahoo_" + m.group(1)) in seen:
+                continue
+            bid = "yahoo_" + m.group(1)
+            seen.add(bid)
+            got += 1
+            tt = re.search(r'ListCassette2__ttl__txt--inner">(.*?)</h2>', card, re.S)
+            p = [x.strip() for x in T(tt.group(1)).split("/")] if tt else []
+            fl, d, ar, lay = (p + [""] * 4)[:4]
+            nm = re.search(r'buildingName&quot;:&quot;(.*?)&quot;', card)
+            pr = re.search(r'ListCassette2__info__price">(.*?)</li>', card, re.S)
+            price = scan.parse_price(T(pr.group(1))) if pr else None
+            if price and price >= 9999:  # 9,999万円 is the undisclosed-price placeholder
+                price = None
+            area = scan.parse_area(ar)
+            if price is None or not keep(price, area, None, None):
+                continue  # undisclosed price: skipped, usually far over budget
+            time.sleep(random.uniform(0.7, 1.3))
+            url = f"https://realestate.yahoo.co.jp/used/mansion/detail_corp/b{m.group(1)}/"
+            dh = get(url)
+            if not dh or "築年月" not in dh:  # a stub/throttled page has no spec table
+                continue
+            f = {T(k): T(v) for k, v in re.findall(
+                r'<dt class="DetailTable__2rows__head">(.*?)</dt>\s*'
+                r'<dd class="DetailTable__2rows__detail">(.*?)</dd>', dh, re.S)}
+            ex = {T(k): scan.parse_yen(T(v)) for k, v in re.findall(
+                r'exPrice__ttl">(.*?)</span>\s*<em[^>]*>(.*?)</em>', dh, re.S)}
+            loc = re.search(r'class="locTxt">\s*<span[^>]*>(.*?)</span>', dh, re.S)
+            acc = re.search(r'class="accTtl">交通</div>\s*<div class="accTxt">(.*?)</div>', dh, re.S)
+            access = T(acc.group(1)) if acc else ""
+            walk = scan.parse_walk(access)
+            year = scan.parse_year(f.get("築年月", ""))
+            if not keep(price, area, walk, year):
+                continue
+            mgmt_form = f.get("管理形態", "")
+            out.append({
+                "id": bid, "url": url, "source": "Yahoo!不動産",
+                "ward": ward, "ward_code": sc, "name": T(nm.group(1)) if nm else "",
+                "blurb": "", "price_raw": f"{price}万円" if price else "",
+                "address": T(loc.group(1)) if loc else "",
+                "station_raw": access, "transport": access,
+                "area_raw": ar.replace(" ", ""), "layout": lay,
+                "built_raw": f.get("築年月", ""),
+                "direction": scan.DIRS.get(d, ""), "floor": scan.parse_floor(fl),
+                "structure": f.get("構造・工法", ""), "units": f.get("総戸数", ""),
+                "tenure": f.get("土地権利形態", ""),
+                "mgmt_fee": ex.get("管理費", 0), "repair_fee": ex.get("修繕積立金", 0),
+                "fees": ex.get("管理費", 0) + ex.get("修繕積立金", 0),
+                "mgmt_style": ("delegated" if "委託" in mgmt_form else
+                               "self-managed" if "自主" in mgmt_form else ""),
+                "detail_ok": True,
+            })
+        if got == 0:
+            break
+        time.sleep(random.uniform(0.7, 1.3))
+    return out
+
+
+# ------------------------------------------------------- Tokyu Livable -----
+def livable(sc, max_pages=12):
+    ward = WARDS[sc][0]
+    out, seen = [], set()
+    for page in range(1, max_pages + 1):
+        h = get(f"https://www.livable.co.jp/kounyu/chuko-mansion/tokyo/a{sc}/?page={page}")
+        m = re.search(r'id="__NEXT_DATA__"[^>]*>(.*?)</script>', h, re.S)
+        items = json.loads(m.group(1))["props"]["pageProps"].get("propertyList", []) if m else []
+        got = 0
+        for o in items:
+            pid = o["propertyCd"]
+            if pid in seen:
+                continue
+            seen.add(pid)
+            got += 1
+            det = [T(x) for x in o.get("propertyDetail", [])]
+            layout = det[0] if det else ""
+            area_s = next((x for x in det if re.match(r"[\d.]+\s*(m|㎡)", x)), "")
+            built = next((x for x in det if "築" in x), "")
+            fl = next((x for x in det if "階" in x and "／" in x), "")
+            dr = next((x for x in det if x.endswith("向き")), "").replace("向き", "")
+            price = o["priceModel"]["price"] // 10000
+            access = " / ".join(o.get("access", []))
+            area = scan.parse_area(area_s.replace("m2", "m²")) if area_s else None
+            year = scan.parse_year(built)
+            walk = scan.parse_walk(access)
+            if not keep(price, area, walk, year):
+                continue
+            out.append({
+                "id": "livable_" + pid, "url": "https://www.livable.co.jp/mansion/" + pid + "/",
+                "source": "Tokyu Livable", "ward": ward, "ward_code": sc,
+                "name": o.get("propertyName", ""), "price_raw": f"{price}万円",
+                "address": o.get("address", ""), "station_raw": access, "transport": access,
+                "area_raw": area_s.replace("m2", "m²"), "layout": layout, "built_raw": built,
+                "direction": scan.DIRS.get(dr, ""), "floor": scan.parse_floor(fl.split("／")[0]),
+                "structure": fl, "detail_ok": False,
+            })
+        if got < 25:
+            break
+        time.sleep(random.uniform(0.7, 1.3))
+    return out
+
+
 # -------------------------------------------------------------- at-home -------
 def athome(sc, max_pages=8):
     ward = WARDS[sc][0]
@@ -267,7 +383,7 @@ def athome(sc, max_pages=8):
 
 # at-home renders its result list client-side (Angular); plain HTTP returns only
 # the filter widgets.  Left in place but disabled until driven by a real browser.
-SOURCES = [("nomu", nomu), ("rehouse", rehouse)]
+SOURCES = [("nomu", nomu), ("rehouse", rehouse), ("yahoo", yahoo), ("livable", livable)]
 
 
 def main():
