@@ -228,8 +228,8 @@ footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);
   <button data-v="disc">Discarded</button>
   <select id="ward"><option value="">All wards</option></select>
   <select id="src"><option value="">All sources</option></select>
-  <input id="pmin" type="number" min="0" step="1" placeholder="Min ¥M" style="width:84px">
-  <input id="pmax" type="number" min="0" step="1" placeholder="Max ¥M" style="width:84px">
+  <select id="pmin"></select>
+  <select id="pmax"></select>
   <select id="sort">
     <option value="score">Sort: score</option>
     <option value="price">Sort: price ↑</option>
@@ -376,10 +376,14 @@ const ssel = document.getElementById('src');
 });
 ssel.onchange = e => { src = e.target.value; render(); };
 wsel.onchange = e => { ward = e.target.value; render(); };
-for (const [id, k] of [['pmin', 'pmin'], ['pmax', 'pmax']]) {
+// price dropdowns: whole-million steps, so no typing
+for (const id of ['pmin', 'pmax']) {
   const el = document.getElementById(id);
-  el.oninput = e => { if (k === 'pmin') pmin = e.target.value; else pmax = e.target.value; render(); };
+  el.innerHTML = `<option value="">${id === 'pmin' ? 'Min price' : 'Max price'}</option>`
+    + Array.from({length: 21}, (_, i) => 10 + i * 2).map(m => `<option value="${m}">¥${m}M</option>`).join('');
 }
+document.getElementById('pmin').onchange = e => { pmin = e.target.value; render(); };
+document.getElementById('pmax').onchange = e => { pmax = e.target.value; render(); };
 document.getElementById('sort').onchange = e => { sort = e.target.value; render(); };
 document.getElementById('q').oninput = e => { q = e.target.value; render(); };
 const rb = document.getElementById('reset');
