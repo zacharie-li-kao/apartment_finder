@@ -37,8 +37,8 @@ h1{font-size:1.4rem;margin:.2rem 0}
 </div>
 <div class="bar">
   <select id="city"><option value="">All cities</option></select>
-  <input id="pmin" type="number" min="0" step="1" placeholder="Min ¥M" style="width:84px">
-  <input id="pmax" type="number" min="0" step="1" placeholder="Max ¥M" style="width:84px">
+  <select id="pmin"></select>
+  <select id="pmax"></select>
 </div>
 <div class="bar" id="sorts">
   <button data-s="score">Best score</button>
@@ -83030,10 +83030,16 @@ try { ({filter = filter, cityF = cityF, pmin = pmin, pmax = pmax} = JSON.parse(l
   document.getElementById("city").insertAdjacentHTML("beforeend", `<option value="${n}">${n}</option>`);
 });
 document.getElementById("city").value = cityF;
+// price dropdowns: whole-million steps, so no typing
+for (const id of ["pmin", "pmax"]) {
+  const el = document.getElementById(id);
+  el.innerHTML = `<option value="">${id === "pmin" ? "Min price" : "Max price"}</option>`
+    + Array.from({length: 21}, (_, i) => 10 + i * 1).map(m => `<option value="${m}">¥${m}M</option>`).join("");
+}
 document.getElementById("pmin").value = pmin; document.getElementById("pmax").value = pmax;
 document.getElementById("city").addEventListener("change", e=>{ cityF = e.target.value; render(); });
-document.getElementById("pmin").addEventListener("input", e=>{ pmin = e.target.value; render(); });
-document.getElementById("pmax").addEventListener("input", e=>{ pmax = e.target.value; render(); });
+document.getElementById("pmin").addEventListener("change", e=>{ pmin = e.target.value; render(); });
+document.getElementById("pmax").addEventListener("change", e=>{ pmax = e.target.value; render(); });
 function render(){
   document.querySelectorAll(".card").forEach(c=>{
     const id=c.dataset.id, f=flags[id]||{};
