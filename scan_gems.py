@@ -227,6 +227,7 @@ def yahoo(sc, max_pages=12):
     detail page is fetched only for units that pass those cheap filters."""
     ward = WARDS[sc][0]
     out, seen = [], set()
+    known = json.load(open(DB, encoding="utf-8")) if os.path.exists(DB) else {}
     for page in range(1, max_pages + 1):
         h = get(f"https://realestate.yahoo.co.jp/used/mansion/search/03/13/{sc}/"
                 + (f"?page={page}" if page > 1 else ""))
@@ -253,8 +254,13 @@ def yahoo(sc, max_pages=12):
             area = scan.parse_area(ar)
             if price is None or not keep(price, area, None, None):
                 continue  # undisclosed price: skipped, usually far over budget
-            time.sleep(random.uniform(0.7, 1.3))
             url = f"https://realestate.yahoo.co.jp/used/mansion/detail_corp/b{m.group(1)}/"
+            if known.get(bid, {}).get("address"):  # detail already stored: refresh list fields only
+                out.append({"id": bid, "url": url, "source": "Yahoo!不動産", "ward": ward,
+                            "ward_code": sc, "price_raw": f"{price}万円", "area_raw": ar.replace(" ", ""),
+                            "layout": lay, "direction": scan.DIRS.get(d, ""), "floor": scan.parse_floor(fl)})
+                continue
+            time.sleep(random.uniform(0.7, 1.3))
             dh = get(url)
             if not dh or "築年月" not in dh:  # a stub/throttled page has no spec table
                 continue

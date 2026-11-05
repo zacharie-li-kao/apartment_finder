@@ -29,6 +29,12 @@ def _holder_alive():
         pid = int(open(LOCK, encoding="utf-8").read().strip())
     except (ValueError, OSError):
         return False
+    if os.name != "nt":  # no tasklist on Linux (the cloud routine)
+        try:
+            os.kill(pid, 0)
+            return True
+        except OSError:
+            return False
     out = subprocess.run(["tasklist", "/FI", f"PID eq {pid}", "/NH"],
                          capture_output=True, text=True).stdout
     return str(pid) in out
